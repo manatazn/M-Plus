@@ -824,20 +824,18 @@ let resetTime = safeGet(RESET_KEY, null);
 let rewardMsgTimeout = null; 
 let isAdRunning = false; 
 
-// --- DƏQİQ SAAT HESABLAMASI (BÜTÜN ÖLKƏLƏR ÜÇÜN AZT 23:00) ---
+// --- YENİ VƏ DƏQİQ SAAT HESABLAMASI (TELEFONUN YERLİ SAATI İLƏ 23:00) ---
 function getNextResetTime() {
     const now = new Date();
-    // Azərbaycan saatı ilə 23:00 əslində UTC (Qrinviç) ilə 19:00 deməkdir.
-    // Beləliklə, hesablamanı ancaq UTC ilə edirik ki, başqa ölkələrdəki istifadəçilərdə də eyni vaxtda sıfırlansın.
-    let resetUTC = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(), 19, 0, 0, 0));
+    // Cihazın (telefonun) saatı ilə bu gün 23:00-ı təyin edirik
+    let resetLocal = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 0, 0, 0);
 
-    // Əgər indiki vaxt artıq bugünkü UTC 19:00-ı (AZT 23:00) keçibsə, növbəti sıfırlanma sabah eyni saatdadır.
-    if (now.getTime() >= resetUTC.getTime()) {
-        resetUTC.setUTCDate(resetUTC.getUTCDate() + 1);
+    // Əgər telefonun saatı 23:00-ı keçibsə və ya tam 23:00-dırsa, növbəti sıfırlanma sabah 23:00-da olacaq
+    if (now.getTime() >= resetLocal.getTime()) {
+        resetLocal.setDate(resetLocal.getDate() + 1);
     }
     
-    // Yekun millisekundları qaytarır (bütün cihazlarda sabit çalışır)
-    return resetUTC.getTime();
+    return resetLocal.getTime();
 }
 
 if(!resetTime || Date.now() >= resetTime){

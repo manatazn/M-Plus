@@ -112,8 +112,10 @@ body.dark-theme .balance-card, body.dark-theme .ad-card, body.dark-theme .profil
 .balance-card .amount{font-size:46px;font-weight:900;color:var(--text-dark); letter-spacing: -1px; text-shadow: 0 4px 15px rgba(0,0,0,0.05);}
 .balance-card .currency{font-size:26px;font-weight:900;color:var(--accent); text-shadow: 0 4px 15px var(--btn-shadow);}
 
+/* Çıxarış Üsulları - Arxa plan əlavə edildi */
 .method-list{display:grid; grid-template-columns: 1fr 1fr; gap: 15px; margin:20px 0;}
-.method{padding:25px 15px;border-radius:24px;background:var(--input-bg); color:var(--text-dark);text-align:center;font-weight:800;cursor:pointer;display:flex;flex-direction: column;align-items: center;justify-content: center;position: relative;overflow: hidden; border: 1.5px solid transparent; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);}
+.method{padding:25px 15px;border-radius:24px;background:var(--card-bg); color:var(--text-dark);text-align:center;font-weight:800;cursor:pointer;display:flex;flex-direction: column;align-items: center;justify-content: center;position: relative;overflow: hidden; border: 1px solid var(--card-border); box-shadow: 0 8px 20px rgba(0,0,0,0.04); transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);}
+body.dark-theme .method { box-shadow: 0 8px 20px rgba(0,0,0,0.3); }
 .method:hover { border-color: var(--accent); background: var(--card-bg); box-shadow: 0 10px 30px var(--btn-shadow); transform: translateY(-3px);}
 .method:active {transform: scale(0.95);}
 .method-logo{width: 60px; height: 60px; margin-bottom: 15px;border-radius: 18px; object-fit: cover; background-color: #fff; box-shadow: 0 8px 20px rgba(0,0,0,0.1); pointer-events: none; -webkit-user-drag: none;}
@@ -155,36 +157,53 @@ body.dark-theme .balance-card, body.dark-theme .ad-card, body.dark-theme .profil
 
 #msg {margin-top: 18px; font-size: 15px;font-weight: 800; padding: 0;color: var(--accent-red);}
 
-/* FLOATING MENU */
-.menu{position:fixed;bottom:25px;left:50%;transform:translateX(-50%);width:92%;max-width:420px; display:flex;justify-content:space-between;background:var(--menu-bg);padding:10px; border-radius:36px;box-shadow:0 25px 50px rgba(0,0,0,.1);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);z-index: 999;border: 1px solid var(--card-border);}
+/* FLOATING MENU - 5 Element üçün yeniləndi */
+.menu{position:fixed;bottom:25px;left:50%;transform:translateX(-50%);width:94%;max-width:460px; display:flex;justify-content:space-between;background:var(--menu-bg);padding:10px; border-radius:36px;box-shadow:0 25px 50px rgba(0,0,0,.1);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);z-index: 999;border: 1px solid var(--card-border);}
 body.dark-theme .menu {box-shadow:0 25px 50px rgba(0,0,0,.6);}
-.menu button{flex:1;margin:0 4px; padding: 14px 0;border:none;border-radius:28px;background:transparent;color:var(--text-muted);cursor: pointer;transition:all 0.4s cubic-bezier(0.16, 1, 0.3, 1);display: flex;flex-direction: column;align-items: center;justify-content: center;height: 65px;}
-.menu button .nav-icon { width: 24px; height: 24px; margin-bottom: 6px; transition: 0.3s; stroke-width: 2.2px; }
-.menu button .nav-text { font-size: 11px; font-weight: 800; transition: 0.3s;}
+.menu button{flex:1;margin:0 2px; padding: 12px 0;border:none;border-radius:28px;background:transparent;color:var(--text-muted);cursor: pointer;transition:all 0.4s cubic-bezier(0.16, 1, 0.3, 1);display: flex;flex-direction: column;align-items: center;justify-content: center;height: 65px;}
+.menu button .nav-icon { width: 22px; height: 22px; margin-bottom: 6px; transition: 0.3s; stroke-width: 2.2px; }
+.menu button .nav-text { font-size: 10px; font-weight: 800; transition: 0.3s;}
 .menu button.active{background:linear-gradient(135deg, var(--btn-gradient-start), var(--btn-gradient-end));color: white;cursor: default; pointer-events: none; box-shadow: 0 8px 20px var(--btn-shadow); transform: translateY(-5px);}
 .menu button.active .nav-icon { stroke-width: 2.5px; transform: translateY(-2px);} 
 
 /* --- PROFIL SƏHİFƏSİ --- */
-.profile-header-wrap { display: flex; align-items: center; justify-content: space-between; margin-bottom: 30px; padding-bottom: 25px; border-bottom: 1px solid var(--card-border);}
-.profile-info { display: flex; align-items: center; gap: 15px; text-align: left;}
-.profile-avatar { width: 75px; height: 75px; background: linear-gradient(135deg, var(--btn-gradient-start), var(--accent-red)); border-radius: 22px; display: flex; align-items: center; justify-content: center; color: #fff; box-shadow: 0 10px 25px var(--btn-shadow); position: relative; border: 3px solid var(--card-bg); transform: rotate(-5deg); transition: 0.3s;}
-.profile-avatar:hover { transform: rotate(0deg) scale(1.05); }
-.profile-avatar .default-icon { width: 35px; height: 35px; stroke-width: 2.5px;}
-.profile-avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 20px; display: none; }
+.profile-header-wrap { display: flex; align-items: center; justify-content: center; flex-direction: column; margin-bottom: 30px; padding-bottom: 25px; border-bottom: 1px solid var(--card-border);}
+/* Loqonun əyriliyi aradan qaldırıldı */
+.profile-avatar { width: 85px; height: 85px; background: linear-gradient(135deg, var(--btn-gradient-start), var(--accent-red)); border-radius: 25px; display: flex; align-items: center; justify-content: center; color: #fff; box-shadow: 0 10px 25px var(--btn-shadow); position: relative; border: 3px solid var(--card-bg); margin-bottom: 15px; transition: 0.3s;}
+.profile-avatar:hover { transform: scale(1.05); }
+.profile-avatar .default-icon { width: 40px; height: 40px; stroke-width: 2.5px;}
+.profile-avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 22px; display: none; }
 .profile-avatar.has-image img { display: block; }
 .profile-avatar.has-image .default-icon { display: none; }
 
-.profile-name { font-size: 22px; font-weight: 900; color: var(--text-dark); margin-bottom: 4px; }
-.profile-id { font-size: 13px; font-weight: 700; color: var(--accent); background: var(--progress-bg); padding: 4px 12px; border-radius: 10px; display: inline-block;}
+.profile-name { font-size: 24px; font-weight: 900; color: var(--text-dark); margin-bottom: 6px; text-align: center;}
+.profile-id { font-size: 14px; font-weight: 700; color: var(--accent); background: var(--progress-bg); padding: 5px 15px; border-radius: 12px; display: inline-block;}
 
-.profile-settings-btn { width: 45px; height: 45px; border-radius: 16px; background: var(--input-bg); border: 1px solid var(--card-border); color: var(--text-dark); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s; box-shadow: 0 4px 10px rgba(0,0,0,0.02);}
-.profile-settings-btn:active { transform: scale(0.9); background: var(--card-border);}
-
+/* Statistikanın keyfiyyəti artırıldı */
 .profile-stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 25px;}
-.profile-stat-box { background: var(--input-bg); padding: 20px; border-radius: 24px; border: 1px solid var(--card-border); text-align: center; transition: 0.3s;}
+.profile-stat-box { background: var(--input-bg); padding: 20px; border-radius: 24px; border: 1px solid var(--card-border); text-align: center; transition: 0.3s; display: flex; flex-direction: column; align-items: center; justify-content: center;}
 .profile-stat-box:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0,0,0,0.03);}
-.profile-stat-val { font-size: 24px; font-weight: 900; color: var(--accent); margin-bottom: 5px;}
-.profile-stat-lbl { font-size: 12px; font-weight: 700; color: var(--text-muted); text-transform: uppercase;}
+.profile-stat-box i { margin-bottom: 10px; width: 24px; height: 24px; stroke-width: 2.5px; }
+.profile-stat-val { font-size: 24px; font-weight: 900; color: var(--text-dark); margin-bottom: 5px;}
+.profile-stat-lbl { font-size: 12px; font-weight: 800; color: var(--text-muted); text-transform: uppercase;}
+
+/* --- AYARLAR SƏHİFƏSİ ÜÇÜN STİLLƏR --- */
+.setting-item-row { display: flex; justify-content: space-between; align-items: center; padding: 18px 20px; background: var(--input-bg); border-radius: 20px; border: 1px solid var(--card-border); margin-bottom: 15px;}
+.setting-info-col { display: flex; align-items: center; gap: 12px; font-weight: 800; font-size: 16px; color: var(--text-dark); }
+.setting-icon-col { display: flex; align-items: center; justify-content: center; background: var(--card-bg); width: 40px; height: 40px; border-radius: 14px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); color: var(--accent);}
+
+.toggle-switch { width: 56px; height: 32px; background-color: #CBD5E1; border-radius: 30px; position: relative; cursor: pointer; transition: 0.3s; }
+body.dark-theme .toggle-switch { background-color: var(--accent); }
+.toggle-thumb { width: 26px; height: 26px; background-color: #fff; border-radius: 50%; position: absolute; top: 3px; left: 3px; transition: 0.3s cubic-bezier(0.16, 1, 0.3, 1); display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 10px rgba(0,0,0,0.15); }
+body.dark-theme .toggle-thumb { transform: translateX(24px); }
+.toggle-thumb i { width: 14px; height: 14px; color: #F59E0B; }
+body.dark-theme .toggle-thumb i { color: #0F172A; }
+
+.modal-btn-action { width: 100%; padding: 18px; border-radius: 20px; border: none; font-weight: 800; font-size: 16px; margin-bottom: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 12px; color: #fff; transition: all 0.2s; box-shadow: 0 8px 25px rgba(0,0,0,0.1);}
+.modal-btn-action:active {transform: scale(0.96);}
+.modal-btn-action.copy-btn { background: var(--input-bg); color: var(--text-dark); border: 1px solid var(--card-border); box-shadow: 0 4px 15px rgba(0,0,0,0.02); }
+.modal-btn-action.whatsapp-btn { background: #25D366; }
+.modal-btn-action.telegram-btn { background: #0088cc; }
 
 #form{display:none;}
 .back-btn-ui {background: var(--accent); border: none; color: #fff; font-weight:800; font-size:15px; border-radius: 16px; padding: 14px 24px; width: max-content; margin: 0 0 25px 0; box-shadow: 0 8px 20px var(--btn-shadow); display: flex; align-items: center; gap: 8px; cursor: pointer; transition: 0.2s;}
@@ -329,32 +348,6 @@ body.dark-theme .alert.success { background: rgba(16, 185, 129, 0.1); border-col
 }
 #taskNotification i { color: #10B981; width: 32px; height: 32px; }
 
-/* MODAL STYLES */
-.modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); z-index: 9999; display: none; justify-content: center; align-items: center; opacity: 0; transition: opacity 0.4s ease; }
-.modal-overlay.show { display: flex; opacity: 1; }
-
-.settings-modal { background: var(--card-bg); width: 90%; max-width: 380px; border-radius: 36px; padding: 35px 25px; box-shadow: 0 30px 60px rgba(0,0,0,0.2); border: 1px solid var(--card-border); transform: scale(0.9) translateY(30px); transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); text-align: center; }
-.modal-overlay.show .settings-modal { transform: scale(1) translateY(0); }
-.modal-title { font-size: 22px; font-weight: 900; color: var(--text-dark); margin-bottom: 25px; }
-
-.setting-item-row { display: flex; justify-content: space-between; align-items: center; padding: 18px 20px; background: var(--input-bg); border-radius: 20px; border: 1px solid var(--card-border); margin-bottom: 15px;}
-.setting-info-col { display: flex; align-items: center; gap: 12px; font-weight: 800; font-size: 16px; color: var(--text-dark); }
-.setting-icon-col { display: flex; align-items: center; justify-content: center; background: var(--card-bg); width: 40px; height: 40px; border-radius: 14px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); color: var(--accent);}
-
-.toggle-switch { width: 56px; height: 32px; background-color: #CBD5E1; border-radius: 30px; position: relative; cursor: pointer; transition: 0.3s; }
-body.dark-theme .toggle-switch { background-color: var(--accent); }
-.toggle-thumb { width: 26px; height: 26px; background-color: #fff; border-radius: 50%; position: absolute; top: 3px; left: 3px; transition: 0.3s cubic-bezier(0.16, 1, 0.3, 1); display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 10px rgba(0,0,0,0.15); }
-body.dark-theme .toggle-thumb { transform: translateX(24px); }
-.toggle-thumb i { width: 14px; height: 14px; color: #F59E0B; }
-body.dark-theme .toggle-thumb i { color: #0F172A; }
-
-.modal-btn-action { width: 100%; padding: 18px; border-radius: 20px; border: none; font-weight: 800; font-size: 16px; margin-bottom: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 12px; color: #fff; transition: all 0.2s;}
-.modal-btn-action:active {transform: scale(0.96);}
-.modal-btn-action.share { background: linear-gradient(135deg, var(--accent), var(--accent-red)); box-shadow: 0 8px 25px var(--btn-shadow); }
-
-.modal-btn-action.close-modal { background: var(--input-bg); color: var(--text-dark); border: 1px solid var(--card-border); box-shadow: none; margin-bottom: 0; margin-top: 20px;}
-.modal-btn-action.close-modal:active { background: var(--card-border); }
-
 /* AD REWARD TOAST MƏRKƏZDƏ */
 #adRewardNotificationContainer { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 9999; pointer-events: none;}
 .reward-msg {background: var(--notification-bg); color: var(--notification-text); padding: 16px 24px; border-radius: 20px; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2); font-weight: 900; font-size: 15px; opacity: 0; transform: scale(0.8); transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); border: 1px solid rgba(255,255,255,0.1); white-space: nowrap; backdrop-filter: blur(10px);}
@@ -394,7 +387,7 @@ if(savedTheme === 'dark') {
 
 <div id="loadingScreen" oncontextmenu="return false;">
   <div class="mplus-animated-logo">M</div>
-  <div class="loading-text">Yükləniyor<span class="loading-dots"></span></div>
+  <div class="loading-text">Yüklənir<span class="loading-dots"></span></div>
 </div>
 
 <div id="taskNotification">
@@ -405,6 +398,36 @@ if(savedTheme === 'dark') {
 
 <div class="container">
   
+  <div id="settingsPage" class="page">
+    <div class="profile-card">
+        <h2 style="font-weight:900; margin-bottom:25px; color: var(--text-dark); text-align: left; font-size: 22px;">Ayarlar</h2>
+        
+        <div class="setting-item-row">
+            <div class="setting-info-col">
+                <div class="setting-icon-col"><i data-lucide="palette"></i></div>
+                <span>Tema</span>
+            </div>
+            <div class="toggle-switch" onclick="toggleTheme()">
+                <div class="toggle-thumb" id="themeThumb"><i data-lucide="moon"></i></div>
+            </div>
+        </div>
+
+        <h3 style="font-weight:900; margin: 35px 0 15px; color: var(--text-dark); text-align: left; font-size: 18px;">Dostlarını Dəvət Et</h3>
+        
+        <div style="display:flex; flex-direction:column; gap:12px;">
+            <button class="modal-btn-action copy-btn" onclick="copyRefLink()">
+                <i data-lucide="copy" style="color: var(--accent);"></i> <span>Linki Kopyala</span>
+            </button>
+            <button class="modal-btn-action whatsapp-btn" onclick="shareWhatsApp()">
+                <i data-lucide="message-square"></i> <span>WhatsApp ilə Paylaş</span>
+            </button>
+            <button class="modal-btn-action telegram-btn" onclick="shareAppAction()">
+                <i data-lucide="send"></i> <span>Telegram ilə Paylaş</span>
+            </button>
+        </div>
+    </div>
+  </div>
+
   <div id="tasksPage" class="page">
     <div class="balance-card">
       <h3>Balansınız</h3>
@@ -552,33 +575,31 @@ if(savedTheme === 'dark') {
   <div id="profilePage" class="page">
     <div class="profile-card" id="profileMainView">
         <div class="profile-header-wrap">
-            <div class="profile-info">
-                <div class="profile-avatar">
-                    <i data-lucide="user" class="default-icon"></i>
-                    <img id="profileImage" src="" alt="Profile" draggable="false">
-                </div>
-                <div>
-                    <div class="profile-name" id="displayUsername">İstifadəçi</div>
-                    <div class="profile-id">ID: <span id="displayUserId"></span></div>
-                </div>
+            <div class="profile-avatar">
+                <i data-lucide="user" class="default-icon"></i>
+                <img id="profileImage" src="" alt="Profile" draggable="false">
             </div>
-            <button class="profile-settings-btn" onclick="openSettingsModal()">
-                <i data-lucide="settings" style="width: 22px; height: 22px;"></i>
-            </button>
+            <div>
+                <div class="profile-name" id="displayUsername">İstifadəçi</div>
+                <div class="profile-id">ID: <span id="displayUserId"></span></div>
+            </div>
         </div>
 
         <h3 style="text-align: left; font-size: 18px; font-weight: 900; margin-bottom: 15px; color: var(--text-dark);">Statistika</h3>
         <div class="profile-stats-grid">
             <div class="profile-stat-box">
+                <i data-lucide="eye" style="color: var(--accent);"></i>
                 <div class="profile-stat-val" id="statTotalAds">0</div>
                 <div class="profile-stat-lbl">Reklam İzləndi</div>
             </div>
             <div class="profile-stat-box">
+                <i data-lucide="check-circle" style="color: #10B981;"></i>
                 <div class="profile-stat-val" id="statTotalTasks">0</div>
                 <div class="profile-stat-lbl">Tapşırıq Edildi</div>
             </div>
             <div class="profile-stat-box" style="grid-column: span 2; background: linear-gradient(135deg, var(--input-bg), var(--card-bg)); border-color: var(--accent);">
-                <div class="profile-stat-val" id="statTotalAdEarn" style="color: var(--accent); font-size: 28px;">0.000 ₼</div>
+                <i data-lucide="coins" style="color: #F59E0B; width: 30px; height: 30px; margin-bottom: 15px;"></i>
+                <div class="profile-stat-val" id="statTotalAdEarn" style="color: var(--accent); font-size: 32px;">0.000 ₼</div>
                 <div class="profile-stat-lbl">Ümumi Reklam Qazancı</div>
             </div>
         </div>
@@ -587,6 +608,10 @@ if(savedTheme === 'dark') {
 </div>
 
 <div class="menu">
+  <button onclick="showPage('settingsPage',this)" data-page-id="settingsPage">
+    <i data-lucide="settings" class="nav-icon"></i>
+    <span class="nav-text">Ayarlar</span>
+  </button>
   <button onclick="showPage('tasksPage',this)" data-page-id="tasksPage">
     <i data-lucide="layout-list" class="nav-icon"></i>
     <span class="nav-text">Tapşırıqlar</span>
@@ -603,30 +628,6 @@ if(savedTheme === 'dark') {
     <i data-lucide="user" class="nav-icon"></i>
     <span class="nav-text">Profil</span>
   </button>
-</div>
-
-<div class="modal-overlay" id="settingsModalOverlay">
-    <div class="settings-modal">
-        <div class="modal-title">Tənzimləmələr</div>
-        
-        <div class="setting-item-row">
-            <div class="setting-info-col">
-                <div class="setting-icon-col"><i data-lucide="moon"></i></div>
-                <span>Qaranlıq Tema</span>
-            </div>
-            <div class="toggle-switch" onclick="toggleTheme()">
-                <div class="toggle-thumb" id="themeThumb"><i data-lucide="moon"></i></div>
-            </div>
-        </div>
-
-        <button class="modal-btn-action share" onclick="shareAppAction()">
-            <i data-lucide="share-2" style="width:20px; height:20px;"></i> <span>Dostlarını Dəvət Et</span>
-        </button>
-        
-        <button class="modal-btn-action close-modal" onclick="closeSettingsModal()">
-            <span>Bağla</span>
-        </button>
-    </div>
 </div>
 
 <script>
@@ -778,22 +779,23 @@ function updateStatsUI() {
     document.getElementById('statTotalAdEarn').textContent = totalAdEarnAllTime.toFixed(3) + ' ₼';
 }
 
-function openSettingsModal() {
-    const overlay = document.getElementById('settingsModalOverlay');
-    overlay.style.display = 'flex';
-    setTimeout(() => overlay.classList.add('show'), 10);
+// Ayarlar Səhifəsi Funksiyaları
+function copyRefLink() {
+    navigator.clipboard.writeText(userRefLink).then(() => {
+        showTaskNotification('✅ Referal linki kopyalandı!');
+    }).catch(() => {
+        showTaskNotification('❌ Kopyalama xətası!');
+    });
 }
 
-function closeSettingsModal() {
-    const overlay = document.getElementById('settingsModalOverlay');
-    overlay.classList.remove('show');
-    setTimeout(() => overlay.style.display = 'none', 400);
+function shareWhatsApp() {
+    const encodedMessage = encodeURIComponent(shareMsgText);
+    window.open(`https://wa.me/?text=${encodedMessage}`, '_blank');
 }
 
 function shareAppAction() {
     const encodedMessage = encodeURIComponent(shareMsgText);
     window.open(`https://t.me/share/url?url=&text=${encodedMessage}`, '_blank');
-    closeSettingsModal();
 }
 
 function formatBal(val) {
@@ -1105,7 +1107,8 @@ methods.forEach(m=>{
     document.getElementById('methodsContainer').style.display='none'; 
     form.style.display='block';
     
-    details.placeholder = (type === 'bank') ? '16 rəqəmli kart nömrəsi' : '10 rəqəmli nömrə (Məs: 0501234567)';
+    // Telefon nömrəsi mətni dəyişdirildi
+    details.placeholder = (type === 'bank') ? '16 rəqəmli kart nömrəsi' : '10 rəqəmli telefon nömrəsi daxil et';
     details.value=''; amount.value=''; alertBox.style.display='none'; feeCalcBox.style.display='none';
   };
 });
@@ -1143,7 +1146,7 @@ document.getElementById('withdrawBtn').onclick=()=>{
   
   if(det.length !== reqLength){
       if(type === 'bank') showErr('Kart nömrəsi tam 16 rəqəm olmalıdır');
-      else showErr('Nömrə tam 10 rəqəm olmalıdır (Məs: 0501234567)');
+      else showErr('Nömrə tam 10 rəqəm olmalıdır');
       return;
   }
 

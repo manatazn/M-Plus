@@ -112,7 +112,7 @@ body.dark-theme .balance-card, body.dark-theme .ad-card, body.dark-theme .profil
 .balance-card .amount{font-size:46px;font-weight:900;color:var(--text-dark); letter-spacing: -1px; text-shadow: 0 4px 15px rgba(0,0,0,0.05);}
 .balance-card .currency{font-size:26px;font-weight:900;color:var(--accent); text-shadow: 0 4px 15px var(--btn-shadow);}
 
-/* Çıxarış Üsulları */
+/* Çıxarış Üsulları - Arxa plan əlavə edildi */
 .method-list{display:grid; grid-template-columns: 1fr 1fr; gap: 15px; margin:20px 0;}
 .method{padding:25px 15px;border-radius:24px;background:var(--card-bg); color:var(--text-dark);text-align:center;font-weight:800;cursor:pointer;display:flex;flex-direction: column;align-items: center;justify-content: center;position: relative;overflow: hidden; border: 1px solid var(--card-border); box-shadow: 0 8px 20px rgba(0,0,0,0.04); transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);}
 body.dark-theme .method { box-shadow: 0 8px 20px rgba(0,0,0,0.3); }
@@ -157,7 +157,7 @@ body.dark-theme .method { box-shadow: 0 8px 20px rgba(0,0,0,0.3); }
 
 #msg {margin-top: 18px; font-size: 15px;font-weight: 800; padding: 0;color: var(--accent-red);}
 
-/* FLOATING MENU */
+/* FLOATING MENU - 5 Element üçün yeniləndi */
 .menu{position:fixed;bottom:25px;left:50%;transform:translateX(-50%);width:94%;max-width:460px; display:flex;justify-content:space-between;background:var(--menu-bg);padding:10px; border-radius:36px;box-shadow:0 25px 50px rgba(0,0,0,.1);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);z-index: 999;border: 1px solid var(--card-border);}
 body.dark-theme .menu {box-shadow:0 25px 50px rgba(0,0,0,.6);}
 .menu button{flex:1;margin:0 2px; padding: 12px 0;border:none;border-radius:28px;background:transparent;color:var(--text-muted);cursor: pointer;transition:all 0.4s cubic-bezier(0.16, 1, 0.3, 1);display: flex;flex-direction: column;align-items: center;justify-content: center;height: 65px;}
@@ -168,6 +168,7 @@ body.dark-theme .menu {box-shadow:0 25px 50px rgba(0,0,0,.6);}
 
 /* --- PROFIL SƏHİFƏSİ --- */
 .profile-header-wrap { display: flex; align-items: center; justify-content: center; flex-direction: column; margin-bottom: 30px; padding-bottom: 25px; border-bottom: 1px solid var(--card-border);}
+/* Loqonun əyriliyi aradan qaldırıldı */
 .profile-avatar { width: 85px; height: 85px; background: linear-gradient(135deg, var(--btn-gradient-start), var(--accent-red)); border-radius: 25px; display: flex; align-items: center; justify-content: center; color: #fff; box-shadow: 0 10px 25px var(--btn-shadow); position: relative; border: 3px solid var(--card-bg); margin-bottom: 15px; transition: 0.3s;}
 .profile-avatar:hover { transform: scale(1.05); }
 .profile-avatar .default-icon { width: 40px; height: 40px; stroke-width: 2.5px;}
@@ -178,6 +179,7 @@ body.dark-theme .menu {box-shadow:0 25px 50px rgba(0,0,0,.6);}
 .profile-name { font-size: 24px; font-weight: 900; color: var(--text-dark); margin-bottom: 6px; text-align: center;}
 .profile-id { font-size: 14px; font-weight: 700; color: var(--accent); background: var(--progress-bg); padding: 5px 15px; border-radius: 12px; display: inline-block;}
 
+/* Statistikanın keyfiyyəti artırıldı */
 .profile-stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 25px;}
 .profile-stat-box { background: var(--input-bg); padding: 20px; border-radius: 24px; border: 1px solid var(--card-border); text-align: center; transition: 0.3s; display: flex; flex-direction: column; align-items: center; justify-content: center;}
 .profile-stat-box:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0,0,0,0.03);}
@@ -237,54 +239,58 @@ body.dark-theme .alert.success { background: rgba(16, 185, 129, 0.1); border-col
 .history-status { font-size: 11px; font-weight: 800; padding: 5px 12px; border-radius: 12px; background: rgba(245, 158, 11, 0.15); color: #D97706; border: 1px solid rgba(245, 158, 11, 0.3); letter-spacing: 0.5px;}
 .history-empty { text-align: center; font-size: 15px; color: var(--text-muted); padding: 40px 20px; font-weight: 700; background: var(--input-bg); border-radius: 20px; border: 2px dashed var(--card-border);}
 
-/* --- MÜKƏMMƏL YÜKLƏNMƏ EKRANI (ŞƏKİLLİ VƏ MÜDAFİƏLİ) --- */
+/* --- MÜKƏMMƏL YÜKLƏNMƏ EKRANI --- */
 #loadingScreen {
     position: fixed;
     top: 0; left: 0;
     width: 100%;
     height: var(--tg-viewport-stable-height, 100vh);
-    background: var(--bg-start); /* Temaya uyğun olaraq avtomatik ağ və ya qara olur */
+    background: var(--bg-start);
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     z-index: 99999;
     transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.6s;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
     overflow: hidden; 
-    
-    /* Seçim, klikləmə və uzun basma tədbirləri */
-    -webkit-touch-callout: none !important;
-    -webkit-user-select: none !important;
-    -khtml-user-select: none !important;
-    -moz-user-select: none !important;
-    -ms-user-select: none !important;
-    user-select: none !important;
 }
 
-/* Göndərdiyiniz şəklin dizaynı */
-.loading-image-logo {
-    width: 130px;
-    height: 130px;
-    object-fit: cover;
-    border-radius: 32px; /* Apple ikon stili yumşaq kvadrat */
-    box-shadow: 0 20px 50px rgba(0,0,0,0.15);
-    margin-bottom: 30px;
-    animation: premiumPulse 2s cubic-bezier(0.16, 1, 0.3, 1) infinite alternate;
-    
-    /* Şəkli uzun basıb yadda saxlamağın və link kimi açmağın qarşısını alır */
-    pointer-events: none !important;
-    -webkit-user-drag: none !important;
-    -webkit-touch-callout: none !important;
-    user-select: none !important;
+.mplus-animated-logo {
+    font-size: 80px;
+    font-weight: 900;
+    letter-spacing: -2px;
+    background: linear-gradient(135deg, var(--accent), var(--accent-red));
+    -webkit-background-clip: text;
+    color: transparent;
+    margin-bottom: 20px;
+    animation: logoPulse 2s cubic-bezier(0.16, 1, 0.3, 1) infinite alternate;
+    text-shadow: 0 10px 30px rgba(37, 99, 235, 0.3);
+    position: relative;
 }
 
-body.dark-theme .loading-image-logo {
-    box-shadow: 0 20px 50px rgba(0,0,0,0.5), 0 0 30px rgba(59, 130, 246, 0.15);
+.mplus-animated-logo::after {
+    content: '+';
+    position: absolute;
+    top: -10px;
+    right: -25px;
+    font-size: 50px;
+    color: var(--accent-red);
+    -webkit-text-fill-color: var(--accent-red);
+    text-shadow: 0 5px 15px rgba(239, 68, 68, 0.4);
+    animation: plusBounce 2s infinite ease-in-out;
 }
 
-@keyframes premiumPulse {
-    0% { transform: scale(1); }
-    100% { transform: scale(1.08); }
+@keyframes logoPulse {
+    0% { transform: scale(1); filter: drop-shadow(0 0 10px rgba(37, 99, 235, 0.2)); }
+    100% { transform: scale(1.1); filter: drop-shadow(0 0 25px rgba(37, 99, 235, 0.6)); }
+}
+
+@keyframes plusBounce {
+    0%, 100% { transform: translateY(0) scale(1); }
+    50% { transform: translateY(-10px) scale(1.2); }
 }
 
 .loading-text {
@@ -306,6 +312,7 @@ body.dark-theme .loading-image-logo {
     60% { text-shadow: .25em 0 0 var(--accent), .5em 0 0 transparent; }
     80%, 100% { text-shadow: .25em 0 0 var(--accent), .5em 0 0 var(--accent); }
 }
+
 
 /* YENİLƏNMİŞ TOAST BİLDİRİŞ (TAM MƏRKƏZDƏ) */
 #taskNotification {
@@ -379,7 +386,7 @@ if(savedTheme === 'dark') {
 </script>
 
 <div id="loadingScreen" oncontextmenu="return false;">
-  <img src="https://i.postimg.cc/RV1fgM1q/file-000000009cdc7243a13447091662b7f6.jpg" alt="M Plus Logo" class="loading-image-logo" draggable="false">
+  <div class="mplus-animated-logo">M</div>
   <div class="loading-text">Yüklənir<span class="loading-dots"></span></div>
 </div>
 
@@ -626,6 +633,7 @@ if(savedTheme === 'dark') {
 <script>
 lucide.createIcons();
 
+// Adsgram Quraşdırılması
 let adManager = null;
 if (window.Adsgram) {
     adManager = window.Adsgram.init({ blockId: "int-28369" });
@@ -717,14 +725,22 @@ let resetTime = safeGet(RESET_KEY, null);
 let rewardMsgTimeout = null; 
 let isAdRunning = false; 
 
+// Azerbaijan Time (UTC+4) reset at 23:59:59
 function getNextResetTime() {
     const now = new Date();
+    // Cari UTC vaxtını alırıq
     const utcNow = now.getTime() + (now.getTimezoneOffset() * 60000);
+    // AZT (UTC+4) vaxtına çeviririk
     const aztNow = new Date(utcNow + (3600000 * 4));
+    
+    // Növbəti sıfırlanma: Bu gün AZT 23:59:59
     let resetAZT = new Date(aztNow.getFullYear(), aztNow.getMonth(), aztNow.getDate(), 23, 59, 59, 999);
+    
     if (aztNow.getTime() >= resetAZT.getTime()) {
         resetAZT.setDate(resetAZT.getDate() + 1);
     }
+    
+    // Yenidən sistem saatına (UTC timestamp) çeviririk ki, doğru müqayisə olunsun
     return resetAZT.getTime() - (3600000 * 4);
 }
 
@@ -763,6 +779,7 @@ function updateStatsUI() {
     document.getElementById('statTotalAdEarn').textContent = totalAdEarnAllTime.toFixed(3) + ' ₼';
 }
 
+// Ayarlar Səhifəsi Funksiyaları
 function copyRefLink() {
     navigator.clipboard.writeText(userRefLink).then(() => {
         showTaskNotification('✅ Referal linki kopyalandı!');
@@ -1090,6 +1107,7 @@ methods.forEach(m=>{
     document.getElementById('methodsContainer').style.display='none'; 
     form.style.display='block';
     
+    // Telefon nömrəsi mətni dəyişdirildi
     details.placeholder = (type === 'bank') ? '16 rəqəmli kart nömrəsi' : '10 rəqəmli telefon nömrəsi daxil et';
     details.value=''; amount.value=''; alertBox.style.display='none'; feeCalcBox.style.display='none';
   };
@@ -1159,6 +1177,7 @@ renderHistory();
 update();
 restoreAdBtnState();
 
+// --- EKRAN YÜKLƏNMƏSİ ---
 function runLoadingScreen() {
     const container = document.getElementById('loadingScreen');
     if(!container) return;

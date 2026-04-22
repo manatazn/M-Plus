@@ -112,25 +112,29 @@ body.dark-theme .balance-card, body.dark-theme .ad-card, body.dark-theme .profil
 .balance-card .amount{font-size:46px;font-weight:900;color:var(--text-dark); letter-spacing: -1px; text-shadow: 0 4px 15px rgba(0,0,0,0.05);}
 .balance-card .currency{font-size:26px;font-weight:900;color:var(--accent); text-shadow: 0 4px 15px var(--btn-shadow);}
 
-/* LİMON BALANSI STİLİ */
+/* Yenilik: Limon balansı */
 .limon-wrap {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    font-size: 14px;
-    font-weight: 800;
-    color: #F59E0B;
-    margin-top: 8px;
-    background: rgba(245, 158, 11, 0.1);
-    padding: 6px 14px;
-    border-radius: 14px;
-    width: max-content;
-    margin-left: auto;
-    margin-right: auto;
-    border: 1px solid rgba(245, 158, 11, 0.2);
-    box-shadow: 0 4px 10px rgba(245, 158, 11, 0.05);
-    transition: 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  margin-top: 10px;
+  font-size: 13px;
+  font-weight: 900;
+  color: #D97706; /* Qızılı sarı/narıncı */
+  background: rgba(245, 158, 11, 0.12);
+  padding: 6px 14px;
+  border-radius: 16px;
+  width: max-content;
+  margin-left: auto;
+  margin-right: auto;
+  border: 1px solid rgba(245, 158, 11, 0.25);
+  transition: all 0.3s ease;
+}
+body.dark-theme .limon-wrap {
+  background: rgba(245, 158, 11, 0.15);
+  border-color: rgba(245, 158, 11, 0.3);
+  color: #FBBF24;
 }
 
 /* Çıxarış Üsulları */
@@ -145,58 +149,9 @@ body.dark-theme .method { box-shadow: 0 8px 20px rgba(0,0,0,0.3); }
 
 .ad-card{margin-bottom:15px; padding: 30px 25px;}
 .ad-card h2{font-size:22px;color:var(--text-dark);margin-bottom:8px; font-weight: 900;}
-.ad-card p{margin:4px 0;color:var(--text-muted);font-size:14px; font-weight: 600;}
+.ad-card p{margin:4px 0;color:var(--text-muted);font-size:15px; font-weight: 600;}
 
-/* GÖREVLƏR VƏ MEQAKUTU */
-.premium-box-container {
-    background: linear-gradient(135deg, #1E293B, #0F172A);
-    border-radius: 26px;
-    padding: 25px 20px;
-    margin-bottom: 20px;
-    position: relative;
-    overflow: hidden;
-    border: 1px solid rgba(245, 158, 11, 0.3);
-    box-shadow: 0 10px 35px rgba(245, 158, 11, 0.15);
-    color: white;
-    text-align: left;
-}
-.premium-box-container::before {
-    content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
-    background: radial-gradient(circle, rgba(245, 158, 11, 0.1) 0%, transparent 70%);
-    animation: spinLimon 15s linear infinite; pointer-events: none;
-}
-@keyframes spinLimon { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-
-.box-header { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; position: relative; z-index: 2; }
-.box-icon-wrap { width: 55px; height: 55px; background: rgba(245, 158, 11, 0.15); border-radius: 18px; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(245, 158, 11, 0.3); box-shadow: inset 0 0 15px rgba(245, 158, 11, 0.2);}
-.box-icon-wrap.glowing { animation: pulseLimon 2s infinite alternate; }
-@keyframes pulseLimon { from { box-shadow: 0 0 10px rgba(245, 158, 11, 0.2); } to { box-shadow: 0 0 25px rgba(245, 158, 11, 0.6); } }
-
-.box-text h4 { font-size: 20px; font-weight: 900; color: #fff; margin-bottom: 4px; display: flex; align-items: center; gap: 8px;}
-.box-text h4 span { font-size: 11px; background: #F59E0B; color: #fff; padding: 3px 8px; border-radius: 8px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;}
-.box-text p { font-size: 13px; color: #94A3B8; font-weight: 600; line-height: 1.4;}
-
-.box-progress-wrap { position: relative; z-index: 2; margin-bottom: 20px; }
-.box-progress-wrap .progress { background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.05); height: 18px; }
-.box-progress-text { margin-top: 8px; text-align: right; font-size: 13px; font-weight: 800; color: #F59E0B; }
-
-.task-btn { width: 100%; padding: 18px; font-size: 16px; font-weight: 800; border: none; border-radius: 20px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); position: relative; z-index: 2;}
-.task-btn:active:not(:disabled) {transform: scale(0.96);}
-.task-btn.action { background: linear-gradient(135deg, var(--btn-gradient-start), var(--btn-gradient-end)); color: white; box-shadow: 0 8px 25px var(--btn-shadow); }
-.task-btn.completed { background: var(--input-bg); color: var(--accent-red); cursor: not-allowed; box-shadow: none; border: 1px solid var(--card-border); }
-.task-btn.waiting { background: var(--progress-bg) !important; color: var(--accent) !important; cursor: wait !important; box-shadow: none !important;}
-
-/* Kutu Buton Xüsusi */
-.task-btn.mega-btn { background: rgba(255, 255, 255, 0.1); color: #94A3B8; cursor: not-allowed; border: 1px dashed rgba(255,255,255,0.2); }
-.task-btn.mega-btn.ready { background: linear-gradient(135deg, #F59E0B, #D97706); color: white; border: none; box-shadow: 0 10px 30px rgba(245, 158, 11, 0.4); cursor: pointer; animation: megaReady 1.5s infinite alternate;}
-@keyframes megaReady { from{ transform: scale(1); } to{ transform: scale(1.02); } }
-
-/* Tamamlanmış Kutu Stili */
-.premium-box-content.completed { text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 15px; padding: 15px 0;}
-.premium-box-content.completed .box-icon-wrap { background: rgba(16, 185, 129, 0.15); border-color: rgba(16, 185, 129, 0.3); width: 65px; height: 65px;}
-.premium-box-content.completed h4 { font-size: 20px; font-weight: 900; color: #fff; margin-bottom: 5px; }
-.premium-box-content.completed p { font-size: 14px; color: #10B981; font-weight: 800; background: rgba(16, 185, 129, 0.1); padding: 8px 16px; border-radius: 12px; }
-
+/* GÖREVLƏR */
 .task-list { display: flex; flex-direction: column; gap: 15px; margin-bottom: 20px; }
 .task-item { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 26px; padding: 25px 20px; position: relative; text-align: left; box-shadow: 0 8px 25px rgba(0,0,0,0.03); transition: all 0.5s;}
 
@@ -206,6 +161,17 @@ body.dark-theme .method { box-shadow: 0 8px 20px rgba(0,0,0,0.3); }
 .task-reward-badge { background: var(--progress-bg); color: var(--accent); padding: 8px 16px; border-radius: 14px; font-weight: 900; font-size: 15px; border: 1px solid var(--card-border);}
 .task-desc { font-size: 14px; color: var(--text-muted); font-weight: 600; margin-bottom: 20px; line-height: 1.5; }
 
+.task-btn { width: 100%; padding: 18px; font-size: 16px; font-weight: 800; border: none; border-radius: 20px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);}
+.task-btn:active:not(:disabled) {transform: scale(0.96);}
+.task-btn.action { background: linear-gradient(135deg, var(--btn-gradient-start), var(--btn-gradient-end)); color: white; box-shadow: 0 8px 25px var(--btn-shadow); }
+.task-btn.completed { background: var(--input-bg); color: var(--accent-red); cursor: not-allowed; box-shadow: none; border: 1px solid var(--card-border); }
+.task-btn.waiting { background: var(--progress-bg) !important; color: var(--accent) !important; cursor: wait !important; box-shadow: none !important;}
+
+/* Şans Qutusu xüsusi dizayn */
+#mysteryBoxCard.completed-box {
+    opacity: 0.8;
+    filter: grayscale(0.5);
+}
 
 .stats{display:flex;justify-content:space-between;margin-top:30px; gap: 15px;}
 .stat{background:var(--input-bg);border-radius:20px;padding:20px 15px; flex: 1; border: 1px solid var(--card-border); transition: 0.3s;}
@@ -250,7 +216,7 @@ body.dark-theme .menu {box-shadow:0 25px 50px rgba(0,0,0,.6);}
 .profile-stat-val { font-size: 24px; font-weight: 900; color: var(--text-dark); margin-bottom: 5px;}
 .profile-stat-lbl { font-size: 12px; font-weight: 800; color: var(--text-muted); text-transform: uppercase;}
 
-/* --- AYARLAR SƏHİFƏSİ ÜÇÜN STİLLƏR --- */
+/* --- AYARLAR SƏHİFƏSİ --- */
 .setting-item-row { display: flex; justify-content: space-between; align-items: center; padding: 18px 20px; background: var(--input-bg); border-radius: 20px; border: 1px solid var(--card-border); margin-bottom: 15px;}
 .setting-info-col { display: flex; align-items: center; gap: 12px; font-weight: 800; font-size: 16px; color: var(--text-dark); }
 .setting-icon-col { display: flex; align-items: center; justify-content: center; background: var(--card-bg); width: 40px; height: 40px; border-radius: 14px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); color: var(--accent);}
@@ -302,7 +268,6 @@ body.dark-theme .alert.success { background: rgba(16, 185, 129, 0.1); border-col
 .history-status { font-size: 11px; font-weight: 800; padding: 5px 12px; border-radius: 12px; background: rgba(245, 158, 11, 0.15); color: #D97706; border: 1px solid rgba(245, 158, 11, 0.3); letter-spacing: 0.5px;}
 .history-empty { text-align: center; font-size: 15px; color: var(--text-muted); padding: 40px 20px; font-weight: 700; background: var(--input-bg); border-radius: 20px; border: 2px dashed var(--card-border);}
 
-/* YÜKLƏNMƏ EKRANI */
 #loadingScreen {
     position: fixed;
     top: 0; left: 0;
@@ -318,21 +283,31 @@ body.dark-theme .alert.success { background: rgba(16, 185, 129, 0.1); border-col
     overflow: hidden; 
     -webkit-touch-callout: none !important;
     -webkit-user-select: none !important;
+    -khtml-user-select: none !important;
+    -moz-user-select: none !important;
+    -ms-user-select: none !important;
     user-select: none !important;
 }
 .loading-image-logo {
     width: 130px;
     height: 130px;
     object-fit: cover;
-    border-radius: 32px;
+    border-radius: 32px; 
     box-shadow: 0 20px 50px rgba(0,0,0,0.15);
     margin-bottom: 30px;
     animation: premiumPulse 2s cubic-bezier(0.16, 1, 0.3, 1) infinite alternate;
     pointer-events: none !important;
     -webkit-user-drag: none !important;
+    -webkit-touch-callout: none !important;
+    user-select: none !important;
 }
-body.dark-theme .loading-image-logo { box-shadow: 0 20px 50px rgba(0,0,0,0.5), 0 0 30px rgba(59, 130, 246, 0.15); }
-@keyframes premiumPulse { 0% { transform: scale(1); } 100% { transform: scale(1.08); } }
+body.dark-theme .loading-image-logo {
+    box-shadow: 0 20px 50px rgba(0,0,0,0.5), 0 0 30px rgba(59, 130, 246, 0.15);
+}
+@keyframes premiumPulse {
+    0% { transform: scale(1); }
+    100% { transform: scale(1.08); }
+}
 .loading-text { font-size: 18px; font-weight: 800; color: var(--text-dark); letter-spacing: 2px; text-transform: uppercase; }
 .loading-dots::after { content: '.'; animation: dots 1.5s steps(4, end) infinite; }
 @keyframes dots {
@@ -342,54 +317,42 @@ body.dark-theme .loading-image-logo { box-shadow: 0 20px 50px rgba(0,0,0,0.5), 0
     80%, 100% { text-shadow: .25em 0 0 var(--accent), .5em 0 0 var(--accent); }
 }
 
-/* BİLDİRİŞLƏR */
 #taskNotification {
-    position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.8); 
-    background: var(--notification-bg); color: var(--notification-text); 
-    padding: 20px 30px; border-radius: 24px; box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3); 
-    font-weight: 800; font-size: 16px; opacity: 0; visibility: hidden;
-    z-index: 10000; transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); 
-    text-align: center; border: 1px solid rgba(255,255,255,0.1); display: flex; 
-    flex-direction: column; align-items: center; gap: 12px; white-space: nowrap; 
-    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    position: fixed; 
+    top: 50%; 
+    left: 50%; 
+    transform: translate(-50%, -50%) scale(0.8); 
+    background: var(--notification-bg); 
+    color: var(--notification-text); 
+    padding: 20px 30px; 
+    border-radius: 24px; 
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3); 
+    font-weight: 800; 
+    font-size: 16px; 
+    opacity: 0; 
+    visibility: hidden;
+    z-index: 10000; 
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); 
+    text-align: center; 
+    border: 1px solid rgba(255,255,255,0.1); 
+    display: flex; 
+    flex-direction: column;
+    align-items: center; 
+    gap: 12px; 
+    white-space: nowrap; 
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
 }
-.notification-show { opacity: 1 !important; visibility: visible !important; transform: translate(-50%, -50%) scale(1) !important; }
+.notification-show {
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: translate(-50%, -50%) scale(1) !important; 
+}
 #taskNotification i { color: #10B981; width: 32px; height: 32px; }
 
 #adRewardNotificationContainer { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 9999; pointer-events: none;}
 .reward-msg {background: var(--notification-bg); color: var(--notification-text); padding: 16px 24px; border-radius: 20px; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2); font-weight: 900; font-size: 15px; opacity: 0; transform: scale(0.8); transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); border: 1px solid rgba(255,255,255,0.1); white-space: nowrap; backdrop-filter: blur(10px);}
 .reward-msg.show { opacity: 1; transform: scale(1); }
-
-/* KUTU AÇILIŞ MODALI */
-#boxModalOverlay {
-    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0,0,0,0.85); z-index: 999999;
-    display: flex; align-items: center; justify-content: center;
-    opacity: 0; visibility: hidden; transition: 0.4s;
-    backdrop-filter: blur(15px);
-}
-#boxModalOverlay.active { opacity: 1; visibility: visible; }
-.box-modal-content {
-    background: var(--card-bg); padding: 40px 25px; border-radius: 35px;
-    text-align: center; width: 90%; max-width: 380px;
-    transform: scale(0.7) translateY(50px); transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    border: 1px solid rgba(245, 158, 11, 0.4);
-    box-shadow: 0 25px 60px rgba(245, 158, 11, 0.25);
-    position: relative; overflow: hidden;
-}
-#boxModalOverlay.active .box-modal-content { transform: scale(1) translateY(0); }
-.box-modal-content::before {
-    content: ''; position: absolute; top: -50px; left: 50%; transform: translateX(-50%);
-    width: 150px; height: 150px; background: radial-gradient(circle, rgba(245, 158, 11, 0.4) 0%, transparent 70%);
-    z-index: 0;
-}
-.box-modal-icon { font-size: 80px; margin-bottom: 20px; animation: bouncePrize 1s infinite alternate; position: relative; z-index: 1;}
-@keyframes bouncePrize { from { transform: translateY(0); } to { transform: translateY(-15px); } }
-.box-modal-title { font-size: 26px; font-weight: 900; color: var(--text-dark); margin-bottom: 10px; position: relative; z-index: 1;}
-.box-modal-desc { font-size: 16px; color: var(--text-muted); font-weight: 600; margin-bottom: 25px; line-height: 1.5; position: relative; z-index: 1;}
-.box-modal-prize { font-size: 55px; font-weight: 900; color: #F59E0B; margin-bottom: 30px; text-shadow: 0 5px 15px rgba(245, 158, 11, 0.3); position: relative; z-index: 1;}
-.box-modal-btn { width: 100%; padding: 18px; border-radius: 20px; background: linear-gradient(135deg, #F59E0B, #D97706); color: white; border: none; font-size: 18px; font-weight: 900; cursor: pointer; box-shadow: 0 10px 30px rgba(245, 158, 11, 0.4); position: relative; z-index: 1; transition: 0.2s;}
-.box-modal-btn:active { transform: scale(0.95); }
 
 </style>
 </head>
@@ -434,16 +397,6 @@ if(savedTheme === 'dark') {
 </div>
 <div id="adRewardNotificationContainer"></div>
 
-<div id="boxModalOverlay">
-    <div class="box-modal-content">
-        <div class="box-modal-icon">🎉</div>
-        <div class="box-modal-title">Təbriklər!</div>
-        <div class="box-modal-desc">Meqakutudan çıxan möhtəşəm mükafatınız:</div>
-        <div class="box-modal-prize" id="boxModalPrizeAmount">0 ₼</div>
-        <button class="box-modal-btn" onclick="closeBoxModal()">Möhtəşəm!</button>
-    </div>
-</div>
-
 <div class="container">
   
   <div id="settingsPage" class="page">
@@ -483,15 +436,33 @@ if(savedTheme === 'dark') {
           <div class="amount"><span id="balance3">0.000</span></div>
           <div class="currency">₼</div>
       </div>
-      <div class="limon-wrap limon-display-element">
-          <span class="limon-amount">0</span>
-          <span>🍋</span>
+      <div class="limon-wrap limon-display">
+          <span id="limonBal3">0</span> <span style="font-size: 14px;">🍋</span>
       </div>
     </div>
 
-    <div id="premiumBoxContainer"></div>
-
     <div class="task-list">
+        <div class="task-item" id="mysteryBoxCard" style="border: 2px solid rgba(245, 158, 11, 0.4); box-shadow: 0 8px 30px rgba(245, 158, 11, 0.1);">
+            <div class="task-header">
+                <div class="task-title">
+                    <div class="task-icon" style="background: linear-gradient(135deg, #F59E0B, #D97706); box-shadow: 0 6px 20px rgba(245, 158, 11, 0.4);"><i data-lucide="gift" style="width:22px;height:22px;"></i></div>
+                    <span>Şans Qutusu</span>
+                </div>
+                <div class="task-reward-badge" style="color: #D97706; background: rgba(245, 158, 11, 0.1); border-color: rgba(245, 158, 11, 0.3);">Hədiyyəli</div>
+            </div>
+            <div class="task-desc" id="mysteryBoxDesc"><b>1,000,000 🍋</b> toplayaraq bu qutunu aç. İçindən təsadüfi olaraq <b>25₼, 50₼, 75₼</b> və ya <b>100₼</b> qazanacaqsan!</div>
+            
+            <div class="progress" style="margin-top:0; margin-bottom: 8px; height: 12px; background: rgba(245, 158, 11, 0.1); border-color: rgba(245, 158, 11, 0.2);">
+                <div class="progress-fill" id="boxProgressFill" style="background: linear-gradient(90deg, #FBBF24, #F59E0B);"></div>
+            </div>
+            <div style="text-align: right; font-size: 12px; font-weight: 800; color: #D97706; margin-bottom: 18px;" id="boxProgressText">0 / 1,000,000 🍋</div>
+
+            <button id="openBoxBtn" class="task-btn">
+                <i data-lucide="lock" style="width:20px;height:20px;"></i>
+                <span>Qutunu Aç</span>
+            </button>
+        </div>
+
         <div class="task-item">
             <div class="task-header">
                 <div class="task-title">
@@ -531,15 +502,14 @@ if(savedTheme === 'dark') {
           <div class="amount"><span id="balance">0.000</span></div>
           <div class="currency">₼</div>
       </div>
-      <div class="limon-wrap limon-display-element">
-          <span class="limon-amount">0</span>
-          <span>🍋</span>
+      <div class="limon-wrap limon-display">
+          <span id="limonBal">0</span> <span style="font-size: 14px;">🍋</span>
       </div>
     </div>
     
     <div class="ad-card"> 
       <h2>Gündəlik Reklamlar</h2>
-      <p id="adRewardText">Hər reklam üçün <b>0.002 ₼</b> və <b>100 🍋</b> qazanın</p>
+      <p id="adRewardText">Hər reklam üçün <b>0.002 ₼ + 100 🍋</b> qazanın</p>
       
       <div class="stats">
         <div class="stat"><span id="adsCount">0</span><label>İzlənən</label></div>
@@ -566,9 +536,8 @@ if(savedTheme === 'dark') {
           <div class="amount"><span id="balance2">0.000</span></div>
           <div class="currency">₼</div>
       </div>
-      <div class="limon-wrap limon-display-element">
-          <span class="limon-amount">0</span>
-          <span>🍋</span>
+      <div class="limon-wrap limon-display">
+          <span id="limonBal2">0</span> <span style="font-size: 14px;">🍋</span>
       </div>
     </div>
     
@@ -744,8 +713,9 @@ if (tgUser) {
 
 const userRefLink = `https://t.me/mplusappbot?startapp=${userRefId}`;
 
-// DƏYİŞƏN KEY-LƏR
 const BAL_KEY = `bal_mplus_${userRefId}`;
+const LIMON_BAL_KEY = `limon_bal_mplus_${userRefId}`;
+const BOX_CLAIMED_KEY = `box_claimed_mplus_${userRefId}`;
 const COUNT_KEY = `cnt_mplus_${userRefId}`;
 const RESET_KEY = `resetTime_mplus_${userRefId}`;
 const JOIN_APP_KEY = `joined_mplus_app_${userRefId}`;
@@ -757,37 +727,20 @@ const TOTAL_ADS_KEY = `tot_ads_mplus_${userRefId}`;
 const TOTAL_TASKS_KEY = `tot_tasks_mplus_${userRefId}`;
 const TOTAL_AD_EARN_KEY = `tot_ad_earn_mplus_${userRefId}`;
 
-// LİMON KEY-LƏRİ
-const LIMON_KEY = `limon_bal_mplus_${userRefId}`;
-const BOX_OPENED_KEY = `mega_box_opened_mplus_${userRefId}`;
-
 const REWARD_PER_AD = 0.002;
 const MAX_ADS_PER_DAY = 50;
+const LIMON_PER_AD = 100;
+const MAX_LIMON = 1000000;
 const TASK_APP_REWARD = 0.10;
 const TASK_CHAT_REWARD = 0.15;
 const MIN_WITHDRAW = 5;
 const FEE_PERCENT = 0.05;
-
-// LİMON DƏYƏRLƏRİ
-const LIMON_PER_AD = 100;
-const MAX_LIMON = 1000000;
 
 let withdrawHistory = safeGet(HISTORY_KEY, []);
 
 let totalAdsAllTime = parseInt(safeGet(TOTAL_ADS_KEY, 0));
 let totalTasksAllTime = parseInt(safeGet(TOTAL_TASKS_KEY, 0));
 let totalAdEarnAllTime = parseFloat(safeGet(TOTAL_AD_EARN_KEY, 0.00));
-
-let bal = parseFloat(safeGet(BAL_KEY, 0.00)); 
-let cnt = parseInt(safeGet(COUNT_KEY, 0));
-let resetTime = safeGet(RESET_KEY, null);
-
-// LİMON DƏYƏRLƏRİ BAZADAN ÇƏKİLİR
-let limonBal = parseInt(safeGet(LIMON_KEY, 0));
-let boxOpened = safeGet(BOX_OPENED_KEY, false);
-
-let rewardMsgTimeout = null; 
-let isAdRunning = false; 
 
 const shareMsgText = `🔥 Pul qazanmaq heç bu qədər rahat olmamışdı M Plus ilə hər şey sənin nəzarətində!\n\n💡 Sadəcə bir neçə saniyəlik reklamları izləyərək balansını artır. Heç bir çətinlik yoxdur telefonun kifayətdir.\n\n👇 İndi qoşul və ilk qazancını əldə et: 🔗 ${userRefLink}\n\n📲 Gün ərzində istədiyin vaxt daxil ol, reklam izlə və qazancını yığ. 💸 Topladığın məbləği rahat şəkildə çıxara bilərsən.\n\n⚡ Gözləmə M Plus ilə qazancını bu gündən başlat!`;
 
@@ -798,6 +751,15 @@ const methodLogos = {
     'azercell': 'https://i.postimg.cc/qM5gmPqZ/applogo512.png',
     'bakcell': 'https://i.postimg.cc/Pqmx5N49/images.jpg'
 };
+
+let bal = parseFloat(safeGet(BAL_KEY, 0.00)); 
+let limonBal = parseInt(safeGet(LIMON_BAL_KEY, 0));
+let boxClaimed = safeGet(BOX_CLAIMED_KEY, false) === 'true' || safeGet(BOX_CLAIMED_KEY, false) === true;
+let cnt = parseInt(safeGet(COUNT_KEY, 0));
+let resetTime = safeGet(RESET_KEY, null);
+
+let rewardMsgTimeout = null; 
+let isAdRunning = false; 
 
 function getNextResetTime() {
     const now = new Date();
@@ -867,69 +829,39 @@ function formatBal(val) {
     return parseFloat(val).toFixed(3);
 }
 
-// MEQAKUTU RENDER FUNKSİYASI
-function renderBoxUI() {
-    const container = document.getElementById('premiumBoxContainer');
-    if (!container) return;
+function updateMysteryBoxUI() {
+    const btn = document.getElementById('openBoxBtn');
+    const progFill = document.getElementById('boxProgressFill');
+    const progText = document.getElementById('boxProgressText');
+    const card = document.getElementById('mysteryBoxCard');
+    const desc = document.getElementById('mysteryBoxDesc');
 
-    if (boxOpened) {
-        container.innerHTML = `
-            <div class="premium-box-content completed">
-                <div class="box-icon-wrap"><i data-lucide="check-circle" style="width: 35px; height: 35px; color: #10B981;"></i></div>
-                <h4>Meqakutu Açıldı</h4>
-                <p>Mükafatınızı artıq almısınız!</p>
-            </div>
-        `;
+    if (boxClaimed) {
+        card.classList.add('completed-box');
+        btn.className = 'task-btn completed';
+        btn.innerHTML = `<i data-lucide="check-circle" style="width:20px;height:20px;"></i> <span>Mükafat Alındı</span>`;
+        btn.disabled = true;
+        desc.innerHTML = 'Bu şans qutusu artıq açılıb və mükafat hesabınıza əlavə edilib.';
+        if (progFill) progFill.style.width = '100%';
+        if (progText) progText.textContent = 'Tamamlandı';
     } else {
-        const percent = Math.min(100, (limonBal / MAX_LIMON) * 100).toFixed(1);
-        const isReady = limonBal >= MAX_LIMON;
-        
-        container.innerHTML = `
-            <div class="box-header">
-                <div class="box-icon-wrap ${isReady ? 'glowing' : ''}">
-                    <i data-lucide="package" style="width: 32px; height: 32px; color: #F59E0B;"></i>
-                </div>
-                <div class="box-text">
-                    <h4>Meqakutu <span>1 Milyon 🍋</span></h4>
-                    <p>Limonları topla 25₼, 50₼, 75₼ və ya 100₼-dan birini qazan!</p>
-                </div>
-            </div>
-            <div class="box-progress-wrap">
-                <div class="progress">
-                    <div class="progress-fill" style="width: ${percent}%; background: linear-gradient(90deg, #F59E0B, #FBBF24);"></div>
-                </div>
-                <div class="box-progress-text">${limonBal.toLocaleString()} / 1,000,000 🍋</div>
-            </div>
-            <button class="task-btn mega-btn ${isReady ? 'ready' : ''}" ${isReady ? 'onclick="openMegaBox()"' : 'disabled'}>
-                <i data-lucide="${isReady ? 'unlock' : 'lock'}" style="width:20px;height:20px;"></i>
-                <span>${isReady ? 'Kutunu Aç və Qazan!' : 'Kifayət qədər limon yoxdur'}</span>
-            </button>
-        `;
+        card.classList.remove('completed-box');
+        const pct = Math.min((limonBal / MAX_LIMON) * 100, 100);
+        if (progFill) progFill.style.width = pct + '%';
+        if (progText) progText.textContent = `${limonBal.toLocaleString()} / 1,000,000 🍋`;
+
+        if (limonBal >= MAX_LIMON) {
+            btn.className = 'task-btn action';
+            btn.style.background = 'linear-gradient(135deg, #F59E0B, #D97706)';
+            btn.innerHTML = `<i data-lucide="unlock" style="width:20px;height:20px;"></i> <span>Qutunu Aç</span>`;
+            btn.disabled = false;
+        } else {
+            btn.className = 'task-btn completed';
+            btn.innerHTML = `<i data-lucide="lock" style="width:20px;height:20px;"></i> <span>Limon Çatmır</span>`;
+            btn.disabled = true;
+        }
     }
     lucide.createIcons();
-}
-
-function openMegaBox() {
-    if (limonBal < MAX_LIMON || boxOpened) return;
-
-    const prizes = [25, 50, 75, 100];
-    const prize = prizes[Math.floor(Math.random() * prizes.length)];
-
-    boxOpened = true;
-    bal += prize;
-    
-    safeSet(BOX_OPENED_KEY, true);
-    safeSet(BAL_KEY, bal);
-
-    document.getElementById('boxModalPrizeAmount').textContent = `${prize} ₼`;
-    const modal = document.getElementById('boxModalOverlay');
-    modal.classList.add('active');
-
-    update(); // Bütün limon dizaynlarını gizlədəcək
-}
-
-function closeBoxModal() {
-    document.getElementById('boxModalOverlay').classList.remove('active');
 }
 
 function update(){
@@ -944,32 +876,60 @@ function update(){
   document.getElementById('balance2').textContent = formattedBal;
   document.getElementById('balance3').textContent = formattedBal;
 
+  /* Limon Yenilikləri */
+  const limonDisplays = document.querySelectorAll('.limon-display');
+  const adRewardText = document.getElementById('adRewardText');
+  
+  if (boxClaimed) {
+      limonDisplays.forEach(el => el.style.display = 'none');
+      if (adRewardText) adRewardText.innerHTML = 'Hər reklam üçün <b>0.002 ₼</b> qazanın';
+  } else {
+      limonDisplays.forEach(el => el.style.display = 'flex');
+      if (adRewardText) adRewardText.innerHTML = 'Hər reklam üçün <b>0.002 ₼ + 100 🍋</b> qazanın';
+      document.getElementById('limonBal').textContent = limonBal.toLocaleString();
+      document.getElementById('limonBal2').textContent = limonBal.toLocaleString();
+      document.getElementById('limonBal3').textContent = limonBal.toLocaleString();
+  }
+
   document.getElementById('adsCount').textContent=cnt;
   document.getElementById('progress').style.width=(cnt/MAX_ADS_PER_DAY*100)+'%';
   const progressTextSpan = document.getElementById('progressTextSpan');
   if(progressTextSpan) progressTextSpan.textContent = `${cnt}/${MAX_ADS_PER_DAY}`;
   
-  // LİMON UI YENİLƏNMƏSİ
-  document.querySelectorAll('.limon-amount').forEach(el => el.textContent = limonBal.toLocaleString());
-  
-  const adText = document.getElementById('adRewardText');
-  if (boxOpened) {
-      // Kutu açılıbsa limonları gizlət
-      document.querySelectorAll('.limon-display-element').forEach(el => el.style.display = 'none');
-      if (adText) adText.innerHTML = `Hər reklam üçün <b>0.002 ₼</b> qazanın`;
-  } else {
-      // Kutu açılmayıbsa limonları göstər
-      document.querySelectorAll('.limon-display-element').forEach(el => el.style.display = 'flex');
-      if (adText) adText.innerHTML = `Hər reklam üçün <b>0.002 ₼</b> və <b>100 🍋</b> qazanın`;
-  }
-
-  safeSet(BAL_KEY, bal); safeSet(COUNT_KEY, cnt); safeSet(LIMON_KEY, limonBal);
+  safeSet(BAL_KEY, bal); 
+  safeSet(COUNT_KEY, cnt); 
   updateStatsUI();
-  
+  updateMysteryBoxUI();
   checkAndDisplayRewardMsg();
   updateTaskButtons(); 
-  renderBoxUI(); // Meqakutunu da yenilə
 }
+
+/* Şans Qutusunu Açma Prosesi */
+document.getElementById('openBoxBtn').onclick = () => {
+    if (boxClaimed || limonBal < MAX_LIMON) return;
+    
+    const btn = document.getElementById('openBoxBtn');
+    btn.innerHTML = `<i data-lucide="loader" style="width:20px;height:20px;"></i> <span>Açılır...</span>`;
+    btn.classList.add('waiting');
+    lucide.createIcons();
+
+    setTimeout(() => {
+        const rewards = [25, 50, 75, 100];
+        const winAmt = rewards[Math.floor(Math.random() * rewards.length)];
+
+        bal += winAmt;
+        boxClaimed = true;
+        limonBal = 0; // Təmizlənir
+
+        safeSet(BAL_KEY, bal);
+        safeSet(BOX_CLAIMED_KEY, true);
+        safeSet(LIMON_BAL_KEY, limonBal);
+
+        update();
+
+        showTaskNotification(`🎁 <b>TƏBRİKLƏR!</b><br>Şans qutusundan <b>${winAmt} ₼</b> çıxdı!`);
+    }, 2500); // 2.5 saniyəlik maraqlı gözləmə
+};
 
 function renderHistory() {
     const list = document.getElementById('historyList');
@@ -1161,31 +1121,31 @@ adBtn.onclick = async () => {
 };
 
 function giveAdReward() {
-    bal += REWARD_PER_AD; cnt++; 
-    
+    bal += REWARD_PER_AD; 
+    cnt++; 
     totalAdsAllTime++;
     totalAdEarnAllTime += REWARD_PER_AD;
     
-    let addedLimon = 0;
-    if (!boxOpened && limonBal < MAX_LIMON) {
-        let oldBal = limonBal;
-        limonBal = Math.min(MAX_LIMON, limonBal + LIMON_PER_AD);
-        addedLimon = limonBal - oldBal;
+    let rewardText = `🎉 <b>${REWARD_PER_AD} ₼</b>`;
+    
+    // Limon əlavə edilməsi (Əgər qutu alınmayıbsa və limit dolmayıbsa)
+    if (!boxClaimed && limonBal < MAX_LIMON) {
+        let earnedLimon = LIMON_PER_AD;
+        if (limonBal + earnedLimon > MAX_LIMON) {
+            earnedLimon = MAX_LIMON - limonBal; // Limiti aşmaması üçün
+        }
+        limonBal += earnedLimon;
+        safeSet(LIMON_BAL_KEY, limonBal);
+        rewardText += ` və <b>${earnedLimon} 🍋</b>`;
     }
     
+    rewardText += ` qazandınız!`;
+
     safeSet(TOTAL_ADS_KEY, totalAdsAllTime);
     safeSet(TOTAL_AD_EARN_KEY, totalAdEarnAllTime);
     
     update(); 
-    
-    // Bildiriş üçün dinamik mətn
-    let toastMsg = `🎉 <b>${REWARD_PER_AD} ₼</b>`;
-    if (addedLimon > 0) {
-        toastMsg += ` və <b>${addedLimon} 🍋</b>`;
-    }
-    toastMsg += ` qazandınız!`;
-    
-    displayRewardMsg(toastMsg);
+    displayRewardMsg(rewardText);
     resetAdBtnState();
 }
 
@@ -1207,7 +1167,7 @@ function showTaskNotification(message) {
     setTimeout(() => { 
         taskNotification.classList.remove('notification-show'); 
         taskNotification.classList.add('notification-hide'); 
-    }, 3500);
+    }, 4000);
 }
 
 function handleTaskClick(btnId, url, storageKey, reward) {
@@ -1227,7 +1187,7 @@ function handleTaskClick(btnId, url, storageKey, reward) {
         safeSet(BAL_KEY, bal); 
         localStorage.setItem(storageKey, '1'); 
         update();
-        showTaskNotification(`✅ Tapşırıq uğurlu! <b>${reward} ₼</b> qazandınız.`);
+        showTaskNotification(`✅ Tapşırıq uğurlu!<br><b>${reward} ₼</b> qazandınız.`);
     }, 4000);
 }
 
@@ -1242,7 +1202,7 @@ function showPage(id, btn){
   btn.classList.add('active');
   
   if (id === 'adsPage') { restoreAdBtnState(); } 
-  else if (id === 'tasksPage') { updateTaskButtons(); } 
+  else if (id === 'tasksPage') { updateTaskButtons(); updateMysteryBoxUI(); } 
   else {
     let rewardMsgElement = document.getElementById('rewardMsg');
     if (rewardMsgElement) rewardMsgElement.classList.remove('show');

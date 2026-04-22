@@ -109,7 +109,6 @@ body.dark-theme .balance-card, body.dark-theme .ad-card, body.dark-theme .profil
 
 .balance-card h3{font-size:14px;color:var(--text-muted);margin-bottom:15px;text-transform:uppercase;letter-spacing:1.5px; font-weight: 800;}
 
-/* YENİ BALANS DİZAYNI: Limon aşağıda kiçik formada */
 .balances-wrapper { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; }
 .amount-wrap { display: flex; align-items: center; justify-content: center; gap: 8px; }
 .amount{font-size:42px;font-weight:900;color:var(--text-dark); letter-spacing: -1px; text-shadow: 0 4px 15px rgba(0,0,0,0.05);}
@@ -118,7 +117,6 @@ body.dark-theme .balance-card, body.dark-theme .ad-card, body.dark-theme .profil
 .limon-wrap { display: flex; align-items: center; justify-content: center; gap: 6px; background: rgba(245, 158, 11, 0.1); padding: 6px 16px; border-radius: 20px; border: 1px solid rgba(245, 158, 11, 0.2); transition: all 0.3s ease; }
 .limon-amount { font-size: 16px; font-weight: 800; color: #F59E0B; }
 .limon-currency { font-size: 14px; }
-
 
 /* Çıxarış Üsulları */
 .method-list{display:grid; grid-template-columns: 1fr 1fr; gap: 15px; margin:20px 0;}
@@ -183,7 +181,7 @@ body.dark-theme .box-card {
 .task-btn:active:not(:disabled) {transform: scale(0.96);}
 .task-btn.action { background: linear-gradient(135deg, var(--btn-gradient-start), var(--btn-gradient-end)); color: white; box-shadow: 0 8px 25px var(--btn-shadow); }
 .task-btn.completed { background: var(--input-bg); color: var(--accent-red); cursor: not-allowed; box-shadow: none; border: 1px solid var(--card-border); }
-.task-btn.waiting { background: var(--progress-bg) !important; color: var(--accent) !important; cursor: wait !important; box-shadow: none !important;}
+.task-btn.waiting { background: var(--progress-bg) !important; color: var(--accent) !important; cursor: not-allowed !important; box-shadow: none !important;}
 
 .stats{display:flex;justify-content:space-between;margin-top:30px; gap: 15px;}
 .stat{background:var(--input-bg);border-radius:20px;padding:20px 15px; flex: 1; border: 1px solid var(--card-border); transition: 0.3s;}
@@ -195,8 +193,7 @@ body.dark-theme .box-card {
 
 .ad-btn{width:100%;margin-top:30px;padding:20px;font-size:18px;font-weight:900;border:none;border-radius:24px;color:var(--text-light);cursor:pointer;background:linear-gradient(135deg,var(--btn-gradient-start),var(--btn-gradient-end));box-shadow:0 10px 30px var(--btn-shadow);position: relative; overflow: hidden; display:flex; align-items:center; justify-content:center; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);}
 .ad-btn:active:not(:disabled) {transform: scale(0.95);}
-.ad-btn.waiting { background: var(--progress-bg) !important; color: var(--accent) !important; cursor: not-allowed; box-shadow: none !important; border: 1px solid var(--card-border) !important; }
-.ad-btn:disabled { opacity: 0.7; cursor: not-allowed; }
+.ad-btn.waiting { background: var(--progress-bg) !important; color: var(--accent) !important; cursor: not-allowed !important; box-shadow: none !important; border: 1px solid var(--card-border) !important; }
 .ad-btn-content { position: relative; z-index: 2; display: flex; align-items:center; gap: 12px;}
 
 #msg {margin-top: 18px; font-size: 15px;font-weight: 800; padding: 0;color: var(--accent-red);}
@@ -281,7 +278,7 @@ body.dark-theme .alert.success { background: rgba(16, 185, 129, 0.1); border-col
 .history-status { font-size: 11px; font-weight: 800; padding: 5px 12px; border-radius: 12px; background: rgba(245, 158, 11, 0.15); color: #D97706; border: 1px solid rgba(245, 158, 11, 0.3); letter-spacing: 0.5px;}
 .history-empty { text-align: center; font-size: 15px; color: var(--text-muted); padding: 40px 20px; font-weight: 700; background: var(--input-bg); border-radius: 20px; border: 2px dashed var(--card-border);}
 
-/* --- MÜKƏMMƏL YÜKLƏNMƏ EKRANI (ŞƏKİLLİ VƏ MÜDAFİƏLİ) --- */
+/* --- MÜKƏMMƏL YÜKLƏNMƏ EKRANI --- */
 #loadingScreen {
     position: fixed;
     top: 0; left: 0;
@@ -347,7 +344,7 @@ body.dark-theme .loading-image-logo {
     80%, 100% { text-shadow: .25em 0 0 var(--accent), .5em 0 0 var(--accent); }
 }
 
-/* YENİLƏNMİŞ TOAST BİLDİRİŞ */
+/* BİLDİRİŞLƏR */
 #taskNotification {
     position: fixed; 
     top: 50%; 
@@ -381,7 +378,6 @@ body.dark-theme .loading-image-logo {
 }
 #taskNotification i { color: #10B981; width: 32px; height: 32px; }
 
-/* AD REWARD TOAST */
 #adRewardNotificationContainer { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 9999; pointer-events: none;}
 .reward-msg {background: var(--notification-bg); color: var(--notification-text); padding: 16px 24px; border-radius: 20px; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2); font-weight: 900; font-size: 15px; opacity: 0; transform: scale(0.8); transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); border: 1px solid rgba(255,255,255,0.1); white-space: nowrap; backdrop-filter: blur(10px);}
 .reward-msg.show { opacity: 1; transform: scale(1); }
@@ -828,36 +824,27 @@ let resetTime = safeGet(RESET_KEY, null);
 let rewardMsgTimeout = null; 
 let isAdRunning = false; 
 
-// --- DÜZƏLDİLMİŞ VAXT FUNKSİYASI (Azərbaycan saatı ilə tam 23:59:59 hesablaması) ---
+// --- DƏQİQ SAAT HESABLAMASI (BÜTÜN ÖLKƏLƏR ÜÇÜN AZT 23:00) ---
 function getNextResetTime() {
     const now = new Date();
-    
-    // Cari vaxtı Bakı saatı ilə format edib gün hissələrini alırıq
-    const formatter = new Intl.DateTimeFormat('en-US', {
-        timeZone: 'Asia/Baku',
-        year: 'numeric', month: 'numeric', day: 'numeric'
-    });
-    
-    const parts = formatter.formatToParts(now);
-    const getPart = (type) => parseInt(parts.find(p => p.type === type).value);
-    
-    const bYear = getPart('year');
-    const bMonth = getPart('month') - 1; // JS ayları 0-dan başlayır
-    const bDay = getPart('day');
-    
-    // Bakı saatı ilə bu gün 23:59:59-un UTC ekvivalentini tapırıq (UTC+4 olduğu üçün UTC ilə 19:59:59 edir)
-    let resetTargetUTC = Date.UTC(bYear, bMonth, bDay, 19, 59, 59, 999);
-    
-    // Əgər həmin vaxt artıq keçibsə, növbəti günə təyin edirik
-    if (now.getTime() >= resetTargetUTC) {
-        resetTargetUTC = Date.UTC(bYear, bMonth, bDay + 1, 19, 59, 59, 999);
+    // Azərbaycan saatı ilə 23:00 əslində UTC (Qrinviç) ilə 19:00 deməkdir.
+    // Beləliklə, hesablamanı ancaq UTC ilə edirik ki, başqa ölkələrdəki istifadəçilərdə də eyni vaxtda sıfırlansın.
+    let resetUTC = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(), 19, 0, 0, 0));
+
+    // Əgər indiki vaxt artıq bugünkü UTC 19:00-ı (AZT 23:00) keçibsə, növbəti sıfırlanma sabah eyni saatdadır.
+    if (now.getTime() >= resetUTC.getTime()) {
+        resetUTC.setUTCDate(resetUTC.getUTCDate() + 1);
     }
     
-    return resetTargetUTC;
+    // Yekun millisekundları qaytarır (bütün cihazlarda sabit çalışır)
+    return resetUTC.getTime();
 }
 
 if(!resetTime || Date.now() >= resetTime){
-  cnt=0; resetTime=getNextResetTime(); safeSet(RESET_KEY,resetTime); safeSet(COUNT_KEY,cnt);
+  cnt = 0; 
+  resetTime = getNextResetTime(); 
+  safeSet(RESET_KEY, resetTime); 
+  safeSet(COUNT_KEY, cnt);
 }
 
 function loadProfilePic() {
@@ -974,18 +961,6 @@ function update(){
   
   checkAndDisplayRewardMsg();
   updateTaskButtons(); 
-  
-  // Update UI if limit reached
-  if(cnt >= MAX_ADS_PER_DAY && !isAdRunning) {
-      const adBtnElement = document.getElementById('adBtn');
-      const msgElement = document.getElementById('msg');
-      if(adBtnElement) {
-          adBtnElement.disabled = true;
-      }
-      if(msgElement) {
-          msgElement.textContent = '📣 Günlük limitə çatdınız!';
-      }
-  }
 }
 
 // Qutu açılışı funksiyası
@@ -1138,7 +1113,7 @@ function checkAndDisplayRewardMsg() {
     } else { if (rewardMsgElement && rewardMsgElement.parentNode === container) rewardMsgElement.remove(); }
 }
 
-// --- KİLİDLƏNƏN BUTON MƏNTİQİ ---
+// --- BUTONUN KİLİDLƏNMƏ (LOCKED) SİSTEMİ ---
 function restoreAdBtnState() {
     const textSpan = adBtnContent.querySelector('span');
     const icon = adBtnContent.querySelector('i');
@@ -1151,11 +1126,11 @@ function restoreAdBtnState() {
     }
 
     if (cnt >= MAX_ADS_PER_DAY) {
-        adBtn.classList.remove('waiting'); 
-        adBtn.disabled = true; // Buton artıq kilitli olacaq
-        if(textSpan) textSpan.textContent = 'Reklam İzlə';
-        if(icon) { icon.setAttribute('data-lucide', 'play'); lucide.createIcons(); }
-        msg.textContent = '📣 Günlük limitə çatdınız!'; 
+        adBtn.classList.add('waiting'); // Butonu boz/deaktiv edir
+        adBtn.disabled = true; 
+        if(textSpan) textSpan.textContent = 'Limit Doldu';
+        if(icon) { icon.setAttribute('data-lucide', 'lock'); lucide.createIcons(); }
+        msg.textContent = '📣 Günlük limitə çatdınız (23:00-da yenilənəcək)!'; 
         checkAndDisplayRewardMsg(); 
         return; 
     }
@@ -1168,7 +1143,7 @@ function restoreAdBtnState() {
 
 adBtn.onclick = async () => {
     update();
-    if (cnt >= MAX_ADS_PER_DAY) { msg.textContent = '📣 Günlük limitə çatdınız!'; return; }
+    if (cnt >= MAX_ADS_PER_DAY) { restoreAdBtnState(); return; }
     if (isAdRunning || adBtn.classList.contains('waiting')) return;
     isAdRunning = true; 
 
@@ -1228,25 +1203,19 @@ function giveAdReward() {
     
     update(); 
     displayRewardMsg(rewardTextStr);
-    resetAdBtnState();
+    
+    // Limitsə çatıbsa yenilə ki, kilitlənsin
+    if (cnt >= MAX_ADS_PER_DAY) {
+        isAdRunning = false;
+        restoreAdBtnState();
+    } else {
+        resetAdBtnState();
+    }
 }
 
 function resetAdBtnState() {
     isAdRunning = false; 
-    adBtn.classList.remove('waiting');
-    
-    const textSpan = adBtnContent.querySelector('span');
-    const icon = adBtnContent.querySelector('i');
-    if(textSpan) textSpan.textContent = 'Reklam İzlə'; 
-    if(icon) { icon.setAttribute('data-lucide', 'play'); lucide.createIcons(); }
-    
-    if (cnt >= MAX_ADS_PER_DAY) {
-        adBtn.disabled = true; // Limit bitibsə kilitlə
-        msg.textContent = '📣 Günlük limitə çatdınız!'; 
-    } else {
-        adBtn.disabled = false; // Limit bitməyibsə normal çalışır
-        msg.textContent = ''; 
-    }
+    restoreAdBtnState();
 }
 
 const taskNotification = document.getElementById('taskNotification');

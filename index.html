@@ -196,7 +196,6 @@ body.dark-theme .box-card {
 .ad-btn{width:100%;margin-top:30px;padding:20px;font-size:18px;font-weight:900;border:none;border-radius:24px;color:var(--text-light);cursor:pointer;background:linear-gradient(135deg,var(--btn-gradient-start),var(--btn-gradient-end));box-shadow:0 10px 30px var(--btn-shadow);position: relative; overflow: hidden; display:flex; align-items:center; justify-content:center; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);}
 .ad-btn:active:not(:disabled) {transform: scale(0.95);}
 .ad-btn.waiting { background: var(--progress-bg) !important; color: var(--accent) !important; cursor: not-allowed; box-shadow: none !important; border: 1px solid var(--card-border) !important; }
-.ad-btn:disabled { opacity: 0.7; cursor: not-allowed; }
 .ad-btn-content { position: relative; z-index: 2; display: flex; align-items:center; gap: 12px;}
 
 #msg {margin-top: 18px; font-size: 15px;font-weight: 800; padding: 0;color: var(--accent-red);}
@@ -828,32 +827,28 @@ let resetTime = safeGet(RESET_KEY, null);
 let rewardMsgTimeout = null; 
 let isAdRunning = false; 
 
-// --- DÜZƏLDİLMİŞ VAXT FUNKSİYASI (Azərbaycan saatı ilə tam 23:59:59 hesablaması) ---
+// Yenilənmiş saat və sıfırlanma hesablama məntiqi: Yalnız AZT ilə tam 23:00-da işləyəcək
 function getNextResetTime() {
     const now = new Date();
+    const currentUTC = now.getTime(); // İndiki dəqiq UTC vaxtı
     
-    // Cari vaxtı Bakı saatı ilə format edib gün hissələrini alırıq
-    const formatter = new Intl.DateTimeFormat('en-US', {
-        timeZone: 'Asia/Baku',
-        year: 'numeric', month: 'numeric', day: 'numeric'
-    });
+    // Azərbaycan saatı ilə bu günü müəyyən etmək üçün +4 saat əlavə edirik
+    const aztDate = new Date(currentUTC + (4 * 3600000));
     
-    const parts = formatter.formatToParts(now);
-    const getPart = (type) => parseInt(parts.find(p => p.type === type).value);
-    
-    const bYear = getPart('year');
-    const bMonth = getPart('month') - 1; // JS ayları 0-dan başlayır
-    const bDay = getPart('day');
-    
-    // Bakı saatı ilə bu gün 23:59:59-un UTC ekvivalentini tapırıq (UTC+4 olduğu üçün UTC ilə 19:59:59 edir)
-    let resetTargetUTC = Date.UTC(bYear, bMonth, bDay, 19, 59, 59, 999);
-    
-    // Əgər həmin vaxt artıq keçibsə, növbəti günə təyin edirik
-    if (now.getTime() >= resetTargetUTC) {
-        resetTargetUTC = Date.UTC(bYear, bMonth, bDay + 1, 19, 59, 59, 999);
+    // Bu gün üçün Azərbaycan vaxtı ilə 23:00-a uyğun olan UTC vaxtını yaradırıq (19:00 UTC)
+    const targetUTC = Date.UTC(
+        aztDate.getUTCFullYear(),
+        aztDate.getUTCMonth(),
+        aztDate.getUTCDate(),
+        19, 0, 0, 0 
+    );
+
+    // Əgər indiki vaxt həmin targetUTC-ni (yəni bu gün 23:00-ı) keçibsə, növbəti sıfırlanma sabaha qalır (+24 saat)
+    if (currentUTC >= targetUTC) {
+        return targetUTC + (24 * 3600000);
+    } else {
+        return targetUTC;
     }
-    
-    return resetTargetUTC;
 }
 
 if(!resetTime || Date.now() >= resetTime){
@@ -914,16 +909,17 @@ function formatBal(val) {
 }
 
 function update(){
+  let didReset = false;
   if(Date.now() >= resetTime){
       cnt = 0;
       resetTime = getNextResetTime();
       safeSet(RESET_KEY, resetTime);
+      didReset = true;
   }
 
   const formattedBal = formatBal(bal);
   document.querySelectorAll('.bal-azn').forEach(el => el.textContent = formattedBal);
 
-  // Limon UI yenilənməsi
   if (boxClaimed) {
       document.querySelectorAll('.limon-wrap').forEach(el => el.style.display = 'none');
       document.querySelectorAll('.reward-text-b').forEach(el => el.innerHTML = '0.002 ₼');
@@ -975,20 +971,11 @@ function update(){
   checkAndDisplayRewardMsg();
   updateTaskButtons(); 
   
-  // Update UI if limit reached
-  if(cnt >= MAX_ADS_PER_DAY && !isAdRunning) {
-      const adBtnElement = document.getElementById('adBtn');
-      const msgElement = document.getElementById('msg');
-      if(adBtnElement) {
-          adBtnElement.disabled = true;
-      }
-      if(msgElement) {
-          msgElement.textContent = '📣 Günlük limitə çatdınız!';
-      }
+  if(didReset) {
+      restoreAdBtnState();
   }
 }
 
-// Qutu açılışı funksiyası
 document.getElementById('openBoxBtn').addEventListener('click', () => {
     if (limon >= MAX_LIMON && !boxClaimed) {
         const rewards = [25, 50, 75, 100];
@@ -1138,7 +1125,6 @@ function checkAndDisplayRewardMsg() {
     } else { if (rewardMsgElement && rewardMsgElement.parentNode === container) rewardMsgElement.remove(); }
 }
 
-// --- KİLİDLƏNƏN BUTON MƏNTİQİ ---
 function restoreAdBtnState() {
     const textSpan = adBtnContent.querySelector('span');
     const icon = adBtnContent.querySelector('i');
@@ -1151,13 +1137,10 @@ function restoreAdBtnState() {
     }
 
     if (cnt >= MAX_ADS_PER_DAY) {
-        adBtn.classList.remove('waiting'); 
-        adBtn.disabled = true; // Buton artıq kilitli olacaq
+        adBtn.classList.remove('waiting'); adBtn.disabled = true; 
         if(textSpan) textSpan.textContent = 'Reklam İzlə';
         if(icon) { icon.setAttribute('data-lucide', 'play'); lucide.createIcons(); }
-        msg.textContent = '📣 Günlük limitə çatdınız!'; 
-        checkAndDisplayRewardMsg(); 
-        return; 
+        msg.textContent = '📣 Günlük limitə çatdınız!'; checkAndDisplayRewardMsg(); return; 
     }
     
     adBtn.classList.remove('waiting'); adBtn.disabled = false; 
@@ -1168,7 +1151,11 @@ function restoreAdBtnState() {
 
 adBtn.onclick = async () => {
     update();
-    if (cnt >= MAX_ADS_PER_DAY) { msg.textContent = '📣 Günlük limitə çatdınız!'; return; }
+    if (cnt >= MAX_ADS_PER_DAY) { 
+        msg.textContent = '📣 Günlük limitə çatdınız!'; 
+        restoreAdBtnState(); 
+        return; 
+    }
     if (isAdRunning || adBtn.classList.contains('waiting')) return;
     isAdRunning = true; 
 
@@ -1233,20 +1220,20 @@ function giveAdReward() {
 
 function resetAdBtnState() {
     isAdRunning = false; 
-    adBtn.classList.remove('waiting');
+    if (cnt >= MAX_ADS_PER_DAY) {
+        adBtn.disabled = true; 
+        adBtn.classList.remove('waiting');
+        msg.textContent = '📣 Günlük limitə çatdınız!';
+    } else {
+        adBtn.disabled = false; 
+        adBtn.classList.remove('waiting');
+        msg.textContent = ''; 
+    }
     
     const textSpan = adBtnContent.querySelector('span');
     const icon = adBtnContent.querySelector('i');
     if(textSpan) textSpan.textContent = 'Reklam İzlə'; 
     if(icon) { icon.setAttribute('data-lucide', 'play'); lucide.createIcons(); }
-    
-    if (cnt >= MAX_ADS_PER_DAY) {
-        adBtn.disabled = true; // Limit bitibsə kilitlə
-        msg.textContent = '📣 Günlük limitə çatdınız!'; 
-    } else {
-        adBtn.disabled = false; // Limit bitməyibsə normal çalışır
-        msg.textContent = ''; 
-    }
 }
 
 const taskNotification = document.getElementById('taskNotification');

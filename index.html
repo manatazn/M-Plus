@@ -43,9 +43,6 @@ if (window.Telegram && window.Telegram.WebApp) {
   --btn-gradient-start: #3B82F6; 
   --btn-gradient-end: #1D4ED8;   
   --btn-shadow: rgba(37, 99, 235, 0.3); 
-  
-  --notification-bg: rgba(15, 23, 42, 0.95); 
-  --notification-text: #FFFFFF; 
 }
 
 /* --- TÜND TEMA (QARA / MAVİ / QIRMIZI) --- */
@@ -65,8 +62,6 @@ body.dark-theme {
   --input-bg: #0F172A;
   
   --btn-shadow: rgba(59, 130, 246, 0.25); 
-  --notification-bg: rgba(255, 255, 255, 0.95);
-  --notification-text: #0F172A;
 }
 
 /* --- ÜMUMİ STİLLƏR --- */
@@ -353,43 +348,46 @@ body.dark-theme .loading-image-logo {
     80%, 100% { text-shadow: .25em 0 0 var(--accent), .5em 0 0 var(--accent); }
 }
 
-/* BİLDİRİŞLƏR */
-#taskNotification {
-    position: fixed; 
-    top: 50%; 
-    left: 50%; 
-    transform: translate(-50%, -50%) scale(0.8); 
-    background: var(--notification-bg); 
-    color: var(--notification-text); 
-    padding: 20px 30px; 
-    border-radius: 24px; 
-    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3); 
-    font-weight: 800; 
-    font-size: 16px; 
-    opacity: 0; 
+/* YENİ NƏSİL BİLDİRİŞLƏR (MODERN TOAST) */
+.toast-notification {
+    position: fixed;
+    top: 25px;
+    left: 50%;
+    transform: translate(-50%, -100px) scale(0.9);
+    background: var(--card-bg);
+    color: var(--text-dark);
+    padding: 14px 22px;
+    border-radius: 50px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1), 0 0 0 1px var(--card-border);
+    font-weight: 800;
+    font-size: 15px;
+    z-index: 100000;
+    transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    white-space: nowrap;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    opacity: 0;
     visibility: hidden;
-    z-index: 10000; 
-    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); 
-    text-align: center; 
-    border: 1px solid rgba(255,255,255,0.1); 
-    display: flex; 
-    flex-direction: column;
-    align-items: center; 
-    gap: 12px; 
-    white-space: nowrap; 
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
 }
-.notification-show {
-    opacity: 1 !important;
-    visibility: visible !important;
-    transform: translate(-50%, -50%) scale(1) !important; 
+body.dark-theme .toast-notification {
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5), 0 0 0 1px var(--card-border);
 }
-#taskNotification i { color: #10B981; width: 32px; height: 32px; }
-
-#adRewardNotificationContainer { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 9999; pointer-events: none;}
-.reward-msg {background: var(--notification-bg); color: var(--notification-text); padding: 16px 24px; border-radius: 20px; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2); font-weight: 900; font-size: 15px; opacity: 0; transform: scale(0.8); transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); border: 1px solid rgba(255,255,255,0.1); white-space: nowrap; backdrop-filter: blur(10px);}
-.reward-msg.show { opacity: 1; transform: scale(1); }
+.toast-notification.show {
+    transform: translate(-50%, 0) scale(1);
+    opacity: 1;
+    visibility: visible;
+}
+.toast-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+}
 
 /* BOX MÜKAFAT MODALI */
 .modal-overlay-box {
@@ -455,14 +453,13 @@ if(currentLang !== 'az' && currentLang !== 'tr') currentLang = 'az';
 
 <div id="loadingScreen" oncontextmenu="return false;">
   <img src="https://i.postimg.cc/RV1fgM1q/file-000000009cdc7243a13447091662b7f6.jpg" alt="M Plus Logo" class="loading-image-logo" draggable="false">
-  <div class="loading-text">Yüklənir<span class="loading-dots"></span></div>
+  <div class="loading-text"><span id="loadingLangText">Yüklənir</span><span class="loading-dots"></span></div>
 </div>
 
-<div id="taskNotification">
-    <i data-lucide="check-circle-2"></i>
-    <span id="taskNotificationText"></span>
-</div>
-<div id="adRewardNotificationContainer"></div>
+<script>
+    // İlkin dilə görə yükləmə yazısını dərhal dəyişirik
+    document.getElementById('loadingLangText').innerText = currentLang === 'tr' ? 'Yükleniyor' : 'Yüklənir';
+</script>
 
 <div id="boxModal" class="modal-overlay-box">
    <div class="box-modal-content">
@@ -780,8 +777,8 @@ const i18n = {
         stat_tasks: "Tapşırıq Edildi",
         stat_earn: "Ümumi Reklam Qazancı",
         msg_limit: "📣 Günlük limitə çatdınız!",
-        msg_copied: "✅ Referal linki kopyalandı!",
-        msg_copy_err: "❌ Kopyalama xətası!",
+        msg_copied: "Referal linki kopyalandı!",
+        msg_copy_err: "Kopyalama xətası!",
         err_method: "Çıxarış üsulunu seçin",
         err_network: "Zəhmət olmasa ağ seçin",
         err_bank: "Kart nömrəsi tam 16 rəqəm olmalıdır",
@@ -796,9 +793,9 @@ const i18n = {
         awesome: "Möhtəşəm!",
         completed: "Tamamlandı",
         checking: "Yoxlanılır...",
-        task_success: "✅ Tapşırıq uğurlu! <b>{reward}</b> qazandınız.",
-        ad_reward_text: "🎉 <b>{reward}</b> qazandınız!",
-        ad_reward_box: "🎉 <b>{reward} + 100 🍋</b> qazandınız!",
+        task_success: "Tapşırıq uğurlu! <b>{reward}</b> qazandınız.",
+        ad_reward_text: "<b>{reward}</b> qazandınız!",
+        ad_reward_box: "<b>{reward} + 100 🍋</b> qazandınız!",
         share_text: `🔥 Pul qazanmaq heç bu qədər rahat olmamışdı M Plus ilə hər şey sənin nəzarətində!\n\n💡 Sadəcə bir neçə saniyəlik reklamları izləyərək balansını artır. Heç bir çətinlik yoxdur telefonun kifayətdir.\n\n👇 İndi qoşul və ilk qazancını əldə et: 🔗 {link}\n\n📲 Gün ərzində istədiyin vaxt daxil ol, reklam izlə və qazancını yığ. 💸 Topladığın məbləği rahat şəkildə çıxara bilərsən.\n\n⚡ Gözləmə M Plus ilə qazancını bu gündən başlat!`
     },
     tr: {
@@ -848,8 +845,8 @@ const i18n = {
         stat_tasks: "Görev Yapıldı",
         stat_earn: "Toplam Reklam Kazancı",
         msg_limit: "📣 Günlük limite ulaştınız!",
-        msg_copied: "✅ Referans bağlantısı kopyalandı!",
-        msg_copy_err: "❌ Kopyalama hatası!",
+        msg_copied: "Referans bağlantısı kopyalandı!",
+        msg_copy_err: "Kopyalama hatası!",
         err_method: "Çekim yöntemini seçin",
         err_network: "Lütfen ağ seçin",
         err_bank: "Kart numarası tam 16 rakam olmalıdır",
@@ -864,9 +861,9 @@ const i18n = {
         awesome: "Harika!",
         completed: "Tamamlandı",
         checking: "Kontrol ediliyor...",
-        task_success: "✅ Görev başarılı! <b>{reward}</b> kazandınız.",
-        ad_reward_text: "🎉 <b>{reward}</b> kazandınız!",
-        ad_reward_box: "🎉 <b>{reward} + 100 🍋</b> kazandınız!",
+        task_success: "Görev başarılı! <b>{reward}</b> kazandınız.",
+        ad_reward_text: "<b>{reward}</b> kazandınız!",
+        ad_reward_box: "<b>{reward} + 100 🍋</b> kazandınız!",
         share_text: `🔥 Para kazanmak hiç bu kadar kolay olmamıştı M Plus ile her şey senin kontrolünde!\n\n💡 Sadece birkaç saniyelik reklamları izleyerek bakiyeni artır. Hiçbir zorluk yok telefonun yeterli.\n\n👇 Şimdi katıl ve ilk kazancını elde et: 🔗 {link}\n\n📲 Gün içinde istediğin zaman gir, reklam izle ve kazancını topla. 💸 Topladığın tutarı rahatça çekebilirsin.\n\n⚡ Bekleme M Plus ile kazancını bugünden başlat!`
     }
 };
@@ -974,6 +971,7 @@ function updateTexts() {
 
     document.getElementById('btnLangAZ').classList.toggle('active', currentLang === 'az');
     document.getElementById('btnLangTR').classList.toggle('active', currentLang === 'tr');
+    document.getElementById('loadingLangText').innerText = currentLang === 'tr' ? 'Yükleniyor' : 'Yüklənir';
 
     document.getElementById('taskJoinRewardBadge').textContent = fC(TASK_APP_REWARD);
     document.getElementById('taskChatRewardBadge').textContent = fC(TASK_CHAT_REWARD);
@@ -998,7 +996,7 @@ function setLang(lang) {
     currentLang = lang;
     safeSet(LANG_KEY, lang);
     
-    // Formu Resetləmək (Xətanı önləmək üçün)
+    // Formu Resetləmək
     document.getElementById('form').style.display = 'none';
     document.getElementById('methodsContainer').style.display = 'block';
     document.getElementById('alert').style.display = 'none';
@@ -1026,7 +1024,6 @@ const TOTAL_ADS_KEY = `tot_ads_mplus_${userRefId}`;
 const TOTAL_TASKS_KEY = `tot_tasks_mplus_${userRefId}`;
 const TOTAL_AD_EARN_KEY = `tot_ad_earn_mplus_${userRefId}`;
 
-// Bütün daxili rəqəmlər AZN olaraq qalır
 const REWARD_PER_AD = 0.002;
 const MAX_ADS_PER_DAY = 50;
 const TASK_APP_REWARD = 0.10;
@@ -1038,7 +1035,6 @@ const LIMON_PER_AD = 100;
 const MAX_LIMON = 1000000;
 
 let withdrawHistory = safeGet(HISTORY_KEY, []);
-
 let totalAdsAllTime = parseInt(safeGet(TOTAL_ADS_KEY, 0));
 let totalTasksAllTime = parseInt(safeGet(TOTAL_TASKS_KEY, 0));
 let totalAdEarnAllTime = parseFloat(safeGet(TOTAL_AD_EARN_KEY, 0.00));
@@ -1049,7 +1045,6 @@ let boxClaimed = safeGet(BOX_CLAIMED_KEY, false);
 let cnt = parseInt(safeGet(COUNT_KEY, 0));
 let resetTime = safeGet(RESET_KEY, null);
 
-let rewardMsgTimeout = null; 
 let isAdRunning = false; 
 
 function getNextResetTime() {
@@ -1106,14 +1101,14 @@ function copyRefLink() {
         textArea.style.top = "0"; textArea.style.left = "0"; textArea.style.position = "fixed";
         document.body.appendChild(textArea);
         textArea.focus(); textArea.select();
-        try { document.execCommand('copy'); showTaskNotification(i18n[currentLang].msg_copied); } 
-        catch (err) { showTaskNotification(i18n[currentLang].msg_copy_err); }
+        try { document.execCommand('copy'); showModernNotification(i18n[currentLang].msg_copied, 'success'); } 
+        catch (err) { showModernNotification(i18n[currentLang].msg_copy_err, 'success'); }
         document.body.removeChild(textArea);
     };
 
     if (navigator.clipboard && window.isSecureContext) {
         navigator.clipboard.writeText(userRefLink).then(() => {
-            showTaskNotification(i18n[currentLang].msg_copied);
+            showModernNotification(i18n[currentLang].msg_copied, 'success');
         }).catch(() => { fallbackCopyTextToClipboard(userRefLink); });
     } else {
         fallbackCopyTextToClipboard(userRefLink);
@@ -1287,67 +1282,58 @@ function updateTaskButtons() {
     lucide.createIcons(); 
 }
 
-const adBtn=document.getElementById('adBtn'), msg=document.getElementById('msg');
-const adBtnContent = document.querySelector('.ad-btn-content');
+// MODERN NOTIFICATION SYSTEM
+let activeNotification = null;
+let notificationTimeout = null;
 
-function displayRewardMsg(messageHTML) {
-    if (rewardMsgTimeout) { clearTimeout(rewardMsgTimeout); rewardMsgTimeout = null; }
-    const container = document.getElementById('adRewardNotificationContainer');
-    if (!container) return; 
-
-    let rewardMsgElement = document.getElementById('rewardMsg');
-    if (rewardMsgElement) { rewardMsgElement.innerHTML = messageHTML; } 
-    else {
-        rewardMsgElement = document.createElement('div');
-        rewardMsgElement.className = 'reward-msg'; rewardMsgElement.id = 'rewardMsg';
-        rewardMsgElement.innerHTML = messageHTML;
-        container.appendChild(rewardMsgElement);
+function showModernNotification(message, type = 'success', duration = 3000) {
+    if (activeNotification && activeNotification.parentNode) {
+        activeNotification.classList.remove('show');
+        setTimeout(() => { if (activeNotification && activeNotification.parentNode) activeNotification.remove(); }, 300);
     }
-    rewardMsgElement.classList.remove('show');
-    safeSet(REWARD_MSG_KEY, { html: messageHTML, expire: Date.now() + 2500 }); 
-    setTimeout(() => { rewardMsgElement.classList.add('show'); }, 50);
-    rewardMsgTimeout = setTimeout(() => {
-        if (rewardMsgElement) {
-            rewardMsgElement.classList.remove('show');
-            setTimeout(() => { if(rewardMsgElement.parentNode === container) rewardMsgElement.remove(); }, 400); 
+    if (notificationTimeout) clearTimeout(notificationTimeout);
+
+    const toast = document.createElement('div');
+    toast.className = 'toast-notification';
+    
+    let iconHtml = type === 'reward' 
+        ? `<i data-lucide="coins" style="width:18px;height:18px;color:#D97706;stroke-width:2.5px;"></i>` 
+        : `<i data-lucide="check" style="width:18px;height:18px;color:#10B981;stroke-width:3px;"></i>`;
+    let bgClass = type === 'reward' ? 'rgba(245, 158, 11, 0.15)' : 'rgba(16, 185, 129, 0.15)';
+
+    toast.innerHTML = `<div class="toast-icon" style="background:${bgClass};">${iconHtml}</div><span>${message}</span>`;
+    document.body.appendChild(toast);
+    lucide.createIcons({root: toast});
+    
+    setTimeout(() => { toast.classList.add('show'); }, 10);
+    activeNotification = toast;
+
+    notificationTimeout = setTimeout(() => {
+        if (toast) {
+            toast.classList.remove('show');
+            setTimeout(() => { if (toast.parentNode) toast.remove(); }, 500);
         }
-        safeRemove(REWARD_MSG_KEY);
-        rewardMsgTimeout = null;
-    }, 2500);
+        if (type === 'reward') safeRemove(REWARD_MSG_KEY);
+    }, duration);
 }
 
 function checkAndDisplayRewardMsg() {
-    const container = document.getElementById('adRewardNotificationContainer');
-    if (!container) return;
     const currentPage = document.querySelector('.page.active');
-    if (!currentPage || currentPage.id !== 'adsPage') {
-        let rewardMsgElement = document.getElementById('rewardMsg');
-        if (rewardMsgElement) rewardMsgElement.classList.remove('show');
-        return;
-    }
+    if (!currentPage || currentPage.id !== 'adsPage') return;
+
     const savedMsg = safeGet(REWARD_MSG_KEY, null);
-    let rewardMsgElement = document.getElementById('rewardMsg');
     if (savedMsg) {
         const remainingTime = savedMsg.expire - Date.now();
         if (remainingTime > 0) {
-            if (!rewardMsgElement) {
-                rewardMsgElement = document.createElement('div');
-                rewardMsgElement.className = 'reward-msg'; rewardMsgElement.id = 'rewardMsg';
-                container.appendChild(rewardMsgElement);
-            }
-            rewardMsgElement.innerHTML = savedMsg.html; rewardMsgElement.classList.remove('show');
-            if (rewardMsgTimeout) clearTimeout(rewardMsgTimeout);
-            setTimeout(() => { rewardMsgElement.classList.add('show'); }, 50);
-            rewardMsgTimeout = setTimeout(() => {
-                 if (rewardMsgElement) {
-                    rewardMsgElement.classList.remove('show');
-                    setTimeout(() => { if(rewardMsgElement.parentNode === container) rewardMsgElement.remove(); }, 400);
-                }
-                safeRemove(REWARD_MSG_KEY); rewardMsgTimeout = null;
-            }, remainingTime);
-        } else { safeRemove(REWARD_MSG_KEY); if (rewardMsgElement && rewardMsgElement.parentNode === container) rewardMsgElement.remove(); }
-    } else { if (rewardMsgElement && rewardMsgElement.parentNode === container) rewardMsgElement.remove(); }
+            showModernNotification(savedMsg.html, 'reward', remainingTime);
+        } else { 
+            safeRemove(REWARD_MSG_KEY); 
+        }
+    }
 }
+
+const adBtn=document.getElementById('adBtn'), msg=document.getElementById('msg');
+const adBtnContent = document.querySelector('.ad-btn-content');
 
 function restoreAdBtnState() {
     const textSpan = adBtnContent.querySelector('span');
@@ -1382,13 +1368,9 @@ adBtn.onclick = async () => {
     if (isAdRunning || adBtn.classList.contains('waiting')) return;
     isAdRunning = true; 
 
-    if (rewardMsgTimeout) { clearTimeout(rewardMsgTimeout); rewardMsgTimeout = null; }
+    // Clear old msg
     safeRemove(REWARD_MSG_KEY);
-    let rewardMsgElement = document.getElementById('rewardMsg');
-    if (rewardMsgElement) {
-         rewardMsgElement.classList.remove('show');
-         setTimeout(() => { const container = document.getElementById('adRewardNotificationContainer'); if(container && rewardMsgElement.parentNode === container) rewardMsgElement.remove(); }, 400); 
-    }
+    if (activeNotification) activeNotification.classList.remove('show');
     
     adBtn.disabled = true; adBtn.classList.add('waiting');
     const textSpan = adBtnContent.querySelector('span');
@@ -1437,7 +1419,10 @@ function giveAdReward() {
     safeSet(TOTAL_AD_EARN_KEY, totalAdEarnAllTime);
     
     update(); 
-    displayRewardMsg(rewardTextStr);
+    
+    // Save state & show modern toast
+    safeSet(REWARD_MSG_KEY, { html: rewardTextStr, expire: Date.now() + 3000 }); 
+    showModernNotification(rewardTextStr, 'reward', 3000);
     
     if (cnt >= MAX_ADS_PER_DAY) {
         isAdRunning = false;
@@ -1450,18 +1435,6 @@ function giveAdReward() {
 function resetAdBtnState() {
     isAdRunning = false; 
     restoreAdBtnState();
-}
-
-const taskNotification = document.getElementById('taskNotification');
-const taskNotificationText = document.getElementById('taskNotificationText');
-function showTaskNotification(message) {
-    taskNotificationText.innerHTML = message;
-    taskNotification.classList.remove('notification-hide'); 
-    taskNotification.classList.add('notification-show');
-    setTimeout(() => { 
-        taskNotification.classList.remove('notification-show'); 
-        taskNotification.classList.add('notification-hide'); 
-    }, 3500);
 }
 
 function handleTaskClick(btnId, url, storageKey, reward) {
@@ -1482,7 +1455,7 @@ function handleTaskClick(btnId, url, storageKey, reward) {
         localStorage.setItem(storageKey, '1'); 
         update();
         let sMsg = i18n[currentLang].task_success.replace('{reward}', fC(reward));
-        showTaskNotification(sMsg);
+        showModernNotification(sMsg, 'success');
     }, 4000);
 }
 
@@ -1499,8 +1472,7 @@ function showPage(id, btn){
   if (id === 'adsPage') { restoreAdBtnState(); } 
   else if (id === 'tasksPage') { updateTaskButtons(); } 
   else {
-    let rewardMsgElement = document.getElementById('rewardMsg');
-    if (rewardMsgElement) rewardMsgElement.classList.remove('show');
+    if (activeNotification) activeNotification.classList.remove('show');
   }
 }
 

@@ -102,6 +102,7 @@ body{
   text-align:center;
   border:1px solid var(--card-border);
   transition: all 0.5s;
+  position: relative;
 }
 body.dark-theme .balance-card, body.dark-theme .ad-card, body.dark-theme .profile-card {
   box-shadow:0 10px 40px rgba(0,0,0,0.5), 0 0 15px rgba(59, 130, 246, 0.05);
@@ -353,56 +354,56 @@ body.dark-theme .loading-image-logo {
     80%, 100% { text-shadow: .25em 0 0 var(--accent), .5em 0 0 var(--accent); }
 }
 
-/* YENİ BİLDİRİŞLƏR (Mavi-Qırmızı Tema & Yuxarı Hissə) */
+/* BİLDİRİŞLƏR - Yeni Tərz (Yuxarıda & Möhtəşəm Dizayn) */
 #taskNotification {
     position: fixed; 
-    top: 40px; 
+    top: 30px; 
     left: 50%; 
-    transform: translateX(-50%) translateY(-20px) scale(0.9); 
-    background: linear-gradient(135deg, var(--accent), var(--accent-red)); 
+    transform: translateX(-50%) translateY(-20px) scale(0.95); 
+    background: linear-gradient(135deg, var(--btn-gradient-start), var(--accent-red)); 
     color: #FFFFFF; 
-    padding: 16px 28px; 
+    padding: 16px 24px; 
     border-radius: 20px; 
-    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25); 
+    box-shadow: 0 15px 35px rgba(37, 99, 235, 0.3); 
     font-weight: 800; 
     font-size: 15px; 
     opacity: 0; 
     visibility: hidden;
     z-index: 10000; 
     transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); 
-    text-align: center; 
-    border: 1px solid rgba(255,255,255,0.2); 
     display: flex; 
     align-items: center; 
-    justify-content: center;
     gap: 12px; 
     white-space: nowrap; 
+    border: 1px solid rgba(255,255,255,0.2); 
 }
 .notification-show {
     opacity: 1 !important;
     visibility: visible !important;
     transform: translateX(-50%) translateY(0) scale(1) !important; 
 }
-#taskNotification i { color: #FFFFFF; width: 22px; height: 22px; stroke-width: 2.5px; }
+#taskNotification i { color: #FFFFFF; width: 24px; height: 24px; }
 
+/* Reklam Kartının İçi Üçün Bildiriş */
 #adRewardNotificationContainer { 
-    position: fixed; 
-    top: 40px; 
+    position: absolute; 
+    top: 15px; 
     left: 50%; 
     transform: translateX(-50%); 
-    z-index: 9999; 
+    z-index: 20; 
     pointer-events: none;
+    width: max-content;
 }
 .reward-msg {
-    background: linear-gradient(135deg, var(--accent), var(--accent-red)); 
+    background: linear-gradient(135deg, var(--btn-gradient-start), var(--accent-red)); 
     color: #FFFFFF; 
-    padding: 16px 28px; 
+    padding: 12px 24px; 
     border-radius: 20px; 
-    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25); 
-    font-weight: 900; 
-    font-size: 15px; 
+    box-shadow: 0 15px 30px rgba(37, 99, 235, 0.3); 
+    font-weight: 800; 
+    font-size: 14px; 
     opacity: 0; 
-    transform: translateY(-20px) scale(0.9); 
+    transform: translateY(-15px) scale(0.95); 
     transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); 
     border: 1px solid rgba(255,255,255,0.2); 
     white-space: nowrap; 
@@ -476,17 +477,17 @@ if(currentLang !== 'az' && currentLang !== 'tr') currentLang = 'az';
 
 <div id="loadingScreen" oncontextmenu="return false;">
   <img src="https://i.postimg.cc/RV1fgM1q/file-000000009cdc7243a13447091662b7f6.jpg" alt="M Plus Logo" class="loading-image-logo" draggable="false">
-  <div class="loading-text"><span data-i18n="loading" id="loadingTextSpan">Yüklənir</span><span class="loading-dots"></span></div>
+  <div class="loading-text"><span id="loadingTextSpan"></span><span class="loading-dots"></span></div>
 </div>
 <script>
-    document.getElementById('loadingTextSpan').innerText = currentLang === 'tr' ? 'Yükleniyor' : 'Yüklənir';
+    // Başlanğıc ekran yazısını dərhal təyin et
+    document.getElementById('loadingTextSpan').innerText = (currentLang === 'tr') ? 'Yükleniyor' : 'Yüklənir';
 </script>
 
 <div id="taskNotification">
     <i data-lucide="check-circle-2"></i>
     <span id="taskNotificationText"></span>
 </div>
-<div id="adRewardNotificationContainer"></div>
 
 <div id="boxModal" class="modal-overlay-box">
    <div class="box-modal-content">
@@ -614,6 +615,8 @@ if(currentLang !== 'az' && currentLang !== 'tr') currentLang = 'az';
     </div>
     
     <div class="ad-card"> 
+      <div id="adRewardNotificationContainer"></div>
+
       <h2 data-i18n="ads_title">Gündəlik Reklamlar</h2>
       <p id="adRewardText" data-i18n="ads_desc">Hər reklam üçün <b class="reward-text-b">0.002 ₼ + 100 🍋</b> qazanın</p>
       

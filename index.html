@@ -32,8 +32,8 @@ if (window.Telegram && window.Telegram.WebApp) {
   --text-light: #FFFFFF;
   --text-dark: #0F172A;
   --text-muted: #64748B;
-  --accent: #2563EB; /* Mavi */
-  --accent-red: #EF4444; /* Qırmızı */
+  --accent: #2563EB; 
+  --accent-red: #EF4444; 
   --menu-bg: rgba(255, 255, 255, 0.95);
   --progress-bg: rgba(37, 99, 235, 0.1);
   --input-text: #0F172A; 
@@ -231,6 +231,11 @@ body.dark-theme .menu {box-shadow:0 25px 50px rgba(0,0,0,.6);}
 .setting-info-col { display: flex; align-items: center; gap: 12px; font-weight: 800; font-size: 16px; color: var(--text-dark); }
 .setting-icon-col { display: flex; align-items: center; justify-content: center; background: var(--card-bg); width: 40px; height: 40px; border-radius: 14px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); color: var(--accent);}
 
+/* DİL SEÇİMİ */
+.lang-switch { display: flex; gap: 5px; background: var(--card-bg); padding: 4px; border-radius: 14px; border: 1px solid var(--card-border); box-shadow: inset 0 2px 5px rgba(0,0,0,0.03); }
+.lang-switch button { border: none; background: transparent; padding: 6px 12px; border-radius: 10px; font-weight: 800; font-size: 14px; color: var(--text-muted); cursor: pointer; transition: all 0.3s; }
+.lang-switch button.active { background: var(--accent); color: #fff; box-shadow: 0 4px 10px rgba(37, 99, 235, 0.3); }
+
 .toggle-switch { width: 56px; height: 32px; background-color: #CBD5E1; border-radius: 30px; position: relative; cursor: pointer; transition: 0.3s; }
 body.dark-theme .toggle-switch { background-color: var(--accent); }
 .toggle-thumb { width: 26px; height: 26px; background-color: #fff; border-radius: 50%; position: absolute; top: 3px; left: 3px; transition: 0.3s cubic-bezier(0.16, 1, 0.3, 1); display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 10px rgba(0,0,0,0.15); }
@@ -252,8 +257,12 @@ body.dark-theme .toggle-thumb i { color: #0F172A; }
 #form input:focus { border-color: var(--accent); background: var(--card-bg); box-shadow: 0 0 0 5px var(--progress-bg);}
 #form input::placeholder { color: var(--text-muted); opacity: 0.7; font-weight: 600;}
 
-#form button{width:100%;padding:20px;margin-top:25px;border:none;border-radius:24px;background:linear-gradient(135deg,var(--btn-gradient-start),var(--btn-gradient-end));color:var(--text-light);font-weight:900;font-size: 18px;cursor:pointer; box-shadow: 0 10px 30px var(--btn-shadow); display:flex; align-items:center; justify-content:center; gap:12px; transition: transform 0.2s;}
-#form button:active {transform: scale(0.95);}
+/* AĞ SEÇİMİ (USDT) */
+.network-btn { flex: 1; padding: 15px; border-radius: 16px; border: 2px solid var(--card-border); background: var(--input-bg); font-weight: 900; font-size: 16px; color: var(--text-muted); transition: 0.3s; cursor: pointer; }
+.network-btn.active { border-color: var(--accent); color: var(--accent); background: rgba(37, 99, 235, 0.08); box-shadow: 0 4px 15px rgba(37, 99, 235, 0.1); }
+
+#form button#withdrawBtn{width:100%;padding:20px;margin-top:25px;border:none;border-radius:24px;background:linear-gradient(135deg,var(--btn-gradient-start),var(--btn-gradient-end));color:var(--text-light);font-weight:900;font-size: 18px;cursor:pointer; box-shadow: 0 10px 30px var(--btn-shadow); display:flex; align-items:center; justify-content:center; gap:12px; transition: transform 0.2s;}
+#form button#withdrawBtn:active {transform: scale(0.95);}
 
 .fee-calc-box { font-size: 14px; font-weight: 700; color: var(--text-muted); margin: 10px 0 20px; text-align: left; padding: 20px; background: var(--input-bg); border-radius: 20px; border: 1px dashed var(--card-border); display: none;}
 .fee-calc-box span { color: var(--text-dark); font-weight: 900; }
@@ -431,6 +440,7 @@ if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initData
 }
 
 const THEME_KEY = 'theme_mplus_' + userRefId;
+const LANG_KEY = 'lang_mplus_' + userRefId;
 
 const savedTheme = safeGet(THEME_KEY, 'light'); 
 if(savedTheme === 'dark') {
@@ -438,6 +448,9 @@ if(savedTheme === 'dark') {
 } else {
     document.getElementById('body').classList.remove('dark-theme');
 }
+
+let currentLang = safeGet(LANG_KEY, 'az'); // Default AZ
+if(currentLang !== 'az' && currentLang !== 'tr') currentLang = 'az';
 </script>
 
 <div id="loadingScreen" oncontextmenu="return false;">
@@ -454,10 +467,10 @@ if(savedTheme === 'dark') {
 <div id="boxModal" class="modal-overlay-box">
    <div class="box-modal-content">
        <div class="modal-box-icon">🎁</div>
-       <h2 style="color:var(--text-dark); font-weight:900; font-size:24px;">Təbrik edirik!</h2>
-       <p style="color:var(--text-muted); margin-top:10px; font-size:15px; font-weight:600;">Siz şans qutusundan qazandınız:</p>
+       <h2 style="color:var(--text-dark); font-weight:900; font-size:24px;" data-i18n="congratulations">Təbrik edirik!</h2>
+       <p style="color:var(--text-muted); margin-top:10px; font-size:15px; font-weight:600;" data-i18n="box_won">Siz şans qutusundan qazandınız:</p>
        <div class="modal-reward-text" id="boxRewardText">50₼</div>
-       <button class="modal-close-btn" onclick="closeBoxModal()">Möhtəşəm!</button>
+       <button class="modal-close-btn" onclick="closeBoxModal()" data-i18n="awesome">Möhtəşəm!</button>
    </div>
 </div>
 
@@ -465,29 +478,40 @@ if(savedTheme === 'dark') {
   
   <div id="settingsPage" class="page">
     <div class="profile-card">
-        <h2 style="font-weight:900; margin-bottom:25px; color: var(--text-dark); text-align: left; font-size: 22px;">Ayarlar</h2>
+        <h2 style="font-weight:900; margin-bottom:25px; color: var(--text-dark); text-align: left; font-size: 22px;" data-i18n="settings">Ayarlar</h2>
         
         <div class="setting-item-row">
             <div class="setting-info-col">
+                <div class="setting-icon-col"><i data-lucide="globe"></i></div>
+                <span data-i18n="lang">Dil</span>
+            </div>
+            <div class="lang-switch">
+                <button id="btnLangAZ" onclick="setLang('az')">AZ</button>
+                <button id="btnLangTR" onclick="setLang('tr')">TR</button>
+            </div>
+        </div>
+
+        <div class="setting-item-row">
+            <div class="setting-info-col">
                 <div class="setting-icon-col"><i data-lucide="palette"></i></div>
-                <span>Tema</span>
+                <span data-i18n="theme">Tema</span>
             </div>
             <div class="toggle-switch" onclick="toggleTheme()">
                 <div class="toggle-thumb" id="themeThumb"><i data-lucide="moon"></i></div>
             </div>
         </div>
 
-        <h3 style="font-weight:900; margin: 35px 0 15px; color: var(--text-dark); text-align: left; font-size: 18px;">Dostlarını Dəvət Et</h3>
+        <h3 style="font-weight:900; margin: 35px 0 15px; color: var(--text-dark); text-align: left; font-size: 18px;" data-i18n="invite">Dostlarını Dəvət Et</h3>
         
         <div style="display:flex; flex-direction:column; gap:12px;">
             <button class="modal-btn-action copy-btn" onclick="copyRefLink()">
-                <i data-lucide="copy" style="color: var(--accent);"></i> <span>Linki Kopyala</span>
+                <i data-lucide="copy" style="color: var(--accent);"></i> <span data-i18n="copy">Linki Kopyala</span>
             </button>
             <button class="modal-btn-action whatsapp-btn" onclick="shareWhatsApp()">
-                <i data-lucide="message-square"></i> <span>WhatsApp ilə Paylaş</span>
+                <i data-lucide="message-square"></i> <span data-i18n="wp">WhatsApp ilə Paylaş</span>
             </button>
             <button class="modal-btn-action telegram-btn" onclick="shareAppAction()">
-                <i data-lucide="send"></i> <span>Telegram ilə Paylaş</span>
+                <i data-lucide="send"></i> <span data-i18n="tg">Telegram ilə Paylaş</span>
             </button>
         </div>
     </div>
@@ -495,11 +519,11 @@ if(savedTheme === 'dark') {
 
   <div id="tasksPage" class="page">
     <div class="balance-card">
-      <h3>Balansınız</h3>
+      <h3 data-i18n="balance">Balansınız</h3>
       <div class="balances-wrapper">
          <div class="amount-wrap">
-             <div class="amount"><span class="bal-azn">0.000</span></div>
-             <div class="currency">₼</div>
+             <div class="amount"><span class="bal-val">0.000</span></div>
+             <div class="currency bal-symbol">₼</div>
          </div>
          <div class="limon-wrap">
              <div class="limon-amount"><span class="bal-limon">0</span></div>
@@ -510,11 +534,11 @@ if(savedTheme === 'dark') {
 
     <div class="box-card" id="limonBoxCard">
        <div class="box-card-icon">🎁</div>
-       <h3>Şans Qutusu</h3>
-       <p>1 Milyon 🍋 topla, qutunu aç və <b>25₼, 50₼, 75₼</b> və ya <b>100₼</b> qazan!</p>
+       <h3 data-i18n="box_title">Şans Qutusu</h3>
+       <p data-i18n="box_desc">1 Milyon 🍋 topla, qutunu aç və <b>25₼, 50₼, 75₼</b> və ya <b>100₼</b> qazan!</p>
        <div class="box-progress"><div class="box-fill" id="boxProgress"></div></div>
        <p class="box-status" id="boxStatusText">0 / 1,000,000 🍋</p>
-       <button id="openBoxBtn" class="box-btn" disabled>Qutunu Aç</button>
+       <button id="openBoxBtn" class="box-btn" disabled data-i18n="open_box">Qutunu Aç</button>
     </div>
 
     <div class="task-list">
@@ -522,14 +546,14 @@ if(savedTheme === 'dark') {
             <div class="task-header">
                 <div class="task-title">
                     <div class="task-icon"><i data-lucide="send" style="width:22px;height:22px;"></i></div>
-                    <span>Kanala Qoşul</span>
+                    <span data-i18n="task1_title">Kanala Qoşul</span>
                 </div>
                 <div class="task-reward-badge" id="taskJoinRewardBadge">0.10 ₼</div>
             </div>
-            <div class="task-desc">Rəsmi M Plus kanalına qoşul və qazan!</div>
+            <div class="task-desc" data-i18n="task1_desc">Rəsmi M Plus kanalına qoşul və qazan!</div>
             <button id="joinAppBtn" class="task-btn action">
                 <i data-lucide="external-link" style="width:20px;height:20px;"></i>
-                <span>Kanala Qoşul</span>
+                <span data-i18n="task1_title">Kanala Qoşul</span>
             </button>
         </div>
         
@@ -537,14 +561,14 @@ if(savedTheme === 'dark') {
             <div class="task-header">
                 <div class="task-title">
                     <div class="task-icon" style="background: linear-gradient(135deg, var(--accent-red), #991B1B);"><i data-lucide="users" style="width:22px;height:22px;"></i></div>
-                    <span>Qrupumuza Qoşul</span>
+                    <span data-i18n="task2_title">Qrupumuza Qoşul</span>
                 </div>
-                <div class="task-reward-badge">0.15 ₼</div>
+                <div class="task-reward-badge" id="taskChatRewardBadge">0.15 ₼</div>
             </div>
-            <div class="task-desc">Söhbət qrupumuza qoşul və icmanın bir hissəsi ol!</div>
+            <div class="task-desc" data-i18n="task2_desc">Söhbət qrupumuza qoşul və icmanın bir hissəsi ol!</div>
             <button id="joinChatBtn" class="task-btn action" style="background: linear-gradient(135deg, var(--accent-red), #991B1B); box-shadow: 0 8px 25px rgba(239, 68, 68, 0.3);">
                 <i data-lucide="message-circle" style="width:20px;height:20px;"></i>
-                <span>Qrupa Qoşul</span>
+                <span data-i18n="task2_btn">Qrupa Qoşul</span>
             </button>
         </div>
     </div>
@@ -552,11 +576,11 @@ if(savedTheme === 'dark') {
 
   <div id="adsPage" class="page active">
     <div class="balance-card">
-      <h3>Balansınız</h3>
+      <h3 data-i18n="balance">Balansınız</h3>
       <div class="balances-wrapper">
          <div class="amount-wrap">
-             <div class="amount"><span class="bal-azn">0.000</span></div>
-             <div class="currency">₼</div>
+             <div class="amount"><span class="bal-val">0.000</span></div>
+             <div class="currency bal-symbol">₼</div>
          </div>
          <div class="limon-wrap">
              <div class="limon-amount"><span class="bal-limon">0</span></div>
@@ -566,21 +590,21 @@ if(savedTheme === 'dark') {
     </div>
     
     <div class="ad-card"> 
-      <h2>Gündəlik Reklamlar</h2>
-      <p id="adRewardText">Hər reklam üçün <b class="reward-text-b">0.002 ₼ + 100 🍋</b> qazanın</p>
+      <h2 data-i18n="ads_title">Gündəlik Reklamlar</h2>
+      <p id="adRewardText" data-i18n="ads_desc">Hər reklam üçün <b class="reward-text-b">0.002 ₼ + 100 🍋</b> qazanın</p>
       
       <div class="stats">
-        <div class="stat"><span id="adsCount">0</span><label>İzlənən</label></div>
-        <div class="stat"><span>50</span><label>Maksimum</label></div>
+        <div class="stat"><span id="adsCount">0</span><label data-i18n="watched">İzlənən</label></div>
+        <div class="stat"><span>50</span><label data-i18n="max">Maksimum</label></div>
       </div>
       
       <div class="progress"><div class="progress-fill" id="progress"></div></div>
-      <p style="margin-top:15px; font-weight:800; color: var(--text-dark); font-size: 15px;">İrəliləyiş: <span id="progressTextSpan" style="color: var(--accent);">0/50</span></p>
+      <p style="margin-top:15px; font-weight:800; color: var(--text-dark); font-size: 15px;"><span data-i18n="progress">İrəliləyiş</span>: <span id="progressTextSpan" style="color: var(--accent);">0/50</span></p>
       
       <button id="adBtn" class="ad-btn">
         <span class="ad-btn-content">
           <i data-lucide="play" style="width: 22px; height: 22px; fill: white;"></i>
-          <span>Reklam İzlə</span>
+          <span data-i18n="watch_ad">Reklam İzlə</span>
         </span>
       </button>
       <div id="msg"></div> 
@@ -589,11 +613,11 @@ if(savedTheme === 'dark') {
   
   <div id="walletPage" class="page">
     <div class="balance-card">
-      <h3>Balansınız</h3>
+      <h3 data-i18n="balance">Balansınız</h3>
       <div class="balances-wrapper">
          <div class="amount-wrap">
-             <div class="amount"><span class="bal-azn">0.000</span></div>
-             <div class="currency">₼</div>
+             <div class="amount"><span class="bal-val">0.000</span></div>
+             <div class="currency bal-symbol">₼</div>
          </div>
          <div class="limon-wrap">
              <div class="limon-amount"><span class="bal-limon">0</span></div>
@@ -603,63 +627,46 @@ if(savedTheme === 'dark') {
     </div>
     
     <div id="methodsContainer">
-        <h2 style="text-align:center;margin-bottom:10px;color:var(--text-dark);font-weight:900; font-size:24px;">Çıxarış Üsulu</h2>
-        <p style="text-align:center; color:var(--text-muted); font-size: 15px; font-weight: 600; margin-bottom: 30px;">Ödənişi hara almaq istəyirsiniz?</p>
+        <h2 style="text-align:center;margin-bottom:10px;color:var(--text-dark);font-weight:900; font-size:24px;" data-i18n="withdraw_method">Çıxarış Üsulu</h2>
+        <p style="text-align:center; color:var(--text-muted); font-size: 15px; font-weight: 600; margin-bottom: 30px;" data-i18n="where_to_receive">Ödənişi hara almaq istəyirsiniz?</p>
         
         <div class="method-list" id="methods">
-          <div class="method" data-type="m10" data-name="M10">
-              <img src="https://i.postimg.cc/Kj94hVNG/unnamed.png" alt="M10" class="method-logo" draggable="false">
-              <span class="method-text">M10</span>
-              <span class="min-withdraw-label">Min: 5 ₼</span>
           </div>
-          <div class="method" data-type="bank" data-name="Bank Kartı">
-              <img src="https://i.postimg.cc/L6H0yWwZ/42492-bank-1024.png" alt="Bank Kartı" class="method-logo" draggable="false">
-              <span class="method-text">Bank Kartı</span>
-              <span class="min-withdraw-label">Min: 5 ₼</span>
-          </div>
-          <div class="method" data-type="nar" data-name="Nar">
-              <img src="https://i.postimg.cc/4NmxhWPy/images.png" alt="Nar" class="method-logo" draggable="false">
-              <span class="method-text">Nar</span>
-              <span class="min-withdraw-label">Min: 5 ₼</span>
-          </div>
-          <div class="method" data-type="azercell" data-name="Azercell">
-              <img src="https://i.postimg.cc/qM5gmPqZ/applogo512.png" alt="Azercell" class="method-logo" draggable="false">
-              <span class="method-text">Azercell</span>
-              <span class="min-withdraw-label">Min: 5 ₼</span>
-          </div>
-          <div class="method" data-type="bakcell" data-name="Bakcell">
-              <img src="https://i.postimg.cc/Pqmx5N49/images.jpg" alt="Bakcell" class="method-logo" draggable="false">
-              <span class="method-text">Bakcell</span>
-              <span class="min-withdraw-label">Min: 5 ₼</span>
-          </div>
-        </div>
     </div>
 
     <div id="form">
       <button id="backBtn" class="back-btn-ui">
         <i data-lucide="arrow-left" style="width:20px;height:20px;"></i>
-        <span>Geri Qayıt</span>
+        <span data-i18n="back">Geri Qayıt</span>
       </button>
       
-      <h3 style="margin-bottom: 20px; font-weight: 900; color: var(--text-dark); font-size: 22px;">Məlumatları daxil et</h3>
+      <h3 style="margin-bottom: 20px; font-weight: 900; color: var(--text-dark); font-size: 22px;" data-i18n="enter_info">Məlumatları daxil et</h3>
       
+      <div id="networkWrapper" style="display:none; margin-bottom: 20px;">
+          <p style="font-weight: 800; margin-bottom: 10px; color: var(--text-dark);" data-i18n="choose_network">Ağı seçin</p>
+          <div style="display: flex; gap: 10px;">
+              <button type="button" class="network-btn" data-net="bep20">BEP20</button>
+              <button type="button" class="network-btn" data-net="ton">TON</button>
+          </div>
+      </div>
+
       <input id="details" type="text" inputmode="numeric" placeholder="">
-      <input id="amount" type="number" step="0.1" placeholder="Məbləğ (Min 5 ₼)">
+      <input id="amount" type="number" step="0.001" placeholder="Məbləğ">
       
       <div id="feeCalcBox" class="fee-calc-box">
-          Şəbəkə haqqı (5%): <span id="feeAmount">0.00</span> ₼<br><br>
-          <span style="font-size: 16px;">Yekun məbləğ: <span id="receiveAmount" style="color: var(--accent);">0.00</span> ₼</span>
+          <span data-i18n="fee">Şəbəkə haqqı (5%):</span> <span id="feeAmount">0.00</span> <span class="feeCalcSymbol">₼</span><br><br>
+          <span style="font-size: 16px;"><span data-i18n="final_amount">Yekun məbləğ:</span> <span id="receiveAmount" style="color: var(--accent);">0.00</span> <span class="feeCalcSymbol">₼</span></span>
       </div>
 
       <button id="withdrawBtn">
         <i data-lucide="credit-card"></i>
-        <span>Təsdiqlə və Çıxar</span>
+        <span data-i18n="confirm_withdraw">Təsdiqlə və Çıxar</span>
       </button>
       <div id="alert" class="alert"></div>
     </div>
 
     <div class="history-card" id="historyCard">
-        <h3 class="history-title">Çıxarış Tarixçəsi</h3>
+        <h3 class="history-title" data-i18n="withdraw_history">Çıxarış Tarixçəsi</h3>
         <div class="history-list" id="historyList"></div>
     </div>
   </div>
@@ -677,22 +684,22 @@ if(savedTheme === 'dark') {
             </div>
         </div>
 
-        <h3 style="text-align: left; font-size: 18px; font-weight: 900; margin-bottom: 15px; color: var(--text-dark);">Statistika</h3>
+        <h3 style="text-align: left; font-size: 18px; font-weight: 900; margin-bottom: 15px; color: var(--text-dark);" data-i18n="stats">Statistika</h3>
         <div class="profile-stats-grid">
             <div class="profile-stat-box">
                 <i data-lucide="eye" style="color: var(--accent);"></i>
                 <div class="profile-stat-val" id="statTotalAds">0</div>
-                <div class="profile-stat-lbl">Reklam İzləndi</div>
+                <div class="profile-stat-lbl" data-i18n="stat_ads">Reklam İzləndi</div>
             </div>
             <div class="profile-stat-box">
                 <i data-lucide="check-circle" style="color: #10B981;"></i>
                 <div class="profile-stat-val" id="statTotalTasks">0</div>
-                <div class="profile-stat-lbl">Tapşırıq Edildi</div>
+                <div class="profile-stat-lbl" data-i18n="stat_tasks">Tapşırıq Edildi</div>
             </div>
             <div class="profile-stat-box" style="grid-column: span 2; background: linear-gradient(135deg, var(--input-bg), var(--card-bg)); border-color: var(--accent);">
                 <i data-lucide="coins" style="color: #F59E0B; width: 30px; height: 30px; margin-bottom: 15px;"></i>
                 <div class="profile-stat-val" id="statTotalAdEarn" style="color: var(--accent); font-size: 32px;">0.000 ₼</div>
-                <div class="profile-stat-lbl">Ümumi Reklam Qazancı</div>
+                <div class="profile-stat-lbl" data-i18n="stat_earn">Ümumi Reklam Qazancı</div>
             </div>
         </div>
     </div>
@@ -702,11 +709,11 @@ if(savedTheme === 'dark') {
 <div class="menu">
   <button onclick="showPage('settingsPage',this)" data-page-id="settingsPage">
     <i data-lucide="settings" class="nav-icon"></i>
-    <span class="nav-text">Ayarlar</span>
+    <span class="nav-text" data-i18n="settings">Ayarlar</span>
   </button>
   <button onclick="showPage('tasksPage',this)" data-page-id="tasksPage">
     <i data-lucide="layout-list" class="nav-icon"></i>
-    <span class="nav-text">Tapşırıqlar</span>
+    <span class="nav-text" data-i18n="tasks">Tapşırıqlar</span>
   </button>
   <button onclick="showPage('adsPage',this)" class="active" data-page-id="adsPage">
     <i data-lucide="house" class="nav-icon"></i>
@@ -714,16 +721,155 @@ if(savedTheme === 'dark') {
   </button>
   <button onclick="showPage('walletPage',this)" data-page-id="walletPage">
     <i data-lucide="wallet" class="nav-icon"></i>
-    <span class="nav-text">Cüzdan</span>
+    <span class="nav-text" data-i18n="wallet">Cüzdan</span>
   </button>
   <button onclick="showPage('profilePage',this)" data-page-id="profilePage">
     <i data-lucide="user" class="nav-icon"></i>
-    <span class="nav-text">Profil</span>
+    <span class="nav-text" data-i18n="profile">Profil</span>
   </button>
 </div>
 
 <script>
 lucide.createIcons();
+
+const i18n = {
+    az: {
+        settings: "Ayarlar",
+        theme: "Tema",
+        lang: "Dil",
+        invite: "Dostlarını Dəvət Et",
+        copy: "Linki Kopyala",
+        wp: "WhatsApp ilə Paylaş",
+        tg: "Telegram ilə Paylaş",
+        balance: "Balansınız",
+        box_title: "Şans Qutusu",
+        box_desc: "1 Milyon 🍋 topla, qutunu aç və <b>25₼, 50₼, 75₼</b> və ya <b>100₼</b> qazan!",
+        open_box: "Qutunu Aç",
+        open_box_ready: "✨ İndi Aç! ✨",
+        box_opened: "Siz bu qutunu artıq açmısınız!",
+        tasks: "Tapşırıqlar",
+        task1_title: "Kanala Qoşul",
+        task1_desc: "Rəsmi M Plus kanalına qoşul və qazan!",
+        task2_title: "Qrupumuza Qoşul",
+        task2_btn: "Qrupa Qoşul",
+        task2_desc: "Söhbət qrupumuza qoşul və icmanın bir hissəsi ol!",
+        ads_title: "Gündəlik Reklamlar",
+        ads_desc: "Hər reklam üçün <b class='reward-text-b'>0.002 ₼ + 100 🍋</b> qazanın",
+        watched: "İzlənən",
+        max: "Maksimum",
+        progress: "İrəliləyiş",
+        watch_ad: "Reklam İzlə",
+        watching: "İzlənilir...",
+        limit_reached: "Limit Doldu",
+        wallet: "Cüzdan",
+        withdraw_method: "Çıxarış Üsulu",
+        where_to_receive: "Ödənişi hara almaq istəyirsiniz?",
+        min_withdraw: "Min",
+        back: "Geri Qayıt",
+        enter_info: "Məlumatları daxil et",
+        choose_network: "Ağı seçin",
+        fee: "Şəbəkə haqqı (5%):",
+        final_amount: "Yekun məbləğ:",
+        confirm_withdraw: "Təsdiqlə və Çıxar",
+        withdraw_history: "Çıxarış Tarixçəsi",
+        history_empty: "Keçmiş boşdur",
+        status_pending: "Gözləyir",
+        profile: "Profil",
+        stats: "Statistika",
+        stat_ads: "Reklam İzləndi",
+        stat_tasks: "Tapşırıq Edildi",
+        stat_earn: "Ümumi Reklam Qazancı",
+        msg_limit: "📣 Günlük limitə çatdınız!",
+        msg_copied: "✅ Referal linki kopyalandı!",
+        msg_copy_err: "❌ Kopyalama xətası!",
+        err_method: "Çıxarış üsulunu seçin",
+        err_network: "Zəhmət olmasa ağ seçin",
+        err_bank: "Kart nömrəsi tam 16 rəqəm olmalıdır",
+        err_phone: "Nömrə tam 10 rəqəm olmalıdır",
+        err_usdt: "Adres düzgün deyil",
+        err_amount: "Düzgün məbləğ daxil edin",
+        err_min: "Minimum çıxarış",
+        err_bal: "Balansınızda kifayət qədər vəsait yoxdur",
+        success_withdraw: "Çıxarış tələbi göndərildi!",
+        congratulations: "Təbrik edirik!",
+        box_won: "Siz şans qutusundan qazandınız:",
+        awesome: "Möhtəşəm!",
+        completed: "Tamamlandı",
+        checking: "Yoxlanılır...",
+        task_success: "✅ Tapşırıq uğurlu! <b>{reward}</b> qazandınız.",
+        ad_reward_text: "🎉 <b>{reward}</b> qazandınız!",
+        ad_reward_box: "🎉 <b>{reward} + 100 🍋</b> qazandınız!",
+        share_text: `🔥 Pul qazanmaq heç bu qədər rahat olmamışdı M Plus ilə hər şey sənin nəzarətində!\n\n💡 Sadəcə bir neçə saniyəlik reklamları izləyərək balansını artır. Heç bir çətinlik yoxdur telefonun kifayətdir.\n\n👇 İndi qoşul və ilk qazancını əldə et: 🔗 {link}\n\n📲 Gün ərzində istədiyin vaxt daxil ol, reklam izlə və qazancını yığ. 💸 Topladığın məbləği rahat şəkildə çıxara bilərsən.\n\n⚡ Gözləmə M Plus ilə qazancını bu gündən başlat!`
+    },
+    tr: {
+        settings: "Ayarlar",
+        theme: "Tema",
+        lang: "Dil",
+        invite: "Arkadaşlarını Davet Et",
+        copy: "Bağlantıyı Kopyala",
+        wp: "WhatsApp ile Paylaş",
+        tg: "Telegram ile Paylaş",
+        balance: "Bakiyeniz",
+        box_title: "Şans Kutusu",
+        box_desc: "1 Milyon 🍋 topla, kutuyu aç ve <b>660 TL, 1320 TL, 1980 TL</b> veya <b>2640 TL</b> kazan!",
+        open_box: "Kutuyu Aç",
+        open_box_ready: "✨ Şimdi Aç! ✨",
+        box_opened: "Bu kutuyu zaten açtınız!",
+        tasks: "Görevler",
+        task1_title: "Kanala Katıl",
+        task1_desc: "Resmi M Plus kanalına katıl ve kazan!",
+        task2_title: "Grubumuza Katıl",
+        task2_btn: "Gruba Katıl",
+        task2_desc: "Sohbet grubumuza katıl ve topluluğun bir parçası ol!",
+        ads_title: "Günlük Reklamlar",
+        ads_desc: "Her reklam için <b class='reward-text-b'>0.0528 TL + 100 🍋</b> kazanın",
+        watched: "İzlenen",
+        max: "Maksimum",
+        progress: "İlerleme",
+        watch_ad: "Reklam İzle",
+        watching: "İzleniyor...",
+        limit_reached: "Limit Doldu",
+        wallet: "Cüzdan",
+        withdraw_method: "Çekim Yöntemi",
+        where_to_receive: "Ödemeyi nereye almak istiyorsunuz?",
+        min_withdraw: "Min",
+        back: "Geri Dön",
+        enter_info: "Bilgileri girin",
+        choose_network: "Ağı seçin",
+        fee: "Ağ ücreti (5%):",
+        final_amount: "Son miktar:",
+        confirm_withdraw: "Onayla ve Çek",
+        withdraw_history: "Çekim Geçmişi",
+        history_empty: "Geçmiş boş",
+        status_pending: "Bekliyor",
+        profile: "Profil",
+        stats: "İstatistikler",
+        stat_ads: "Reklam İzlendi",
+        stat_tasks: "Görev Yapıldı",
+        stat_earn: "Toplam Reklam Kazancı",
+        msg_limit: "📣 Günlük limite ulaştınız!",
+        msg_copied: "✅ Referans bağlantısı kopyalandı!",
+        msg_copy_err: "❌ Kopyalama hatası!",
+        err_method: "Çekim yöntemini seçin",
+        err_network: "Lütfen ağ seçin",
+        err_bank: "Kart numarası tam 16 rakam olmalıdır",
+        err_phone: "Numara tam 10 rakam olmalıdır",
+        err_usdt: "Adres geçersiz",
+        err_amount: "Geçerli bir miktar girin",
+        err_min: "Minimum çekim",
+        err_bal: "Yetersiz Bakiye",
+        success_withdraw: "Çekim talebi gönderildi!",
+        congratulations: "Tebrikler!",
+        box_won: "Şans kutusundan kazandınız:",
+        awesome: "Harika!",
+        completed: "Tamamlandı",
+        checking: "Kontrol ediliyor...",
+        task_success: "✅ Görev başarılı! <b>{reward}</b> kazandınız.",
+        ad_reward_text: "🎉 <b>{reward}</b> kazandınız!",
+        ad_reward_box: "🎉 <b>{reward} + 100 🍋</b> kazandınız!",
+        share_text: `🔥 Para kazanmak hiç bu kadar kolay olmamıştı M Plus ile her şey senin kontrolünde!\n\n💡 Sadece birkaç saniyelik reklamları izleyerek bakiyeni artır. Hiçbir zorluk yok telefonun yeterli.\n\n👇 Şimdi katıl ve ilk kazancını elde et: 🔗 {link}\n\n📲 Gün içinde istediğin zaman gir, reklam izle ve kazancını topla. 💸 Topladığın tutarı rahatça çekebilirsin.\n\n⚡ Bekleme M Plus ile kazancını bugünden başlat!`
+    }
+};
 
 let adManager = null;
 if (window.Adsgram) {
@@ -774,6 +920,97 @@ if (tgUser) {
 
 const userRefLink = `https://t.me/mplusappbot?startapp=${userRefId}`;
 
+// Format Currency
+function fC(val_azn, forceNumberOnly = false) {
+    if(currentLang === 'tr') {
+        let v = (parseFloat(val_azn) * 26.4).toFixed(4).replace(/\.?0+$/, '');
+        return forceNumberOnly ? v : v + ' TL';
+    }
+    let v2 = parseFloat(val_azn).toFixed(3);
+    return forceNumberOnly ? v2 : v2 + ' ₼';
+}
+
+const allMethods = [
+    { type: 'm10', name: 'M10', logo: 'https://i.postimg.cc/Kj94hVNG/unnamed.png' },
+    { type: 'bank', name: 'Bank Kartı', logo: 'https://i.postimg.cc/L6H0yWwZ/42492-bank-1024.png' },
+    { type: 'nar', name: 'Nar', logo: 'https://i.postimg.cc/4NmxhWPy/images.png' },
+    { type: 'azercell', name: 'Azercell', logo: 'https://i.postimg.cc/qM5gmPqZ/applogo512.png' },
+    { type: 'bakcell', name: 'Bakcell', logo: 'https://i.postimg.cc/Pqmx5N49/images.jpg' },
+    { type: 'usdt', name: 'USDT', logo: 'https://i.postimg.cc/8kmSsGyz/XTVCUSDT-600-(1).png' }
+];
+
+let type = '';
+let methodName = '';
+let selectedNetwork = '';
+
+function renderMethodsList() {
+    const list = document.getElementById('methods');
+    list.innerHTML = '';
+    
+    let methodsToShow = currentLang === 'tr' ? [allMethods[5]] : allMethods;
+    
+    methodsToShow.forEach(m => {
+        const minText = currentLang === 'tr' ? 'Min: 132 TL' : 'Min: 5 ₼';
+        const dName = (currentLang === 'tr' && m.type === 'bank') ? 'Banka Kartı' : m.name; 
+        
+        list.innerHTML += `
+        <div class="method" data-type="${m.type}" data-name="${dName}">
+          <img src="${m.logo}" alt="${dName}" class="method-logo" draggable="false">
+          <span class="method-text">${dName}</span>
+          <span class="min-withdraw-label">${minText}</span>
+        </div>`;
+    });
+    
+    bindMethodClicks();
+}
+
+function updateTexts() {
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if(i18n[currentLang][key]) {
+            el.innerHTML = i18n[currentLang][key];
+        }
+    });
+
+    document.getElementById('btnLangAZ').classList.toggle('active', currentLang === 'az');
+    document.getElementById('btnLangTR').classList.toggle('active', currentLang === 'tr');
+
+    document.getElementById('taskJoinRewardBadge').textContent = fC(TASK_APP_REWARD);
+    document.getElementById('taskChatRewardBadge').textContent = fC(TASK_CHAT_REWARD);
+    
+    document.querySelectorAll('.bal-symbol').forEach(el => el.textContent = currentLang === 'tr' ? 'TL' : '₼');
+    document.querySelectorAll('.feeCalcSymbol').forEach(el => el.textContent = currentLang === 'tr' ? 'TL' : '₼');
+    
+    const amtInput = document.getElementById('amount');
+    if (amtInput) {
+        amtInput.placeholder = currentLang === 'tr' ? 'Miktar (Min 132 TL)' : 'Məbləğ (Min 5 ₼)';
+    }
+
+    renderMethodsList();
+    renderHistory();
+    updateStatsUI();
+    update();
+    restoreAdBtnState();
+}
+
+function setLang(lang) {
+    if(currentLang === lang) return;
+    currentLang = lang;
+    safeSet(LANG_KEY, lang);
+    
+    // Formu Resetləmək (Xətanı önləmək üçün)
+    document.getElementById('form').style.display = 'none';
+    document.getElementById('methodsContainer').style.display = 'block';
+    document.getElementById('alert').style.display = 'none';
+    document.getElementById('feeCalcBox').style.display = 'none';
+    type = '';
+    selectedNetwork = '';
+    document.getElementById('details').value = '';
+    document.getElementById('amount').value = '';
+    
+    updateTexts();
+}
+
 const BAL_KEY = `bal_mplus_${userRefId}`;
 const LIMON_KEY = `limon_mplus_${userRefId}`;
 const BOX_CLAIMED_KEY = `box_claimed_mplus_${userRefId}`;
@@ -789,6 +1026,7 @@ const TOTAL_ADS_KEY = `tot_ads_mplus_${userRefId}`;
 const TOTAL_TASKS_KEY = `tot_tasks_mplus_${userRefId}`;
 const TOTAL_AD_EARN_KEY = `tot_ad_earn_mplus_${userRefId}`;
 
+// Bütün daxili rəqəmlər AZN olaraq qalır
 const REWARD_PER_AD = 0.002;
 const MAX_ADS_PER_DAY = 50;
 const TASK_APP_REWARD = 0.10;
@@ -805,16 +1043,6 @@ let totalAdsAllTime = parseInt(safeGet(TOTAL_ADS_KEY, 0));
 let totalTasksAllTime = parseInt(safeGet(TOTAL_TASKS_KEY, 0));
 let totalAdEarnAllTime = parseFloat(safeGet(TOTAL_AD_EARN_KEY, 0.00));
 
-const shareMsgText = `🔥 Pul qazanmaq heç bu qədər rahat olmamışdı M Plus ilə hər şey sənin nəzarətində!\n\n💡 Sadəcə bir neçə saniyəlik reklamları izləyərək balansını artır. Heç bir çətinlik yoxdur telefonun kifayətdir.\n\n👇 İndi qoşul və ilk qazancını əldə et: 🔗 ${userRefLink}\n\n📲 Gün ərzində istədiyin vaxt daxil ol, reklam izlə və qazancını yığ. 💸 Topladığın məbləği rahat şəkildə çıxara bilərsən.\n\n⚡ Gözləmə M Plus ilə qazancını bu gündən başlat!`;
-
-const methodLogos = {
-    'm10': 'https://i.postimg.cc/Kj94hVNG/unnamed.png',
-    'bank': 'https://i.postimg.cc/L6H0yWwZ/42492-bank-1024.png',
-    'nar': 'https://i.postimg.cc/4NmxhWPy/images.png',
-    'azercell': 'https://i.postimg.cc/qM5gmPqZ/applogo512.png',
-    'bakcell': 'https://i.postimg.cc/Pqmx5N49/images.jpg'
-};
-
 let bal = parseFloat(safeGet(BAL_KEY, 0.00)); 
 let limon = parseInt(safeGet(LIMON_KEY, 0));
 let boxClaimed = safeGet(BOX_CLAIMED_KEY, false);
@@ -824,17 +1052,12 @@ let resetTime = safeGet(RESET_KEY, null);
 let rewardMsgTimeout = null; 
 let isAdRunning = false; 
 
-// --- YENİ VƏ DƏQİQ SAAT HESABLAMASI (TELEFONUN YERLİ SAATI İLƏ 23:00) ---
 function getNextResetTime() {
     const now = new Date();
-    // Cihazın (telefonun) saatı ilə bu gün 23:00-ı təyin edirik
     let resetLocal = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 0, 0, 0);
-
-    // Əgər telefonun saatı 23:00-ı keçibsə və ya tam 23:00-dırsa, növbəti sıfırlanma sabah 23:00-da olacaq
     if (now.getTime() >= resetLocal.getTime()) {
         resetLocal.setDate(resetLocal.getDate() + 1);
     }
-    
     return resetLocal.getTime();
 }
 
@@ -873,29 +1096,40 @@ function loadProfile() {
 function updateStatsUI() {
     document.getElementById('statTotalAds').textContent = totalAdsAllTime;
     document.getElementById('statTotalTasks').textContent = totalTasksAllTime;
-    document.getElementById('statTotalAdEarn').textContent = totalAdEarnAllTime.toFixed(3) + ' ₼';
+    document.getElementById('statTotalAdEarn').textContent = fC(totalAdEarnAllTime);
 }
 
 function copyRefLink() {
-    navigator.clipboard.writeText(userRefLink).then(() => {
-        showTaskNotification('✅ Referal linki kopyalandı!');
-    }).catch(() => {
-        showTaskNotification('❌ Kopyalama xətası!');
-    });
+    const fallbackCopyTextToClipboard = (text) => {
+        var textArea = document.createElement("textarea");
+        textArea.value = text;
+        textArea.style.top = "0"; textArea.style.left = "0"; textArea.style.position = "fixed";
+        document.body.appendChild(textArea);
+        textArea.focus(); textArea.select();
+        try { document.execCommand('copy'); showTaskNotification(i18n[currentLang].msg_copied); } 
+        catch (err) { showTaskNotification(i18n[currentLang].msg_copy_err); }
+        document.body.removeChild(textArea);
+    };
+
+    if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(userRefLink).then(() => {
+            showTaskNotification(i18n[currentLang].msg_copied);
+        }).catch(() => { fallbackCopyTextToClipboard(userRefLink); });
+    } else {
+        fallbackCopyTextToClipboard(userRefLink);
+    }
 }
 
 function shareWhatsApp() {
-    const encodedMessage = encodeURIComponent(shareMsgText);
+    let msg = i18n[currentLang].share_text.replace('{link}', userRefLink);
+    const encodedMessage = encodeURIComponent(msg);
     window.open(`https://wa.me/?text=${encodedMessage}`, '_blank');
 }
 
 function shareAppAction() {
-    const encodedMessage = encodeURIComponent(shareMsgText);
+    let msg = i18n[currentLang].share_text.replace('{link}', userRefLink);
+    const encodedMessage = encodeURIComponent(msg);
     window.open(`https://t.me/share/url?url=&text=${encodedMessage}`, '_blank');
-}
-
-function formatBal(val) {
-    return parseFloat(val).toFixed(3);
 }
 
 function update(){
@@ -905,26 +1139,25 @@ function update(){
       safeSet(RESET_KEY, resetTime);
   }
 
-  const formattedBal = formatBal(bal);
-  document.querySelectorAll('.bal-azn').forEach(el => el.textContent = formattedBal);
+  const formattedBal = fC(bal, true);
+  document.querySelectorAll('.bal-val').forEach(el => el.textContent = formattedBal);
 
-  // Limon UI yenilənməsi
   if (boxClaimed) {
       document.querySelectorAll('.limon-wrap').forEach(el => el.style.display = 'none');
-      document.querySelectorAll('.reward-text-b').forEach(el => el.innerHTML = '0.002 ₼');
+      document.querySelectorAll('.reward-text-b').forEach(el => el.innerHTML = fC(REWARD_PER_AD));
       
       const boxCard = document.getElementById('limonBoxCard');
       if(boxCard) {
           boxCard.innerHTML = `<div class="box-card-icon" style="animation:none;">✅</div>
-                               <h3>Şans Qutusu</h3>
-                               <p style="color:var(--accent); font-size:16px; font-weight:800; margin-top:10px;">Siz bu qutunu artıq açmısınız!</p>`;
+                               <h3>${i18n[currentLang].box_title}</h3>
+                               <p style="color:var(--accent); font-size:16px; font-weight:800; margin-top:10px;">${i18n[currentLang].box_opened}</p>`;
           boxCard.style.borderColor = 'var(--card-border)';
           boxCard.style.boxShadow = 'none';
       }
   } else {
       document.querySelectorAll('.bal-limon').forEach(el => el.textContent = limon.toLocaleString('en-US'));
       document.querySelectorAll('.limon-wrap').forEach(el => el.style.display = 'flex');
-      document.querySelectorAll('.reward-text-b').forEach(el => el.innerHTML = '0.002 ₼ + 100 🍋');
+      document.querySelectorAll('.reward-text-b').forEach(el => el.innerHTML = `${fC(REWARD_PER_AD)} + 100 🍋`);
       
       let perc = Math.min((limon / MAX_LIMON) * 100, 100);
       let progressFill = document.getElementById('boxProgress');
@@ -938,11 +1171,11 @@ function update(){
           if (limon >= MAX_LIMON) {
               btn.disabled = false;
               btn.classList.add('ready');
-              btn.innerHTML = '✨ İndi Aç! ✨';
+              btn.innerHTML = i18n[currentLang].open_box_ready;
           } else {
               btn.disabled = true;
               btn.classList.remove('ready');
-              btn.innerHTML = 'Qutunu Aç';
+              btn.innerHTML = i18n[currentLang].open_box;
           }
       }
   }
@@ -961,7 +1194,6 @@ function update(){
   updateTaskButtons(); 
 }
 
-// Qutu açılışı funksiyası
 document.getElementById('openBoxBtn').addEventListener('click', () => {
     if (limon >= MAX_LIMON && !boxClaimed) {
         const rewards = [25, 50, 75, 100];
@@ -977,7 +1209,7 @@ document.getElementById('openBoxBtn').addEventListener('click', () => {
         
         update();
         
-        document.getElementById('boxRewardText').textContent = winAmount + ' ₼';
+        document.getElementById('boxRewardText').textContent = fC(winAmount);
         document.getElementById('boxModal').classList.add('show');
     }
 });
@@ -986,12 +1218,18 @@ function closeBoxModal() {
     document.getElementById('boxModal').classList.remove('show');
 }
 
+function getLogoForType(t) {
+    let m = allMethods.find(x => x.type === t);
+    if(m) return m.logo;
+    return allMethods[0].logo;
+}
+
 function renderHistory() {
     const list = document.getElementById('historyList');
     list.innerHTML = '';
     
     if (withdrawHistory.length === 0) {
-        list.innerHTML = `<div class="history-empty">Keçmiş boşdur</div>`;
+        list.innerHTML = `<div class="history-empty">${i18n[currentLang].history_empty}</div>`;
         return;
     }
     
@@ -1002,7 +1240,7 @@ function renderHistory() {
         
         const d = new Date(item.date);
         const dateStr = d.toLocaleDateString() + ' ' + d.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-        const logoSrc = methodLogos[item.type] || methodLogos['m10'];
+        const logoSrc = getLogoForType(item.type);
         
         div.innerHTML = `
             <div class="history-info">
@@ -1010,21 +1248,21 @@ function renderHistory() {
                 <div class="history-date">${dateStr}</div>
             </div>
             <div class="history-status-wrap">
-                <div class="history-amount">${formatBal(item.amount)} ₼</div>
-                <div class="history-status">Gözləyir</div>
+                <div class="history-amount">${fC(item.amount)}</div>
+                <div class="history-status">${i18n[currentLang].status_pending}</div>
             </div>
         `;
         list.appendChild(div);
     });
 }
 
-function setupTaskBtn(btnId, storageKey, reward, linkText) {
+function setupTaskBtn(btnId, storageKey, linkTextKey) {
     const btn = document.getElementById(btnId);
     if (!btn) return;
     
     if (localStorage.getItem(storageKey)){
         btn.className = 'task-btn completed'; 
-        btn.innerHTML = `<i data-lucide="check-circle" style="width:20px;height:20px;"></i> Tamamlandı`; 
+        btn.innerHTML = `<i data-lucide="check-circle" style="width:20px;height:20px;"></i> ${i18n[currentLang].completed}`; 
         btn.disabled = true; 
         btn.style.background = '';
         btn.style.boxShadow = '';
@@ -1035,17 +1273,17 @@ function setupTaskBtn(btnId, storageKey, reward, linkText) {
             if(btnId === 'joinChatBtn'){
                 btn.style.background = 'linear-gradient(135deg, var(--accent-red), #991B1B)';
                 btn.style.boxShadow = '0 8px 25px rgba(239, 68, 68, 0.3)';
-                btn.innerHTML = `<i data-lucide="message-circle" style="width:20px;height:20px;"></i> <span>${linkText}</span>`;
+                btn.innerHTML = `<i data-lucide="message-circle" style="width:20px;height:20px;"></i> <span>${i18n[currentLang][linkTextKey]}</span>`;
             } else {
-                btn.innerHTML = `<i data-lucide="external-link" style="width:20px;height:20px;"></i> <span>${linkText}</span>`;
+                btn.innerHTML = `<i data-lucide="external-link" style="width:20px;height:20px;"></i> <span>${i18n[currentLang][linkTextKey]}</span>`;
             }
         }
     }
 }
 
 function updateTaskButtons() {
-    setupTaskBtn('joinAppBtn', JOIN_APP_KEY, TASK_APP_REWARD, 'Kanala Qoşul');
-    setupTaskBtn('joinChatBtn', JOIN_CHAT_KEY, TASK_CHAT_REWARD, 'Qrupa Qoşul');
+    setupTaskBtn('joinAppBtn', JOIN_APP_KEY, 'task1_title');
+    setupTaskBtn('joinChatBtn', JOIN_CHAT_KEY, 'task2_btn');
     lucide.createIcons(); 
 }
 
@@ -1111,30 +1349,29 @@ function checkAndDisplayRewardMsg() {
     } else { if (rewardMsgElement && rewardMsgElement.parentNode === container) rewardMsgElement.remove(); }
 }
 
-// --- BUTONUN KİLİDLƏNMƏ (LOCKED) SİSTEMİ ---
 function restoreAdBtnState() {
     const textSpan = adBtnContent.querySelector('span');
     const icon = adBtnContent.querySelector('i');
     
     if (isAdRunning) {
         adBtn.classList.add('waiting'); adBtn.disabled = true;
-        if(textSpan) textSpan.textContent = 'İzlənilir...'; 
+        if(textSpan) textSpan.textContent = i18n[currentLang].watching; 
         if(icon) { icon.setAttribute('data-lucide', 'loader'); lucide.createIcons(); }
         return; 
     }
 
     if (cnt >= MAX_ADS_PER_DAY) {
-        adBtn.classList.add('waiting'); // Butonu boz/deaktiv edir
+        adBtn.classList.add('waiting'); 
         adBtn.disabled = true; 
-        if(textSpan) textSpan.textContent = 'Limit Doldu';
+        if(textSpan) textSpan.textContent = i18n[currentLang].limit_reached;
         if(icon) { icon.setAttribute('data-lucide', 'lock'); lucide.createIcons(); }
-        msg.textContent = '📣 Günlük limitə çatdınız!'; 
+        msg.textContent = i18n[currentLang].msg_limit; 
         checkAndDisplayRewardMsg(); 
         return; 
     }
     
     adBtn.classList.remove('waiting'); adBtn.disabled = false; 
-    if(textSpan) textSpan.textContent = 'Reklam İzlə';
+    if(textSpan) textSpan.textContent = i18n[currentLang].watch_ad;
     if(icon) { icon.setAttribute('data-lucide', 'play'); lucide.createIcons(); }
     msg.textContent = ''; checkAndDisplayRewardMsg();
 }
@@ -1156,7 +1393,7 @@ adBtn.onclick = async () => {
     adBtn.disabled = true; adBtn.classList.add('waiting');
     const textSpan = adBtnContent.querySelector('span');
     const icon = adBtnContent.querySelector('i');
-    if(textSpan) textSpan.textContent = 'İzlənilir...'; 
+    if(textSpan) textSpan.textContent = i18n[currentLang].watching; 
     if(icon) { icon.setAttribute('data-lucide', 'loader'); lucide.createIcons(); }
     msg.textContent = '';
     
@@ -1183,14 +1420,14 @@ function giveAdReward() {
     bal += REWARD_PER_AD; 
     cnt++; 
     
-    let rewardTextStr = `🎉 <b>${REWARD_PER_AD} ₼</b> qazandınız!`;
+    let rewardTextStr = i18n[currentLang].ad_reward_text.replace('{reward}', fC(REWARD_PER_AD));
     
     if (!boxClaimed) {
         if (limon < MAX_LIMON) {
             limon += LIMON_PER_AD;
             if (limon > MAX_LIMON) limon = MAX_LIMON;
             safeSet(LIMON_KEY, limon);
-            rewardTextStr = `🎉 <b>${REWARD_PER_AD} ₼ + 100 🍋</b> qazandınız!`;
+            rewardTextStr = i18n[currentLang].ad_reward_box.replace('{reward}', fC(REWARD_PER_AD));
         }
     }
     
@@ -1202,7 +1439,6 @@ function giveAdReward() {
     update(); 
     displayRewardMsg(rewardTextStr);
     
-    // Limitsə çatıbsa yenilə ki, kilitlənsin
     if (cnt >= MAX_ADS_PER_DAY) {
         isAdRunning = false;
         restoreAdBtnState();
@@ -1236,7 +1472,7 @@ function handleTaskClick(btnId, url, storageKey, reward) {
     btn.disabled = true; btn.classList.add('waiting'); 
     btn.style.background = '';
     btn.style.boxShadow = '';
-    btn.innerHTML = `<i data-lucide="loader" style="width:20px;height:20px;"></i> <span>Yoxlanılır...</span>`;
+    btn.innerHTML = `<i data-lucide="loader" style="width:20px;height:20px;"></i> <span>${i18n[currentLang].checking}</span>`;
     lucide.createIcons();
     setTimeout(() => {
         bal += reward; 
@@ -1245,7 +1481,8 @@ function handleTaskClick(btnId, url, storageKey, reward) {
         safeSet(BAL_KEY, bal); 
         localStorage.setItem(storageKey, '1'); 
         update();
-        showTaskNotification(`✅ Tapşırıq uğurlu! <b>${reward} ₼</b> qazandınız.`);
+        let sMsg = i18n[currentLang].task_success.replace('{reward}', fC(reward));
+        showTaskNotification(sMsg);
     }, 4000);
 }
 
@@ -1267,48 +1504,93 @@ function showPage(id, btn){
   }
 }
 
-const methods = document.querySelectorAll('.method');
 const form = document.getElementById('form'); const details = document.getElementById('details');
 const amount = document.getElementById('amount'); const alertBox = document.getElementById('alert');
 const feeCalcBox = document.getElementById('feeCalcBox');
 const feeAmountSpan = document.getElementById('feeAmount');
 const receiveAmountSpan = document.getElementById('receiveAmount');
-let type = '';
-let methodName = '';
-let reqLength = 10;
 
-methods.forEach(m=>{
-  m.onclick=()=>{
-    type = m.dataset.type;
-    methodName = m.dataset.name;
-    reqLength = (type === 'bank') ? 16 : 10;
+function bindMethodClicks() {
+    document.querySelectorAll('.method').forEach(m => {
+      m.onclick = () => {
+        type = m.dataset.type;
+        methodName = m.dataset.name;
+        
+        document.getElementById('methodsContainer').style.display='none'; 
+        form.style.display='block';
+        
+        alertBox.style.display='none'; feeCalcBox.style.display='none';
+        details.value=''; amount.value='';
+        selectedNetwork = '';
+        
+        document.querySelectorAll('.network-btn').forEach(b => b.classList.remove('active'));
 
-    document.getElementById('methodsContainer').style.display='none'; 
-    form.style.display='block';
-    
-    details.placeholder = (type === 'bank') ? '16 rəqəmli kart nömrəsi' : '10 rəqəmli telefon nömrəsi daxil et';
-    details.value=''; amount.value=''; alertBox.style.display='none'; feeCalcBox.style.display='none';
-  };
+        if(type === 'usdt') {
+            document.getElementById('networkWrapper').style.display = 'block';
+            details.style.display = 'none';
+            amount.style.display = 'none';
+            feeCalcBox.style.display = 'none';
+            document.getElementById('withdrawBtn').style.display = 'none';
+            details.type = 'text';
+            details.inputMode = 'text';
+        } else {
+            document.getElementById('networkWrapper').style.display = 'none';
+            details.style.display = 'block';
+            amount.style.display = 'block';
+            document.getElementById('withdrawBtn').style.display = 'flex';
+            details.type = 'text';
+            details.inputMode = 'numeric';
+            details.placeholder = type === 'bank' 
+                ? (currentLang==='tr' ? '16 haneli kart numarası' : '16 rəqəmli kart nömrəsi')
+                : (currentLang==='tr' ? '10 haneli telefon numarası' : '10 rəqəmli telefon nömrəsi daxil et');
+        }
+      };
+    });
+}
+
+document.querySelectorAll('.network-btn').forEach(btn => {
+    btn.onclick = () => {
+        document.querySelectorAll('.network-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        selectedNetwork = btn.dataset.net;
+        
+        details.style.display = 'block';
+        amount.style.display = 'block';
+        document.getElementById('withdrawBtn').style.display = 'flex';
+        
+        if(selectedNetwork === 'bep20') {
+            details.placeholder = currentLang === 'tr' ? 'BEP20 adresini girin' : 'BEP20 adresini daxil edin';
+        } else {
+            details.placeholder = currentLang === 'tr' ? 'TON adresini girin' : 'TON adresini daxil edin';
+        }
+    };
 });
 
 details.addEventListener('input', function() {
-    this.value = this.value.replace(/\D/g, ''); 
-    if(this.value.length > reqLength) {
-        this.value = this.value.slice(0, reqLength);
+    if(type !== 'usdt') {
+        this.value = this.value.replace(/\D/g, ''); 
+        let reqLength = type === 'bank' ? 16 : 10;
+        if(this.value.length > reqLength) {
+            this.value = this.value.slice(0, reqLength);
+        }
+    } else {
+        this.value = this.value.replace(/[^a-zA-Z0-9]/g, '');
     }
 });
 
 document.getElementById('backBtn').onclick=()=>{
-  form.style.display='none'; document.getElementById('methodsContainer').style.display='block'; alertBox.style.display='none'; type='';
+  form.style.display='none'; document.getElementById('methodsContainer').style.display='block'; alertBox.style.display='none'; type=''; selectedNetwork='';
 };
 
 function calculateFee() {
-    const amt = parseFloat(amount.value);
-    if (!isNaN(amt) && amt > 0) {
-        const fee = amt * FEE_PERCENT;
-        const receive = amt - fee;
+    const amt_input = parseFloat(amount.value);
+    if (!isNaN(amt_input) && amt_input > 0) {
+        const fee = amt_input * FEE_PERCENT;
+        const receive = amt_input - fee;
+        
         feeAmountSpan.textContent = fee.toFixed(3);
         receiveAmountSpan.textContent = receive.toFixed(3);
+        
         feeCalcBox.style.display = 'block';
     } else {
         feeCalcBox.style.display = 'none';
@@ -1317,43 +1599,58 @@ function calculateFee() {
 amount.addEventListener('input', calculateFee);
 
 document.getElementById('withdrawBtn').onclick=()=>{
-  const det = details.value.trim(); const amt = parseFloat(amount.value);
+  const det = details.value.trim(); const input_amt = parseFloat(amount.value);
   alertBox.style.display='none';
 
-  if(!type){ showErr('Çıxarış üsulunu seçin'); return; }
+  if(!type){ showErr(i18n[currentLang].err_method); return; }
   
-  if(det.length !== reqLength){
-      if(type === 'bank') showErr('Kart nömrəsi tam 16 rəqəm olmalıdır');
-      else showErr('Nömrə tam 10 rəqəm olmalıdır');
-      return;
+  if(type === 'usdt' && !selectedNetwork) {
+      showErr(i18n[currentLang].err_network); return;
+  }
+  
+  if(type !== 'usdt') {
+      let reqLength = type === 'bank' ? 16 : 10;
+      if(det.length !== reqLength){
+          if(type === 'bank') showErr(i18n[currentLang].err_bank);
+          else showErr(i18n[currentLang].err_phone);
+          return;
+      }
+  } else {
+      if(det.length < 10) { 
+          showErr(i18n[currentLang].err_usdt); return;
+      }
   }
 
-  if(isNaN(amt) || amt <= 0){ showErr('Düzgün məbləğ daxil edin'); return; }
+  if(isNaN(input_amt) || input_amt <= 0){ showErr(i18n[currentLang].err_amount); return; }
+  
+  let amt_azn = currentLang === 'tr' ? (input_amt / 26.4) : input_amt;
   
   const EPSILON = 0.0001; 
-  if(amt < MIN_WITHDRAW - EPSILON){ showErr(`Minimum çıxarış ${MIN_WITHDRAW} ₼-dir`); return; }
-  if(amt > bal + EPSILON){ showErr('Balansınızda kifayət qədər vəsait yoxdur'); return; }
+  if(amt_azn < MIN_WITHDRAW - EPSILON){ 
+      showErr(`${i18n[currentLang].err_min} ${fC(MIN_WITHDRAW)}`); 
+      return; 
+  }
+  if(amt_azn > bal + EPSILON){ showErr(i18n[currentLang].err_bal); return; }
   
-  bal = Math.max(0, bal - amt); 
+  bal = Math.max(0, bal - amt_azn); 
   safeSet(BAL_KEY,bal); update();
   
-  const historyItem = { type: type, methodName: methodName, amount: amt, status: 'pending', date: Date.now() };
+  const historyMethodName = type === 'usdt' ? `USDT (${selectedNetwork.toUpperCase()})` : methodName;
+  const historyItem = { type: type, methodName: historyMethodName, amount: amt_azn, status: 'pending', date: Date.now() };
   withdrawHistory.push(historyItem); safeSet(HISTORY_KEY, withdrawHistory); renderHistory(); 
 
-  alertBox.innerHTML='<i data-lucide="check-circle" style="vertical-align: middle; margin-right: 5px;"></i> Çıxarış tələbi göndərildi!'; 
+  alertBox.innerHTML=`<i data-lucide="check-circle" style="vertical-align: middle; margin-right: 5px;"></i> ${i18n[currentLang].success_withdraw}`; 
   lucide.createIcons();
   alertBox.className='alert success'; alertBox.style.display='block';
   setTimeout(()=>{
-    form.style.display='none'; document.getElementById('methodsContainer').style.display='block'; alertBox.style.display='none'; type='';
+    form.style.display='none'; document.getElementById('methodsContainer').style.display='block'; alertBox.style.display='none'; type=''; selectedNetwork='';
   }, 2500);
 };
 
 function showErr(msg){ alertBox.innerHTML=`<i data-lucide="alert-circle" style="vertical-align: middle; margin-right: 5px;"></i> ${msg}`; lucide.createIcons(); alertBox.className='alert error'; alertBox.style.display='block'; }
 
+updateTexts(); 
 loadProfile();
-renderHistory();
-update();
-restoreAdBtnState();
 
 function runLoadingScreen() {
     const container = document.getElementById('loadingScreen');

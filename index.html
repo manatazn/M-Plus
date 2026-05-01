@@ -1023,8 +1023,6 @@ function updateTexts() {
     renderMethodsList();
     renderHistory();
     updateStatsUI();
-    update();
-    restoreAdBtnState();
 }
 
 function setLang(lang) {
@@ -1042,57 +1040,65 @@ function setLang(lang) {
     document.getElementById('amount').value = '';
     
     updateTexts();
+    update();
 }
 
-// ==== SAAT SİNXRONİZASİYASI VƏ HİYLƏNİN QARŞISININ ALINMASI (OFFSET LOGIC) ====
-let timeOffset = 0;
+// =========================================================================
+// MÜTLƏQ SAAT SİNXRONİZASİYASI VƏ SAXTAKARLIQ ƏLEYHİNƏ SİSTEM
+// =========================================================================
+let serverTimeAtLoad = 0;
+let localTimeAtLoad = 0;
 let timeSynced = false;
 
-// Cihaz saatından asılı olmayıb daimi düzgün API saatını tapmaq
-function getTrueTime() {
-    return Date.now() + timeOffset;
-}
-
-// Reklam düyməsini ləngitməmək üçün saat serverdən arxa planda 1 dəfə asinxron çəkilir
+// 6 fərqli xarici API vasitəsi ilə saatı yoxlamaq üçün asinxron funksiya
 async function syncServerTime() {
     const apis = [
-        async () => {
-            const res = await fetch('https://api.binance.com/api/v3/time');
-            const data = await res.json();
-            return data.serverTime;
-        },
-        async () => {
-            const res = await fetch('https://worldtimeapi.org/api/timezone/Etc/UTC');
-            const data = await res.json();
-            return data.unixtime * 1000;
-        },
-        async () => {
-            const res = await fetch('https://timeapi.io/api/Time/current/zone?timeZone=Etc/UTC');
-            const data = await res.json();
-            return new Date(data.dateTime).getTime();
-        }
+        async () => { const r = await fetch('https://api.binance.com/api/v3/time'); const d = await r.json(); return d.serverTime; },
+        async () => { const r = await fetch('https://api.kucoin.com/api/v1/timestamp'); const d = await r.json(); return d.data; },
+        async () => { const r = await fetch('https://worldtimeapi.org/api/timezone/Etc/UTC'); const d = await r.json(); return d.unixtime * 1000; },
+        async () => { const r = await fetch('https://timeapi.io/api/Time/current/zone?timeZone=Etc/UTC'); const d = await r.json(); return new Date(d.dateTime).getTime(); },
+        async () => { const r = await fetch('https://api.coinbase.com/v2/time'); const d = await r.json(); return parseInt(d.data.epoch) * 1000; },
+        async () => { const r = await fetch('https://api.bybit.com/v5/market/time'); const d = await r.json(); return parseInt(d.result.timeSecond) * 1000; }
     ];
 
-    for (let getApiTime of apis) {
-        try {
-            const serverTime = await getApiTime();
-            if (serverTime) {
-                timeOffset = serverTime - Date.now();
-                timeSynced = true;
-                // Saat qurulandan sonra bəlkə gün dəyişib, onu yoxlayıb anında düyməni fəallaşdırır və ya bağlayır
-                if(getTrueTime() >= resetTime) { update(); }
-                return;
-            }
-        } catch (e) {
-            // Əgər işləməsə digər API-yə keçir
-        }
+    try {
+        // Hansı API birinci cavab versə onu götürür (Ən sürətli bağlantı)
+        const fastestTime = await Promise.any(apis.map(api => api().then(t => {
+            if (!t || isNaN(t)) throw new Error('Yalnış Saat');
+            return t;
+        })));
+        
+        serverTimeAtLoad = fastestTime;
+        localTimeAtLoad = performance.now(); // Telefonun aktiv olma müddəti
+        timeSynced = true;
+    } catch (error) {
+        timeSynced = false;
+        console.warn("Saat heç bir API-dən alına bilmədi. İnternet yoxdur.");
     }
 }
 
-// Səhifə açılanda birbaşa saatı serverlə yoxla
-syncServerTime();
-// Əgər istifadəçi proqramı açıq qoyubsa, hər 10 dəqiqədən bir saat fərqini yenilə (etibarlılıq üçün)
-setInterval(syncServerTime, 600000);
+// Dünyanın hər yerində eyni və dəyişdirilə bilməyən mütləq saatı tapır
+function getTrueTime() {
+    if (timeSynced) {
+        // API-dən gələn saatın üzərinə telefon prosessorunun işlədiyi saniyələri gəlir. 
+        // Yəni proqram açıq olanda kimsə arxa planda saatı dəyişsə belə, heçnə dəyişməyəcək!
+        return serverTimeAtLoad + (performance.now() - localTimeAtLoad);
+    }
+    return Date.now(); // Təcili ehtiyat variant (əgər internet kəsilibsə)
+}
+
+// Gündəlik sıfırlanma: Mütləq şəkildə Moskva Saatı ilə (UTC 19:00 -> Msk 22:00)
+function getNextResetTime(baseTimeMs) {
+    let d = new Date(baseTimeMs);
+    let resetUtc = new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate(), 19, 0, 0, 0));
+    
+    // Əgər həmin vaxt artıq keçibsə, növbəti günə təyin et
+    if (baseTimeMs >= resetUtc.getTime()) {
+        resetUtc.setUTCDate(resetUtc.getUTCDate() + 1);
+    }
+    return resetUtc.getTime();
+}
+// =========================================================================
 
 const BAL_KEY = `bal_mplus_${userRefId}`;
 const LIMON_KEY = `limon_mplus_${userRefId}`;
@@ -1132,30 +1138,6 @@ let resetTime = safeGet(RESET_KEY, null);
 
 let rewardMsgTimeout = null; 
 let isAdRunning = false; 
-
-// Yenilənmiş tam dəqiq API saatı Rusiya (Moskva) vaxtı ilə
-function getNextResetTime() {
-    let nowMs = getTrueTime();
-    let d = new Date(nowMs);
-    // Moskva Saatı UTC+3-dür.
-    // 22:00 Moskva saatı = 19:00 UTC (Qrinviç vaxtı) edir.
-    // Heç bir cihazın saat dilimindən asılı olmadan sırf UTC 19:00-a təyin edilir.
-    let resetUtc = new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate(), 19, 0, 0, 0));
-    
-    // Əgər hal-hazırkı saat 19:00 UTC-dən (22:00 Moskva) böyükdürsə, sıfırlanmanı növbəti günə at.
-    if (nowMs >= resetUtc.getTime()) {
-        resetUtc.setUTCDate(resetUtc.getUTCDate() + 1);
-    }
-    return resetUtc.getTime();
-}
-
-// Cihazın vaxtı ilə yox, API ilə yoxlanış
-if(!resetTime || getTrueTime() >= resetTime){
-  cnt = 0; 
-  resetTime = getNextResetTime(); 
-  safeSet(RESET_KEY, resetTime); 
-  safeSet(COUNT_KEY, cnt);
-}
 
 function loadProfilePic() {
     const pic = localStorage.getItem(PROFILE_PIC_KEY);
@@ -1210,11 +1192,13 @@ function copyRefLink() {
 }
 
 function update(){
-  // Hər gün Rusiya 22:00-da təmiz və təhlükəsiz sıfırlanma (Offset ilə)
-  if(getTrueTime() >= resetTime){
+  // Bura diqqət et: Əgər internet yoxdursa (`timeSynced` falsedirsə), sistem sadəcə 
+  // mövcud olan sayğacı saxlayacaq. Reset atmayacaq. Təhlükəsizlik budur.
+  if (timeSynced && getTrueTime() >= resetTime) {
       cnt = 0;
-      resetTime = getNextResetTime();
+      resetTime = getNextResetTime(getTrueTime());
       safeSet(RESET_KEY, resetTime);
+      safeSet(COUNT_KEY, cnt);
   }
 
   const formattedBal = fC(bal, true);
@@ -1270,6 +1254,7 @@ function update(){
   
   checkAndDisplayRewardMsg();
   updateTaskButtons(); 
+  restoreAdBtnState();
 }
 
 document.getElementById('openBoxBtn').addEventListener('click', () => {
@@ -1455,8 +1440,7 @@ function restoreAdBtnState() {
 }
 
 adBtn.onclick = async () => {
-    // Düyməyə basan kimi saniyəsində API saatı ilə limit yoxlayır
-    update();
+    update(); // Düyməyə basanda API məlumatı ilə limiti yoxlayır
     if (cnt >= MAX_ADS_PER_DAY) { restoreAdBtnState(); return; }
     if (isAdRunning || adBtn.classList.contains('waiting')) return;
     isAdRunning = true; 
@@ -1729,22 +1713,49 @@ document.getElementById('withdrawBtn').onclick=()=>{
 
 function showErr(msg){ alertBox.innerHTML=`<i data-lucide="alert-circle" style="vertical-align: middle; margin-right: 5px;"></i> ${msg}`; lucide.createIcons(); alertBox.className='alert error'; alertBox.style.display='block'; }
 
-updateTexts(); 
-loadProfile();
-
-function runLoadingScreen() {
-    const container = document.getElementById('loadingScreen');
-    if(!container) return;
+// =========================================================================
+// SİSTEMİN BAŞLADILMASI (YÜKLƏNMƏ VƏ SAAT YOXLANIŞI)
+// =========================================================================
+async function startApp() {
+    // Təhlükəsizlik və "Premium" UX üçün ən azı 2.5 saniyə ekranı gözlədirik
+    const minLoadPromise = new Promise(resolve => setTimeout(resolve, 2500));
     
-    setTimeout(()=>{
-        container.style.opacity="0"; 
-        setTimeout(()=>{
-            container.style.visibility="hidden";
-            container.style.display="none";
+    // Arxada 6 yerdən saat yoxlayır
+    const syncPromise = syncServerTime();
+
+    await Promise.all([minLoadPromise, syncPromise]);
+
+    // Həqiqi saat tapıldısa, limits resetini yoxlayırıq. 
+    // Tapılmadısa, keçmişdəki limiti dondururuq.
+    if (!resetTime) {
+        resetTime = getNextResetTime(timeSynced ? getTrueTime() : Date.now());
+        safeSet(RESET_KEY, resetTime);
+        cnt = 0;
+        safeSet(COUNT_KEY, cnt);
+    } else if (timeSynced && getTrueTime() >= resetTime) {
+        cnt = 0;
+        resetTime = getNextResetTime(getTrueTime());
+        safeSet(RESET_KEY, resetTime);
+        safeSet(COUNT_KEY, cnt);
+    }
+
+    updateTexts();
+    loadProfile();
+    update();
+
+    // Yüklənmə ekranını yığışdırırıq
+    const container = document.getElementById('loadingScreen');
+    if (container) {
+        container.style.opacity = "0";
+        setTimeout(() => {
+            container.style.visibility = "hidden";
+            container.style.display = "none";
         }, 600);
-    }, 2500);
+    }
 }
-runLoadingScreen();
+
+// Proqramı işə salırıq
+startApp();
 
 const navMenu = document.querySelector('.menu');
 const initialWindowHeight = window.innerHeight;

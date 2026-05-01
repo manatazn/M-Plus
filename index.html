@@ -1003,7 +1003,6 @@ function updateTexts() {
         }
     });
 
-    // Loading ekranı yoxlanışı
     const loadTextNode = document.getElementById('loadingTextNode');
     if (loadTextNode) loadTextNode.textContent = i18n[currentLang].loading;
 
@@ -1033,7 +1032,6 @@ function setLang(lang) {
     currentLang = lang;
     safeSet(LANG_KEY, lang);
     
-    // Formu Resetləmək (Xətanı önləmək üçün)
     document.getElementById('form').style.display = 'none';
     document.getElementById('methodsContainer').style.display = 'block';
     document.getElementById('alert').style.display = 'none';
@@ -1045,6 +1043,56 @@ function setLang(lang) {
     
     updateTexts();
 }
+
+// ==== SAAT SİNXRONİZASİYASI VƏ HİYLƏNİN QARŞISININ ALINMASI (OFFSET LOGIC) ====
+let timeOffset = 0;
+let timeSynced = false;
+
+// Cihaz saatından asılı olmayıb daimi düzgün API saatını tapmaq
+function getTrueTime() {
+    return Date.now() + timeOffset;
+}
+
+// Reklam düyməsini ləngitməmək üçün saat serverdən arxa planda 1 dəfə asinxron çəkilir
+async function syncServerTime() {
+    const apis = [
+        async () => {
+            const res = await fetch('https://api.binance.com/api/v3/time');
+            const data = await res.json();
+            return data.serverTime;
+        },
+        async () => {
+            const res = await fetch('https://worldtimeapi.org/api/timezone/Etc/UTC');
+            const data = await res.json();
+            return data.unixtime * 1000;
+        },
+        async () => {
+            const res = await fetch('https://timeapi.io/api/Time/current/zone?timeZone=Etc/UTC');
+            const data = await res.json();
+            return new Date(data.dateTime).getTime();
+        }
+    ];
+
+    for (let getApiTime of apis) {
+        try {
+            const serverTime = await getApiTime();
+            if (serverTime) {
+                timeOffset = serverTime - Date.now();
+                timeSynced = true;
+                // Saat qurulandan sonra bəlkə gün dəyişib, onu yoxlayıb anında düyməni fəallaşdırır və ya bağlayır
+                if(getTrueTime() >= resetTime) { update(); }
+                return;
+            }
+        } catch (e) {
+            // Əgər işləməsə digər API-yə keçir
+        }
+    }
+}
+
+// Səhifə açılanda birbaşa saatı serverlə yoxla
+syncServerTime();
+// Əgər istifadəçi proqramı açıq qoyubsa, hər 10 dəqiqədən bir saat fərqini yenilə (etibarlılıq üçün)
+setInterval(syncServerTime, 600000);
 
 const BAL_KEY = `bal_mplus_${userRefId}`;
 const LIMON_KEY = `limon_mplus_${userRefId}`;
@@ -1061,7 +1109,6 @@ const TOTAL_ADS_KEY = `tot_ads_mplus_${userRefId}`;
 const TOTAL_TASKS_KEY = `tot_tasks_mplus_${userRefId}`;
 const TOTAL_AD_EARN_KEY = `tot_ad_earn_mplus_${userRefId}`;
 
-// Bütün daxili rəqəmlər AZN olaraq qalır
 const REWARD_PER_AD = 0.002;
 const MAX_ADS_PER_DAY = 50;
 const TASK_APP_REWARD = 0.10;
@@ -1073,7 +1120,6 @@ const LIMON_PER_AD = 100;
 const MAX_LIMON = 1000000;
 
 let withdrawHistory = safeGet(HISTORY_KEY, []);
-
 let totalAdsAllTime = parseInt(safeGet(TOTAL_ADS_KEY, 0));
 let totalTasksAllTime = parseInt(safeGet(TOTAL_TASKS_KEY, 0));
 let totalAdEarnAllTime = parseFloat(safeGet(TOTAL_AD_EARN_KEY, 0.00));
@@ -1087,16 +1133,24 @@ let resetTime = safeGet(RESET_KEY, null);
 let rewardMsgTimeout = null; 
 let isAdRunning = false; 
 
+// Yenilənmiş tam dəqiq API saatı Rusiya (Moskva) vaxtı ilə
 function getNextResetTime() {
-    const now = new Date();
-    let resetLocal = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 0, 0, 0);
-    if (now.getTime() >= resetLocal.getTime()) {
-        resetLocal.setDate(resetLocal.getDate() + 1);
+    let nowMs = getTrueTime();
+    let d = new Date(nowMs);
+    // Moskva Saatı UTC+3-dür.
+    // 22:00 Moskva saatı = 19:00 UTC (Qrinviç vaxtı) edir.
+    // Heç bir cihazın saat dilimindən asılı olmadan sırf UTC 19:00-a təyin edilir.
+    let resetUtc = new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate(), 19, 0, 0, 0));
+    
+    // Əgər hal-hazırkı saat 19:00 UTC-dən (22:00 Moskva) böyükdürsə, sıfırlanmanı növbəti günə at.
+    if (nowMs >= resetUtc.getTime()) {
+        resetUtc.setUTCDate(resetUtc.getUTCDate() + 1);
     }
-    return resetLocal.getTime();
+    return resetUtc.getTime();
 }
 
-if(!resetTime || Date.now() >= resetTime){
+// Cihazın vaxtı ilə yox, API ilə yoxlanış
+if(!resetTime || getTrueTime() >= resetTime){
   cnt = 0; 
   resetTime = getNextResetTime(); 
   safeSet(RESET_KEY, resetTime); 
@@ -1155,20 +1209,9 @@ function copyRefLink() {
     }
 }
 
-function shareWhatsApp() {
-    let msg = i18n[currentLang].share_text.replace('{link}', userRefLink);
-    const encodedMessage = encodeURIComponent(msg);
-    window.open(`https://wa.me/?text=${encodedMessage}`, '_blank');
-}
-
-function shareAppAction() {
-    let msg = i18n[currentLang].share_text.replace('{link}', userRefLink);
-    const encodedMessage = encodeURIComponent(msg);
-    window.open(`https://t.me/share/url?url=&text=${encodedMessage}`, '_blank');
-}
-
 function update(){
-  if(Date.now() >= resetTime){
+  // Hər gün Rusiya 22:00-da təmiz və təhlükəsiz sıfırlanma (Offset ilə)
+  if(getTrueTime() >= resetTime){
       cnt = 0;
       resetTime = getNextResetTime();
       safeSet(RESET_KEY, resetTime);
@@ -1412,6 +1455,7 @@ function restoreAdBtnState() {
 }
 
 adBtn.onclick = async () => {
+    // Düyməyə basan kimi saniyəsində API saatı ilə limit yoxlayır
     update();
     if (cnt >= MAX_ADS_PER_DAY) { restoreAdBtnState(); return; }
     if (isAdRunning || adBtn.classList.contains('waiting')) return;
@@ -1671,7 +1715,8 @@ document.getElementById('withdrawBtn').onclick=()=>{
   safeSet(BAL_KEY,bal); update();
   
   const historyMethodName = type === 'usdt' ? `USDT (${selectedNetwork.toUpperCase()})` : methodName;
-  const historyItem = { type: type, methodName: historyMethodName, amount: amt_azn, status: 'pending', date: Date.now() };
+  // Tarixçəyə əlavə olunanda da təmiz API saatı daxil edilir
+  const historyItem = { type: type, methodName: historyMethodName, amount: amt_azn, status: 'pending', date: getTrueTime() };
   withdrawHistory.push(historyItem); safeSet(HISTORY_KEY, withdrawHistory); renderHistory(); 
 
   alertBox.innerHTML=`<i data-lucide="check-circle" style="vertical-align: middle; margin-right: 5px;"></i> ${i18n[currentLang].success_withdraw}`; 

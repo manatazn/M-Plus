@@ -440,6 +440,49 @@ body.dark-theme .loading-image-logo {
 .modal-close-btn { width: 100%; padding: 18px; border: none; border-radius: 20px; font-weight: 900; font-size: 16px; background: linear-gradient(135deg, var(--btn-gradient-start), var(--btn-gradient-end)); color: white; cursor: pointer; margin-top: 15px; box-shadow: 0 8px 25px var(--btn-shadow);}
 .modal-close-btn:active { transform: scale(0.96); }
 
+/* --- GÜNDƏLİK GİRİŞ (DAILY BONUS) MODALI --- */
+.modal-overlay-daily {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(12px);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 100000; opacity: 0; visibility: hidden; transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.modal-overlay-daily.show { opacity: 1; visibility: visible; }
+.daily-modal-content {
+    background: linear-gradient(135deg, var(--card-bg), var(--input-bg));
+    width: 90%; max-width: 340px; border-radius: 32px; padding: 40px 25px; text-align: center;
+    transform: translateY(30px) scale(0.9); opacity: 0; transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    border: 2px solid rgba(245, 158, 11, 0.5);
+    box-shadow: 0 25px 60px rgba(245, 158, 11, 0.25), inset 0 0 20px rgba(245, 158, 11, 0.1);
+    position: relative; overflow: hidden;
+}
+.modal-overlay-daily.show .daily-modal-content { transform: translateY(0) scale(1); opacity: 1; }
+.daily-icon-wrapper {
+    width: 90px; height: 90px; margin: 0 auto 20px;
+    background: linear-gradient(135deg, #FCD34D, #F59E0B);
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-size: 45px; box-shadow: 0 10px 25px rgba(245, 158, 11, 0.4);
+    animation: bounceDaily 2s infinite;
+}
+@keyframes bounceDaily {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+.daily-modal-title { font-size: 24px; font-weight: 900; color: var(--text-dark); margin-bottom: 12px; }
+.daily-modal-desc { font-size: 15px; color: var(--text-muted); font-weight: 600; line-height: 1.5; margin-bottom: 25px; }
+.daily-btn {
+    width: 100%; padding: 18px; border: none; border-radius: 20px; font-weight: 900; font-size: 17px;
+    background: linear-gradient(135deg, #F59E0B, #D97706); color: white; cursor: pointer;
+    box-shadow: 0 8px 25px rgba(245, 158, 11, 0.4); transition: transform 0.2s;
+}
+.daily-btn:active { transform: scale(0.95); }
+.daily-sunburst {
+    position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+    background: repeating-conic-gradient(from 0deg, rgba(245, 158, 11, 0.05) 0deg 15deg, transparent 15deg 30deg);
+    animation: rotateSunburst 20s linear infinite; z-index: -1; pointer-events: none;
+}
+body.dark-theme .daily-sunburst { background: repeating-conic-gradient(from 0deg, rgba(245, 158, 11, 0.1) 0deg 15deg, transparent 15deg 30deg); }
+@keyframes rotateSunburst { 100% { transform: rotate(360deg); } }
 </style>
 </head>
 <body id="body">
@@ -485,6 +528,16 @@ if(currentLang !== 'az' && currentLang !== 'tr') currentLang = 'az';
 // Yüklənmə ekranındakı yazı səhifə tam açılmadan əvvəl mövcud dilə uyğun tənzimlənir
 document.getElementById('loadingTextNode').textContent = currentLang === 'tr' ? 'Yükleniyor' : 'Yüklənir';
 </script>
+
+<div id="dailyBonusModal" class="modal-overlay-daily">
+    <div class="daily-modal-content">
+        <div class="daily-sunburst"></div>
+        <div class="daily-icon-wrapper">🍋</div>
+        <div class="daily-modal-title" data-i18n="daily_bonus_title">Gündəlik Giriş Mükafatı</div>
+        <div class="daily-modal-desc" data-i18n="daily_bonus_desc">Hər gün tətbiqə daxil ol və <b>1000 🍋</b> qazan!</div>
+        <button id="claimDailyBtn" class="daily-btn" data-i18n="claim_bonus">Mükafatı Al</button>
+    </div>
+</div>
 
 <div id="taskNotification">
     <i data-lucide="check-circle-2"></i>
@@ -777,6 +830,10 @@ const i18n = {
         open_box: "Qutunu Aç",
         open_box_ready: "✨ İndi Aç! ✨",
         box_opened: "Siz bu qutunu artıq açmısınız!",
+        daily_bonus_title: "Gündəlik Giriş Mükafatı",
+        daily_bonus_desc: "Hər gün tətbiqə daxil ol və <b>1000 🍋</b> qazan!",
+        claim_bonus: "Mükafatı Al",
+        bonus_claimed_msg: "🎉 1000 🍋 balansınıza əlavə edildi!",
         tasks: "Tapşırıqlar",
         task1_title: "Kanala Qoşul",
         task1_desc: "Rəsmi M Plus kanalına qoşul və qazan!",
@@ -846,6 +903,10 @@ const i18n = {
         open_box: "Kutuyu Aç",
         open_box_ready: "✨ Şimdi Aç! ✨",
         box_opened: "Bu kutuyu zaten açtınız!",
+        daily_bonus_title: "Günlük Giriş Ödülü",
+        daily_bonus_desc: "Her gün uygulamaya gir ve <b>1000 🍋</b> kazan!",
+        claim_bonus: "Ödülü Al",
+        bonus_claimed_msg: "🎉 1000 🍋 bakiyenize eklendi!",
         tasks: "Görevler",
         task1_title: "Kanala Katıl",
         task1_desc: "Resmi M Plus kanalına katıl ve kazan!",
@@ -1106,6 +1167,7 @@ const BOX_CLAIMED_KEY = `box_claimed_mplus_${userRefId}`;
 
 const COUNT_KEY = `cnt_mplus_${userRefId}`;
 const RESET_KEY = `resetTime_mplus_${userRefId}`;
+const DAILY_CLAIM_KEY = `daily_claimed_time_mplus_${userRefId}`;
 const JOIN_APP_KEY = `joined_mplus_app_${userRefId}`;
 const JOIN_CHAT_KEY = `joined_mplus_chat_${userRefId}`;
 const REWARD_MSG_KEY = `rewardMsgExpire_mplus_${userRefId}`;
@@ -1135,6 +1197,7 @@ let limon = parseInt(safeGet(LIMON_KEY, 0));
 let boxClaimed = safeGet(BOX_CLAIMED_KEY, false);
 let cnt = parseInt(safeGet(COUNT_KEY, 0));
 let resetTime = safeGet(RESET_KEY, null);
+let lastClaimedResetTime = safeGet(DAILY_CLAIM_KEY, 0);
 
 let rewardMsgTimeout = null; 
 let isAdRunning = false; 
@@ -1192,8 +1255,7 @@ function copyRefLink() {
 }
 
 function update(){
-  // Bura diqqət et: Əgər internet yoxdursa (`timeSynced` falsedirsə), sistem sadəcə 
-  // mövcud olan sayğacı saxlayacaq. Reset atmayacaq. Təhlükəsizlik budur.
+  // Əgər internet yoxdursa (`timeSynced` falsedirsə), sistem sadəcə mövcud olan sayğacı saxlayacaq
   if (timeSynced && getTrueTime() >= resetTime) {
       cnt = 0;
       resetTime = getNextResetTime(getTrueTime());
@@ -1256,6 +1318,24 @@ function update(){
   updateTaskButtons(); 
   restoreAdBtnState();
 }
+
+// Günlük mükafatı əldə etmək üçün düymə
+document.getElementById('claimDailyBtn').addEventListener('click', () => {
+    if (lastClaimedResetTime === resetTime) return; 
+    
+    if (!boxClaimed) {
+        limon += 1000;
+        if (limon > MAX_LIMON) limon = MAX_LIMON;
+        safeSet(LIMON_KEY, limon);
+    }
+    
+    lastClaimedResetTime = resetTime;
+    safeSet(DAILY_CLAIM_KEY, lastClaimedResetTime);
+    
+    document.getElementById('dailyBonusModal').classList.remove('show');
+    update();
+    showTaskNotification(i18n[currentLang].bonus_claimed_msg);
+});
 
 document.getElementById('openBoxBtn').addEventListener('click', () => {
     if (limon >= MAX_LIMON && !boxClaimed) {
@@ -1699,7 +1779,6 @@ document.getElementById('withdrawBtn').onclick=()=>{
   safeSet(BAL_KEY,bal); update();
   
   const historyMethodName = type === 'usdt' ? `USDT (${selectedNetwork.toUpperCase()})` : methodName;
-  // Tarixçəyə əlavə olunanda da təmiz API saatı daxil edilir
   const historyItem = { type: type, methodName: historyMethodName, amount: amt_azn, status: 'pending', date: getTrueTime() };
   withdrawHistory.push(historyItem); safeSet(HISTORY_KEY, withdrawHistory); renderHistory(); 
 
@@ -1717,16 +1796,11 @@ function showErr(msg){ alertBox.innerHTML=`<i data-lucide="alert-circle" style="
 // SİSTEMİN BAŞLADILMASI (YÜKLƏNMƏ VƏ SAAT YOXLANIŞI)
 // =========================================================================
 async function startApp() {
-    // Təhlükəsizlik və "Premium" UX üçün ən azı 2.5 saniyə ekranı gözlədirik
     const minLoadPromise = new Promise(resolve => setTimeout(resolve, 2500));
-    
-    // Arxada 6 yerdən saat yoxlayır
     const syncPromise = syncServerTime();
 
     await Promise.all([minLoadPromise, syncPromise]);
 
-    // Həqiqi saat tapıldısa, limits resetini yoxlayırıq. 
-    // Tapılmadısa, keçmişdəki limiti dondururuq.
     if (!resetTime) {
         resetTime = getNextResetTime(timeSynced ? getTrueTime() : Date.now());
         safeSet(RESET_KEY, resetTime);
@@ -1743,18 +1817,21 @@ async function startApp() {
     loadProfile();
     update();
 
-    // Yüklənmə ekranını yığışdırırıq
     const container = document.getElementById('loadingScreen');
     if (container) {
         container.style.opacity = "0";
         setTimeout(() => {
             container.style.visibility = "hidden";
             container.style.display = "none";
+            
+            // Gündəlik giriş yoxlanışı (Əgər boxClaimed hələ tamamlanmayıbsa)
+            if (lastClaimedResetTime !== resetTime && !boxClaimed) {
+                document.getElementById('dailyBonusModal').classList.add('show');
+            }
         }, 600);
     }
 }
 
-// Proqramı işə salırıq
 startApp();
 
 const navMenu = document.querySelector('.menu');

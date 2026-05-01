@@ -1105,17 +1105,17 @@ function setLang(lang) {
 }
 
 // =========================================================================
-// MÜTLƏQ SAAT SİNXRONİZASİYASI VƏ SAXTAKARLIQ ƏLEYHİNƏ SİSTEM
+// YENİ, DAHA ETİBARLI SAAT SİNXRONİZASİYASI VƏ SIFIRLANMA SİSTEMİ
 // =========================================================================
 let serverTimeAtLoad = 0;
 let localTimeAtLoad = 0;
 let timeSynced = false;
 
-// Yalnız ən stabil 3 Qlobal Saat API-si (CORS xətası və gecikmələri önləmək üçün)
+// Yalnız ən stabil Qlobal Saat API-ləri
 async function syncServerTime() {
     const apis = [
         async () => { const r = await fetch('https://worldtimeapi.org/api/timezone/Etc/UTC'); const d = await r.json(); return d.unixtime * 1000; },
-        async () => { const r = await fetch('https://yandex.com/time/sync.json?geo=213'); const d = await r.json(); return d.time; }, // Yandex ən sürətlilərdəndir
+        async () => { const r = await fetch('https://yandex.com/time/sync.json?geo=213'); const d = await r.json(); return d.time; }, 
         async () => { const r = await fetch('https://timeapi.io/api/Time/current/zone?timeZone=Etc/UTC'); const d = await r.json(); return new Date(d.dateTime + "Z").getTime(); }
     ];
 
@@ -1141,17 +1141,19 @@ function getTrueTime() {
     return Date.now(); 
 }
 
-// Gündəlik sıfırlanma: Moskva Saatı ilə gecə 00:00 (Yəni UTC 21:00)
-function getNextResetTime(baseTimeMs) {
-    let d = new Date(baseTimeMs);
-    // UTC 21:00 Moskvada gecə tam yarısı (00:00) deməkdir.
-    let resetUtc = new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate(), 21, 0, 0, 0));
-    
-    // Əgər həmin vaxt artıq keçibsə, növbəti günə təyin et
-    if (baseTimeMs >= resetUtc.getTime()) {
-        resetUtc.setUTCDate(resetUtc.getUTCDate() + 1);
+// Yeni Məntiq: Dünyanın hər yerində eyni (Moskva) təqvim gününü yoxlamaq
+function getMoscowDateStr(timeMs) {
+    try {
+        // Mövcud zamanı birbaşa Moskva vaxt qurşağı ilə "Gün/Ay/İl" formatına salır.
+        // Gecə saat 00:00 (Moskva) olan kimi bu yazı avtomatik dəyişəcək (məsələn: 01/05/2026 -> 02/05/2026)
+        return new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/Moscow', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date(timeMs));
+    } catch(e) {
+        // Əgər brauzer timeZone dəstəkləmirsə ehtiyat variant:
+        let d = new Date(timeMs);
+        let utc = d.getTime() + (d.getTimezoneOffset() * 60000);
+        let moscowTime = new Date(utc + (3600000 * 3));
+        return moscowTime.getDate() + '/' + (moscowTime.getMonth()+1) + '/' + moscowTime.getFullYear();
     }
-    return resetUtc.getTime();
 }
 // =========================================================================
 
@@ -1160,8 +1162,11 @@ const LIMON_KEY = `limon_mplus_${userRefId}`;
 const BOX_CLAIMED_KEY = `box_claimed_mplus_${userRefId}`;
 
 const COUNT_KEY = `cnt_mplus_${userRefId}`;
-const RESET_KEY = `resetTime_mplus_${userRefId}`;
-const DAILY_CLAIM_KEY = `daily_claimed_time_mplus_${userRefId}`;
+
+// YENİ AÇARLAR (Tarixə əsaslanır)
+const LAST_RESET_DATE_KEY = `last_date_mplus_${userRefId}`;
+const DAILY_CLAIM_DATE_KEY = `daily_claim_date_mplus_${userRefId}`;
+
 const JOIN_APP_KEY = `joined_mplus_app_${userRefId}`;
 const JOIN_CHAT_KEY = `joined_mplus_chat_${userRefId}`;
 const REWARD_MSG_KEY = `rewardMsgExpire_mplus_${userRefId}`;
@@ -1190,11 +1195,22 @@ let bal = parseFloat(safeGet(BAL_KEY, 0.00));
 let limon = parseInt(safeGet(LIMON_KEY, 0));
 let boxClaimed = safeGet(BOX_CLAIMED_KEY, false);
 let cnt = parseInt(safeGet(COUNT_KEY, 0));
-let resetTime = safeGet(RESET_KEY, null);
-let lastClaimedResetTime = safeGet(DAILY_CLAIM_KEY, 0);
 
 let rewardMsgTimeout = null; 
 let isAdRunning = false; 
+
+// Gündəlik sıfırlanmanı yoxlayan xüsusi funksiya (Tam problemsiz işləməsi üçün)
+function checkDailyReset() {
+    let currentMoscowDate = getMoscowDateStr(getTrueTime());
+    let lastSavedDate = localStorage.getItem(LAST_RESET_DATE_KEY);
+
+    // Əgər cihazda saxlanılan tarix indiki Moskva tarixindən fərqlidirsə (yeni günə keçilibsə)
+    if (lastSavedDate !== currentMoscowDate) {
+        cnt = 0; // Reklam limitini sıfırla
+        safeSet(COUNT_KEY, cnt);
+        localStorage.setItem(LAST_RESET_DATE_KEY, currentMoscowDate); // Yeni tarixi yadda saxla
+    }
+}
 
 function loadProfilePic() {
     const pic = localStorage.getItem(PROFILE_PIC_KEY);
@@ -1249,13 +1265,8 @@ function copyRefLink() {
 }
 
 function update(){
-  let currentRealTime = getTrueTime();
-  if (currentRealTime >= resetTime) {
-      cnt = 0;
-      resetTime = getNextResetTime(currentRealTime);
-      safeSet(RESET_KEY, resetTime);
-      safeSet(COUNT_KEY, cnt);
-  }
+  // Hər əməliyyatda və ya bota girəndə limiti yoxlayır
+  checkDailyReset();
 
   const formattedBal = fC(bal, true);
   document.querySelectorAll('.bal-val').forEach(el => el.textContent = formattedBal);
@@ -1314,7 +1325,10 @@ function update(){
 }
 
 document.getElementById('claimDailyBtn').addEventListener('click', () => {
-    if (lastClaimedResetTime === resetTime) return; 
+    let currentMoscowDate = getMoscowDateStr(getTrueTime());
+    let lastClaimDate = localStorage.getItem(DAILY_CLAIM_DATE_KEY);
+
+    if (lastClaimDate === currentMoscowDate) return; 
     
     if (!boxClaimed) {
         limon += 1000;
@@ -1322,8 +1336,8 @@ document.getElementById('claimDailyBtn').addEventListener('click', () => {
         safeSet(LIMON_KEY, limon);
     }
     
-    lastClaimedResetTime = resetTime;
-    safeSet(DAILY_CLAIM_KEY, lastClaimedResetTime);
+    // Gündəlik mükafatı aldığını yeni tarix olaraq yaddaşa yazır
+    localStorage.setItem(DAILY_CLAIM_DATE_KEY, currentMoscowDate);
     
     document.getElementById('dailyBonusModal').classList.remove('show');
     update();
@@ -1789,24 +1803,14 @@ function showErr(msg){ alertBox.innerHTML=`<i data-lucide="alert-circle" style="
 // SİSTEMİN BAŞLADILMASI (YÜKLƏNMƏ VƏ SAAT YOXLANIŞI)
 // =========================================================================
 async function startApp() {
-    const minLoadPromise = new Promise(resolve => setTimeout(resolve, 2000));
+    // Sürətli yüklənmə
+    const minLoadPromise = new Promise(resolve => setTimeout(resolve, 1500));
     const syncPromise = syncServerTime();
 
     await Promise.all([minLoadPromise, syncPromise]);
 
-    let currentRealTime = getTrueTime();
-
-    if (!resetTime) {
-        resetTime = getNextResetTime(currentRealTime);
-        safeSet(RESET_KEY, resetTime);
-        cnt = 0;
-        safeSet(COUNT_KEY, cnt);
-    } else if (currentRealTime >= resetTime) {
-        cnt = 0;
-        resetTime = getNextResetTime(currentRealTime);
-        safeSet(RESET_KEY, resetTime);
-        safeSet(COUNT_KEY, cnt);
-    }
+    // Bota daxil olanda birbaşa saatı və günü yoxlayır
+    checkDailyReset();
 
     updateTexts();
     loadProfile();
@@ -1819,7 +1823,11 @@ async function startApp() {
             container.style.visibility = "hidden";
             container.style.display = "none";
             
-            if (lastClaimedResetTime !== resetTime && !boxClaimed) {
+            // Gündəlik bonusun ekrana gəlməsi
+            let currentMoscowDate = getMoscowDateStr(getTrueTime());
+            let lastClaimDate = localStorage.getItem(DAILY_CLAIM_DATE_KEY);
+            
+            if (lastClaimDate !== currentMoscowDate && !boxClaimed) {
                 document.getElementById('dailyBonusModal').classList.add('show');
             }
         }, 600);

@@ -70,7 +70,14 @@ body.dark-theme {
 }
 
 /* --- ÜMUMİ STİLLƏR --- */
-*{box-sizing:border-box;margin:0;padding:0;}
+*{box-sizing:border-box;margin:0;padding:0; -webkit-user-drag: none;}
+html, body {
+    max-width: 100vw;
+    width: 100vw;
+    overflow-x: hidden !important; /* Sağa-sola sürüşmənin qarşısını alır */
+    overscroll-behavior: none; /* iOS/Android pull-to-refresh və dartılmanın qarşısını alır */
+}
+
 body{
   font-family:'Inter',sans-serif;
   background:linear-gradient(135deg,var(--bg-start),var(--bg-end));
@@ -82,15 +89,20 @@ body{
   -webkit-tap-highlight-color:transparent;
   transition: background-color 0.5s ease, color 0.5s ease; 
   padding-bottom: 90px; 
+  position: relative;
 }
 
-.container{max-width:480px;margin:auto;padding:40px 20px 20px;} 
+.container{max-width:480px;margin:auto;padding:40px 20px 20px; overflow-x: hidden;} 
 
 .page{display:none;animation:fadeIn .4s cubic-bezier(0.16, 1, 0.3, 1);}
 .page.active{display:block;}
 @keyframes fadeIn{from{opacity:0;transform:translateY(15px) scale(0.98);}to{opacity:1;transform:translateY(0) scale(1);}}
 
 /* KART DİZAYNLARI */
+.balance-card, .ad-card, .profile-card, .box-card, .task-item, .history-card {
+  touch-action: pan-y; /* Yalnız aşağı-yuxarı sürüşdürməyə icazə verir */
+}
+
 .balance-card, .ad-card, .profile-card{
   background:var(--card-bg);
   border-radius:30px;
@@ -184,8 +196,8 @@ body.dark-theme .box-card {
 .task-btn.waiting { background: var(--progress-bg) !important; color: var(--accent) !important; cursor: not-allowed !important; box-shadow: none !important;}
 
 /* ÇARX OYUNU STİLLƏRİ */
-.wheel-container { position: relative; width: 280px; height: 280px; margin: 25px auto 35px; }
-.wheel { width: 100%; height: 100%; border-radius: 50%; overflow: hidden; position: relative; transition: transform 4s cubic-bezier(0.1, 2.5, 0.1, 1); border: 8px solid var(--card-bg); box-shadow: 0 15px 40px rgba(0,0,0,0.15); }
+.wheel-container { touch-action: none; position: relative; width: 280px; height: 280px; margin: 25px auto 35px; }
+.wheel { width: 100%; height: 100%; border-radius: 50%; overflow: hidden; position: relative; transition: transform 4s cubic-bezier(0.1, 2.5, 0.1, 1); border: 8px solid var(--card-bg); box-shadow: 0 15px 40px rgba(0,0,0,0.15); pointer-events: none;}
 body.dark-theme .wheel { border-color: #1E293B; box-shadow: 0 15px 40px rgba(0,0,0,0.6); }
 .wheel-pointer { position: absolute; top: -20px; left: 50%; transform: translateX(-50%); font-size: 40px; color: #EF4444; z-index: 10; text-shadow: 0 4px 10px rgba(0,0,0,0.2); filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3)); pointer-events: none;}
 .wheel-label { position: absolute; top: 50%; left: 50%; width: 140px; height: 30px; margin-top: -15px; transform-origin: 0 50%; font-weight: 900; font-size: 18px; color: #0F172A; text-align: right; padding-right: 20px; display:flex; align-items:center; justify-content:flex-end; gap:5px;}
@@ -257,7 +269,7 @@ body.dark-theme .toggle-thumb i { color: #0F172A; }
 .modal-btn-action.telegram-btn { background: #0088cc; }
 
 #form{display:none;}
-.back-btn-ui {background: var(--accent); border: none; color: #fff; font-weight:800; font-size:15px; border-radius: 16px; padding: 14px 24px; width: max-content; margin: 0 0 25px 0; box-shadow: 0 8px 20px var(--btn-shadow); display: flex; align-items: center; gap: 8px; cursor: pointer; transition: 0.2s;}
+.back-btn-ui {background: var(--accent); border: none; color: #fff; font-weight:800; font-size:15px; border-radius: 16px; padding: 14px 24px; width: max-content; margin: 0 0 20px 0; box-shadow: 0 8px 20px var(--btn-shadow); display: flex; align-items: center; gap: 8px; cursor: pointer; transition: 0.2s;}
 .back-btn-ui:active { transform: scale(0.95); }
 
 #form input{width:100%;padding:20px;margin:12px 0;border-radius:20px;border:2px solid transparent;background:var(--input-bg);color:var(--input-text); font-size: 16px;font-weight: 700;outline: none;transition: all 0.3s; font-family: 'Inter', sans-serif; box-shadow: inset 0 2px 6px rgba(0,0,0,0.02);}
@@ -632,7 +644,9 @@ document.getElementById('loadingTextNode').textContent = currentLang === 'tr' ? 
         <div class="task-item">
             <div class="task-header">
                 <div class="task-title">
-                    <div class="task-icon" style="background: linear-gradient(135deg, #F59E0B, #D97706);"><i data-lucide="dribbble" style="width:22px;height:22px;"></i></div>
+                    <div class="task-icon" style="background: linear-gradient(135deg, #8B5CF6, #6D28D9); box-shadow: 0 6px 20px rgba(139, 92, 246, 0.3);">
+                        <span style="font-size: 24px; line-height: 1;">🎡</span>
+                    </div>
                     <span data-i18n="wheel_title">Şans Çarxı</span>
                 </div>
             </div>
@@ -678,11 +692,6 @@ document.getElementById('loadingTextNode').textContent = currentLang === 'tr' ? 
   </div>
 
   <div id="wheelPage" class="page">
-    <button onclick="closeWheelPage()" class="back-btn-ui">
-      <i data-lucide="arrow-left" style="width:20px;height:20px;"></i>
-      <span data-i18n="back">Geri Qayıt</span>
-    </button>
-    
     <div class="balance-card">
       <h3 data-i18n="balance">Balansınız</h3>
       <div class="balances-wrapper">
@@ -696,6 +705,11 @@ document.getElementById('loadingTextNode').textContent = currentLang === 'tr' ? 
          </div>
       </div>
     </div>
+    
+    <button onclick="closeWheelPage()" class="back-btn-ui">
+      <i data-lucide="arrow-left" style="width:20px;height:20px;"></i>
+      <span data-i18n="back">Geri Qayıt</span>
+    </button>
 
     <div class="ad-card" style="text-align: center; overflow: visible;">
          <h2 data-i18n="wheel_title">Şans Çarxı</h2>
@@ -716,7 +730,7 @@ document.getElementById('loadingTextNode').textContent = currentLang === 'tr' ? 
 
          <button id="spinBtn" class="ad-btn" style="background: linear-gradient(135deg, #F59E0B, #D97706); box-shadow: 0 10px 30px rgba(245, 158, 11, 0.3);">
             <span class="ad-btn-content">
-              <i data-lucide="dribbble" style="width: 22px; height: 22px; fill: white;"></i>
+              <span style="font-size: 20px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));">🎡</span>
               <span id="spinBtnText" data-i18n="spin_btn">Reklam İzlə və Çevir</span>
             </span>
          </button>
@@ -921,7 +935,7 @@ const i18n = {
         max: "Maksimum",
         progress: "İrəliləyiş",
         watch_ad: "Reklam İzlə",
-        watching: "Gözlənilir...",
+        watching: "İzlənir...",
         limit_reached: "Limit Doldu",
         wallet: "Cüzdan",
         withdraw_method: "Çıxarış Üsulu",
@@ -999,7 +1013,7 @@ const i18n = {
         max: "Maksimum",
         progress: "İlerleme",
         watch_ad: "Reklam İzle",
-        watching: "Bekleniyor...",
+        watching: "İzleniyor...",
         limit_reached: "Limit Doldu",
         wallet: "Cüzdan",
         withdraw_method: "Çekim Yöntemi",
@@ -1931,19 +1945,20 @@ function getRiggedRewardIndex() {
     wheelSpinCount++;
     safeSet(WHEEL_CNT_KEY, wheelSpinCount);
 
-    // Tam 35-ci spində 500 verir (30-40 arası)
+    // Tam 35-ci spində 500 verir
     if (!wheelHasWon500 && wheelSpinCount === 35) {
         safeSet(WHEEL_500_KEY, true);
         return 3; // 500-ün indeksi
     }
 
-    // Hər tam 11-ci spində 200 verir (10-12 arası)
+    // Hər tam 11-ci spində 200 verir
     if (wheelSpinCount % 11 === 0) {
         return 2; // 200-ün indeksi
     }
 
-    // Digər bütün vaxtlar yalnız 50 və ya 100 verir
-    return Math.random() < 0.5 ? 0 : 1; 
+    // Əvvəllər çox vaxt 50 verirdi. 
+    // İndi təqribən %40 ehtimalla 50 (0), %60 ehtimalla 100 (1) verəcək ki, 100 də tez-tez düşsün.
+    return Math.random() < 0.4 ? 0 : 1; 
 }
 
 document.getElementById('spinBtn').onclick = async () => {
@@ -1959,9 +1974,10 @@ document.getElementById('spinBtn').onclick = async () => {
     spinBtn.classList.add('waiting');
     
     const textSpan = spinBtn.querySelector('#spinBtnText');
-    const icon = spinBtn.querySelector('i');
+    const iconSpan = spinBtn.querySelector('.ad-btn-content span:first-child');
     if(textSpan) textSpan.textContent = i18n[currentLang].watching;
-    if(icon) { icon.setAttribute('data-lucide', 'loader'); lucide.createIcons(); }
+    // Çarx butonuna loader efekti veririk
+    if(iconSpan) iconSpan.innerHTML = '<i data-lucide="loader" style="width: 22px; height: 22px; fill: white;"></i>'; lucide.createIcons();
     document.getElementById('wheelMsg').textContent = '';
     
     try {
@@ -2016,6 +2032,9 @@ function executeSpin() {
             safeSet(LIMON_KEY, limon);
         }
         
+        totalAdsAllTime++;
+        safeSet(TOTAL_ADS_KEY, totalAdsAllTime); // Profil statistikasına reklamın əlavə edilməsi
+        
         update(); 
         showTaskNotification(`🎉 ${rewardValue} 🍋 qazandınız!`);
         resetWheelBtnState();
@@ -2027,17 +2046,17 @@ function resetWheelBtnState() {
     let wheelSpinCount = parseInt(safeGet(WHEEL_CNT_KEY, 0));
     const spinBtn = document.getElementById('spinBtn');
     const textSpan = spinBtn.querySelector('#spinBtnText');
-    const icon = spinBtn.querySelector('i');
+    const iconSpan = spinBtn.querySelector('.ad-btn-content span:first-child');
     
     if (wheelSpinCount >= 50) {
         spinBtn.classList.add('waiting');
         if(textSpan) textSpan.textContent = i18n[currentLang].limit_reached;
-        if(icon) { icon.setAttribute('data-lucide', 'lock'); lucide.createIcons(); }
+        if(iconSpan) { iconSpan.innerHTML = '<i data-lucide="lock" style="width: 22px; height: 22px; fill: white;"></i>'; lucide.createIcons(); }
         document.getElementById('wheelMsg').textContent = i18n[currentLang].msg_limit;
     } else {
         spinBtn.classList.remove('waiting');
         if(textSpan) textSpan.textContent = i18n[currentLang].spin_btn;
-        if(icon) { icon.setAttribute('data-lucide', 'dribbble'); lucide.createIcons(); }
+        if(iconSpan) { iconSpan.innerHTML = '<span style="font-size: 20px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));">🎡</span>'; }
         document.getElementById('wheelMsg').textContent = '';
     }
 }

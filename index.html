@@ -360,7 +360,7 @@ body.dark-theme .loading-image-logo {
     80%, 100% { text-shadow: .25em 0 0 var(--accent), .5em 0 0 var(--accent); }
 }
 
-/* YENİLƏNMİŞ BİLDİRİŞLƏR */
+/* YENİLƏNMİŞ BİLDİRİŞLƏR (GÖREVLƏR ÜÇÜN EKRAN ORTASI QIRMIZI/MAVİ) */
 #taskNotification {
     position: fixed; 
     top: 50%; 
@@ -447,7 +447,7 @@ body.dark-theme .loading-image-logo {
 .modal-close-btn { width: 100%; padding: 18px; border: none; border-radius: 20px; font-weight: 900; font-size: 16px; background: linear-gradient(135deg, var(--btn-gradient-start), var(--btn-gradient-end)); color: white; cursor: pointer; margin-top: 15px; box-shadow: 0 8px 25px var(--btn-shadow);}
 .modal-close-btn:active { transform: scale(0.96); }
 
-/* --- GÜNDƏLİK GİRİŞ MODALI --- */
+/* --- GÜNDƏLİK GİRİŞ (DAILY BONUS) MODALI --- */
 .modal-overlay-daily {
     position: fixed; top: 0; left: 0; width: 100%; height: 100%;
     background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(12px);
@@ -532,6 +532,7 @@ if(currentLang !== 'az' && currentLang !== 'tr') currentLang = 'az';
 </div>
 
 <script>
+// Yüklənmə ekranındakı yazı səhifə tam açılmadan əvvəl mövcud dilə uyğun tənzimlənir
 document.getElementById('loadingTextNode').textContent = currentLang === 'tr' ? 'Yükleniyor' : 'Yüklənir';
 </script>
 
@@ -1897,7 +1898,7 @@ function buildWheel() {
     if(!wheel) return;
     const segAngle = 360 / wheelSegments.length;
     
-    // Conic gradient ilə mükəmməl dairə
+    // Conic gradient ilə mükəmməl dairə (Tam ortadan başlayır və fırlanır)
     let bg = 'conic-gradient(';
     const colors = ['#FEF3C7', '#FDE68A', '#FCD34D', '#FBBF24', '#F59E0B', '#D97706', '#B45309'];
     for(let i=0; i<wheelSegments.length; i++) {
@@ -1907,13 +1908,13 @@ function buildWheel() {
     bg += ')';
     wheel.style.background = bg;
     
-    // Label-ləri əlavə etmək
+    // Label-ləri əlavə etmək (Tam seqmentlərin mərkəzinə düşür)
     wheel.innerHTML = '';
     for(let i=0; i<wheelSegments.length; i++) {
         let lbl = document.createElement('div');
         lbl.className = 'wheel-label';
-        // Mərkəzi tapıb yerləşdirmək
         let angle = (i * segAngle) + (segAngle / 2);
+        // Conic-gradient saat 12 (top) yönündən başlayır, ona görə mərkəzi tapırıq
         lbl.style.transform = `rotate(${angle - 90}deg)`;
         lbl.innerHTML = `<span>${wheelSegments[i]}</span><span style="font-size:16px;">🍋</span>`;
         wheel.appendChild(lbl);
@@ -1930,19 +1931,18 @@ function getRiggedRewardIndex() {
     wheelSpinCount++;
     safeSet(WHEEL_CNT_KEY, wheelSpinCount);
 
-    // Xüsusi alqoritm (istənilən tələblər)
-    // 30-40 spində 1 dəfə 500 verir (Məsələn tam 35-ci spində)
+    // Tam 35-ci spində 500 verir (30-40 arası)
     if (!wheelHasWon500 && wheelSpinCount === 35) {
         safeSet(WHEEL_500_KEY, true);
-        return 3; // 500 indeksi
+        return 3; // 500-ün indeksi
     }
 
-    // 11 spində 1 dəfə 200 (10-12 arası)
+    // Hər tam 11-ci spində 200 verir (10-12 arası)
     if (wheelSpinCount % 11 === 0) {
-        return 2; // 200 indeksi
+        return 2; // 200-ün indeksi
     }
 
-    // Digər vaxtlar yalnız 50 və 100
+    // Digər bütün vaxtlar yalnız 50 və ya 100 verir
     return Math.random() < 0.5 ? 0 : 1; 
 }
 
@@ -1986,10 +1986,12 @@ function executeSpin() {
     const rewardIndex = getRiggedRewardIndex();
     const rewardValue = wheelSegments[rewardIndex];
     
-    // Hədəf bucağı hesablama
+    // Hədəf bucağı tam mərkəzə təyin edirik
     const targetAngleCenter = (rewardIndex * segAngle) + (segAngle / 2);
-    // Tam xəttə düşməməsi üçün içəridə kiçik bir təsadüfi sürüşmə
-    const randomOffset = (Math.random() * (segAngle/1.5)) - (segAngle/3); 
+    
+    // Tam xəttin üstünə düşməməsi və süni görünməməsi üçün içəridə kiçik təsadüfi sürüşmə
+    // Bu kod oxun (▼) xəttə deyil, tam mərkəzi hissəyə düşməsini qarantiya edir
+    const randomOffset = (Math.random() * (segAngle/2)) - (segAngle/4); 
     
     const currentMod = currentWheelRotation % 360;
     const targetMod = (360 - targetAngleCenter) + randomOffset;
@@ -1997,12 +1999,14 @@ function executeSpin() {
     let distance = targetMod - currentMod;
     if (distance <= 0) distance += 360;
     
-    const spins = 5; // 5 tam dövr
+    const spins = 5; // Hər basışda 5 tam dövr edir
     distance += 360 * spins;
     
     currentWheelRotation += distance;
     
     const wheelEl = document.getElementById('spinWheel');
+    // Kubik bezier animasiyası ilə yavaş-yavaş tam xətasız mərkəzə qonur
+    wheelEl.style.transition = 'transform 4s cubic-bezier(0.2, 0.8, 0.2, 1)'; 
     wheelEl.style.transform = `rotate(${currentWheelRotation}deg)`;
     
     setTimeout(() => {
@@ -2050,7 +2054,7 @@ async function startApp() {
 
     checkDailyReset();
 
-    buildWheel(); // Çarxı yükləyirik
+    buildWheel(); // Çarx interfeysi yaradılır
     updateTexts();
     loadProfile();
     update();

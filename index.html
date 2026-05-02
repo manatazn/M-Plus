@@ -183,6 +183,13 @@ body.dark-theme .box-card {
 .task-btn.completed { background: var(--input-bg); color: var(--accent-red); cursor: not-allowed; box-shadow: none; border: 1px solid var(--card-border); }
 .task-btn.waiting { background: var(--progress-bg) !important; color: var(--accent) !important; cursor: not-allowed !important; box-shadow: none !important;}
 
+/* ÇARX OYUNU STİLLƏRİ */
+.wheel-container { position: relative; width: 280px; height: 280px; margin: 25px auto 35px; }
+.wheel { width: 100%; height: 100%; border-radius: 50%; overflow: hidden; position: relative; transition: transform 4s cubic-bezier(0.1, 2.5, 0.1, 1); border: 8px solid var(--card-bg); box-shadow: 0 15px 40px rgba(0,0,0,0.15); }
+body.dark-theme .wheel { border-color: #1E293B; box-shadow: 0 15px 40px rgba(0,0,0,0.6); }
+.wheel-pointer { position: absolute; top: -20px; left: 50%; transform: translateX(-50%); font-size: 40px; color: #EF4444; z-index: 10; text-shadow: 0 4px 10px rgba(0,0,0,0.2); filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3)); pointer-events: none;}
+.wheel-label { position: absolute; top: 50%; left: 50%; width: 140px; height: 30px; margin-top: -15px; transform-origin: 0 50%; font-weight: 900; font-size: 18px; color: #0F172A; text-align: right; padding-right: 20px; display:flex; align-items:center; justify-content:flex-end; gap:5px;}
+
 .stats{display:flex;justify-content:space-between;margin-top:30px; gap: 15px;}
 .stat{background:var(--input-bg);border-radius:20px;padding:20px 15px; flex: 1; border: 1px solid var(--card-border); transition: 0.3s;}
 .stat span{display:block;font-size:26px;font-weight:900;color:var(--text-dark); margin-bottom: 4px; text-shadow: 0 2px 10px rgba(0,0,0,0.05);}
@@ -621,6 +628,22 @@ document.getElementById('loadingTextNode').textContent = currentLang === 'tr' ? 
        <button id="openBoxBtn" class="box-btn" disabled data-i18n="open_box">Qutunu Aç</button>
     </div>
 
+    <div class="task-list" style="margin-bottom: 20px;">
+        <div class="task-item">
+            <div class="task-header">
+                <div class="task-title">
+                    <div class="task-icon" style="background: linear-gradient(135deg, #F59E0B, #D97706);"><i data-lucide="dribbble" style="width:22px;height:22px;"></i></div>
+                    <span data-i18n="wheel_title">Şans Çarxı</span>
+                </div>
+            </div>
+            <div class="task-desc" data-i18n="wheel_desc">Reklam izləyərək çarxı çevir və 5000-ə qədər 🍋 qazan!</div>
+            <button onclick="openWheelPage()" class="task-btn action" style="background: linear-gradient(135deg, #F59E0B, #D97706); box-shadow: 0 8px 25px rgba(245, 158, 11, 0.3);">
+                <i data-lucide="play" style="width:20px;height:20px;"></i>
+                <span data-i18n="wheel_btn">Çarxı Çevir</span>
+            </button>
+        </div>
+    </div>
+
     <div class="task-list">
         <div class="task-item">
             <div class="task-header">
@@ -651,6 +674,53 @@ document.getElementById('loadingTextNode').textContent = currentLang === 'tr' ? 
                 <span data-i18n="task2_btn">Qrupa Qoşul</span>
             </button>
         </div>
+    </div>
+  </div>
+
+  <div id="wheelPage" class="page">
+    <button onclick="closeWheelPage()" class="back-btn-ui">
+      <i data-lucide="arrow-left" style="width:20px;height:20px;"></i>
+      <span data-i18n="back">Geri Qayıt</span>
+    </button>
+    
+    <div class="balance-card">
+      <h3 data-i18n="balance">Balansınız</h3>
+      <div class="balances-wrapper">
+         <div class="amount-wrap">
+             <div class="amount"><span class="bal-val">0.000</span></div>
+             <div class="currency bal-symbol">₼</div>
+         </div>
+         <div class="limon-wrap">
+             <div class="limon-amount"><span class="bal-limon">0</span></div>
+             <div class="limon-currency">🍋</div>
+         </div>
+      </div>
+    </div>
+
+    <div class="ad-card" style="text-align: center; overflow: visible;">
+         <h2 data-i18n="wheel_title">Şans Çarxı</h2>
+         <p data-i18n="wheel_info">Hər gün 50 spin çevir və limon qazan!</p>
+         
+         <div class="wheel-container">
+             <div class="wheel-pointer">▼</div>
+             <div class="wheel" id="spinWheel"></div>
+         </div>
+
+         <div class="stats" style="margin-top: 20px;">
+            <div class="stat"><span id="wheelCountTxt">0</span><label data-i18n="watched">Çevrilən</label></div>
+            <div class="stat"><span>50</span><label data-i18n="max">Maksimum</label></div>
+         </div>
+         
+         <div class="progress"><div class="progress-fill" id="progressWheel"></div></div>
+         <p style="margin-top:15px; font-weight:800; color: var(--text-dark); font-size: 15px;"><span data-i18n="progress">İrəliləyiş</span>: <span id="progressTextWheelSpan" style="color: var(--accent);">0/50</span></p>
+
+         <button id="spinBtn" class="ad-btn" style="background: linear-gradient(135deg, #F59E0B, #D97706); box-shadow: 0 10px 30px rgba(245, 158, 11, 0.3);">
+            <span class="ad-btn-content">
+              <i data-lucide="dribbble" style="width: 22px; height: 22px; fill: white;"></i>
+              <span id="spinBtnText" data-i18n="spin_btn">Reklam İzlə və Çevir</span>
+            </span>
+         </button>
+         <div id="wheelMsg" style="margin-top: 18px; font-size: 15px; font-weight: 800; color: var(--accent-red);"></div>
     </div>
   </div>
 
@@ -835,6 +905,11 @@ const i18n = {
         claim_bonus: "Mükafatı Al",
         bonus_claimed_msg: "🎉 1000 🍋 balansınıza əlavə edildi!",
         tasks: "Tapşırıqlar",
+        wheel_title: "Şans Çarxı",
+        wheel_desc: "Reklam izləyərək çarxı çevir və 5000-ə qədər 🍋 qazan!",
+        wheel_btn: "Çarxı Çevir",
+        wheel_info: "Hər gün 50 spin çevir və limon qazan!",
+        spin_btn: "Reklam İzlə və Çevir",
         task1_title: "Kanala Qoşul",
         task1_desc: "Rəsmi M Plus kanalına qoşul və qazan!",
         task2_title: "Qrupumuza Qoşul",
@@ -846,7 +921,7 @@ const i18n = {
         max: "Maksimum",
         progress: "İrəliləyiş",
         watch_ad: "Reklam İzlə",
-        watching: "İzlənilir...",
+        watching: "Gözlənilir...",
         limit_reached: "Limit Doldu",
         wallet: "Cüzdan",
         withdraw_method: "Çıxarış Üsulu",
@@ -908,6 +983,11 @@ const i18n = {
         claim_bonus: "Ödülü Al",
         bonus_claimed_msg: "🎉 1000 🍋 bakiyenize eklendi!",
         tasks: "Görevler",
+        wheel_title: "Şans Çarkı",
+        wheel_desc: "Reklam izleyerek çarkı çevir ve 5000'e kadar 🍋 kazan!",
+        wheel_btn: "Çarkı Çevir",
+        wheel_info: "Her gün 50 spin çevir ve limon kazan!",
+        spin_btn: "Reklam İzle ve Çevir",
         task1_title: "Kanala Katıl",
         task1_desc: "Resmi M Plus kanalına katıl ve kazan!",
         task2_title: "Grubumuza Katıl",
@@ -919,7 +999,7 @@ const i18n = {
         max: "Maksimum",
         progress: "İlerleme",
         watch_ad: "Reklam İzle",
-        watching: "İzleniyor...",
+        watching: "Bekleniyor...",
         limit_reached: "Limit Doldu",
         wallet: "Cüzdan",
         withdraw_method: "Çekim Yöntemi",
@@ -1012,7 +1092,6 @@ if (tgUser) {
 
 const userRefLink = `https://t.me/mplusappbot?startapp=${userRefId}`;
 
-// Format Currency
 function fC(val_azn, forceNumberOnly = false) {
     if(currentLang === 'tr') {
         let v = (parseFloat(val_azn) * 26.4).toFixed(4).replace(/\.?0+$/, '');
@@ -1104,14 +1183,10 @@ function setLang(lang) {
     update();
 }
 
-// =========================================================================
-// YENİ, DAHA ETİBARLI SAAT SİNXRONİZASİYASI VƏ SIFIRLANMA SİSTEMİ
-// =========================================================================
 let serverTimeAtLoad = 0;
 let localTimeAtLoad = 0;
 let timeSynced = false;
 
-// Yalnız ən stabil Qlobal Saat API-ləri
 async function syncServerTime() {
     const apis = [
         async () => { const r = await fetch('https://worldtimeapi.org/api/timezone/Etc/UTC'); const d = await r.json(); return d.unixtime * 1000; },
@@ -1130,42 +1205,36 @@ async function syncServerTime() {
         timeSynced = true;
     } catch (error) {
         timeSynced = false;
-        console.warn("Saat API-ləri işləmədi. Cihaz saatından istifadə edilir.");
     }
 }
 
 function getTrueTime() {
-    if (timeSynced) {
-        return serverTimeAtLoad + (performance.now() - localTimeAtLoad);
-    }
+    if (timeSynced) { return serverTimeAtLoad + (performance.now() - localTimeAtLoad); }
     return Date.now(); 
 }
 
-// Yeni Məntiq: Dünyanın hər yerində eyni (Moskva) təqvim gününü yoxlamaq
 function getMoscowDateStr(timeMs) {
     try {
-        // Mövcud zamanı birbaşa Moskva vaxt qurşağı ilə "Gün/Ay/İl" formatına salır.
-        // Gecə saat 00:00 (Moskva) olan kimi bu yazı avtomatik dəyişəcək (məsələn: 01/05/2026 -> 02/05/2026)
         return new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/Moscow', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date(timeMs));
     } catch(e) {
-        // Əgər brauzer timeZone dəstəkləmirsə ehtiyat variant:
         let d = new Date(timeMs);
         let utc = d.getTime() + (d.getTimezoneOffset() * 60000);
         let moscowTime = new Date(utc + (3600000 * 3));
         return moscowTime.getDate() + '/' + (moscowTime.getMonth()+1) + '/' + moscowTime.getFullYear();
     }
 }
-// =========================================================================
 
 const BAL_KEY = `bal_mplus_${userRefId}`;
 const LIMON_KEY = `limon_mplus_${userRefId}`;
 const BOX_CLAIMED_KEY = `box_claimed_mplus_${userRefId}`;
-
 const COUNT_KEY = `cnt_mplus_${userRefId}`;
 
-// YENİ AÇARLAR (Tarixə əsaslanır)
 const LAST_RESET_DATE_KEY = `last_date_mplus_${userRefId}`;
 const DAILY_CLAIM_DATE_KEY = `daily_claim_date_mplus_${userRefId}`;
+
+// ÇARX OYUNU AÇARLARI
+const WHEEL_CNT_KEY = `wheel_cnt_mplus_${userRefId}`;
+const WHEEL_500_KEY = `wheel_500_mplus_${userRefId}`;
 
 const JOIN_APP_KEY = `joined_mplus_app_${userRefId}`;
 const JOIN_CHAT_KEY = `joined_mplus_chat_${userRefId}`;
@@ -1199,16 +1268,19 @@ let cnt = parseInt(safeGet(COUNT_KEY, 0));
 let rewardMsgTimeout = null; 
 let isAdRunning = false; 
 
-// Gündəlik sıfırlanmanı yoxlayan xüsusi funksiya (Tam problemsiz işləməsi üçün)
 function checkDailyReset() {
     let currentMoscowDate = getMoscowDateStr(getTrueTime());
     let lastSavedDate = localStorage.getItem(LAST_RESET_DATE_KEY);
 
-    // Əgər cihazda saxlanılan tarix indiki Moskva tarixindən fərqlidirsə (yeni günə keçilibsə)
     if (lastSavedDate !== currentMoscowDate) {
-        cnt = 0; // Reklam limitini sıfırla
+        cnt = 0; 
         safeSet(COUNT_KEY, cnt);
-        localStorage.setItem(LAST_RESET_DATE_KEY, currentMoscowDate); // Yeni tarixi yadda saxla
+        
+        // ÇARX LIMITLERI SIFIRLANIR
+        safeSet(WHEEL_CNT_KEY, 0);
+        safeSet(WHEEL_500_KEY, false);
+
+        localStorage.setItem(LAST_RESET_DATE_KEY, currentMoscowDate); 
     }
 }
 
@@ -1265,7 +1337,6 @@ function copyRefLink() {
 }
 
 function update(){
-  // Hər əməliyyatda və ya bota girəndə limiti yoxlayır
   checkDailyReset();
 
   const formattedBal = fC(bal, true);
@@ -1314,6 +1385,15 @@ function update(){
   const progressTextSpan = document.getElementById('progressTextSpan');
   if(progressTextSpan) progressTextSpan.textContent = `${cnt}/${MAX_ADS_PER_DAY}`;
   
+  // ÇARX STATİSTİKALARININ YENİLƏNMƏSİ
+  let wCnt = parseInt(safeGet(WHEEL_CNT_KEY, 0));
+  const wCountTxt = document.getElementById('wheelCountTxt');
+  if(wCountTxt) wCountTxt.textContent = wCnt;
+  const wProgFill = document.getElementById('progressWheel');
+  if(wProgFill) wProgFill.style.width = (wCnt/50*100)+'%';
+  const wProgSpan = document.getElementById('progressTextWheelSpan');
+  if(wProgSpan) wProgSpan.textContent = `${wCnt}/50`;
+
   safeSet(BAL_KEY, bal); 
   safeSet(COUNT_KEY, cnt); 
   safeSet(LIMON_KEY, limon);
@@ -1336,7 +1416,6 @@ document.getElementById('claimDailyBtn').addEventListener('click', () => {
         safeSet(LIMON_KEY, limon);
     }
     
-    // Gündəlik mükafatı aldığını yeni tarix olaraq yaddaşa yazır
     localStorage.setItem(DAILY_CLAIM_DATE_KEY, currentMoscowDate);
     
     document.getElementById('dailyBonusModal').classList.remove('show');
@@ -1639,6 +1718,16 @@ function handleTaskClick(btnId, url, storageKey, reward) {
 document.getElementById('joinAppBtn').onclick = () => handleTaskClick('joinAppBtn', 'https://t.me/mplus_app', JOIN_APP_KEY, TASK_APP_REWARD);
 document.getElementById('joinChatBtn').onclick = () => handleTaskClick('joinChatBtn', 'https://t.me/mpluschat', JOIN_CHAT_KEY, TASK_CHAT_REWARD);
 
+function openWheelPage() {
+    document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+    document.getElementById('wheelPage').classList.add('active');
+    resetWheelBtnState();
+}
+function closeWheelPage() {
+    document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+    document.getElementById('tasksPage').classList.add('active');
+}
+
 function showPage(id, btn){
   if (btn.classList.contains('active')) return; 
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
@@ -1799,19 +1888,173 @@ document.getElementById('withdrawBtn').onclick=()=>{
 
 function showErr(msg){ alertBox.innerHTML=`<i data-lucide="alert-circle" style="vertical-align: middle; margin-right: 5px;"></i> ${msg}`; lucide.createIcons(); alertBox.className='alert error'; alertBox.style.display='block'; }
 
-// =========================================================================
-// SİSTEMİN BAŞLADILMASI (YÜKLƏNMƏ VƏ SAAT YOXLANIŞI)
-// =========================================================================
+/* =========================================================================
+   YENİ: ÇARX OYUNU MƏNTİQİ VƏ YARADILMASI
+   ========================================================================= */
+const wheelSegments = [50, 100, 200, 500, 700, 1000, 5000];
+
+function buildWheel() {
+    const wheel = document.getElementById('spinWheel');
+    if(!wheel) return;
+    const segAngle = 360 / wheelSegments.length;
+    
+    // Conic gradient ilə mükəmməl dairə (Tam ortadan başlayır və fırlanır)
+    let bg = 'conic-gradient(';
+    const colors = ['#FEF3C7', '#FDE68A', '#FCD34D', '#FBBF24', '#F59E0B', '#D97706', '#B45309'];
+    for(let i=0; i<wheelSegments.length; i++) {
+        bg += `${colors[i]} ${i*segAngle}deg ${(i+1)*segAngle}deg`;
+        if(i < wheelSegments.length - 1) bg += ', ';
+    }
+    bg += ')';
+    wheel.style.background = bg;
+    
+    // Label-ləri əlavə etmək (Tam seqmentlərin mərkəzinə düşür)
+    wheel.innerHTML = '';
+    for(let i=0; i<wheelSegments.length; i++) {
+        let lbl = document.createElement('div');
+        lbl.className = 'wheel-label';
+        let angle = (i * segAngle) + (segAngle / 2);
+        // Conic-gradient saat 12 (top) yönündən başlayır, ona görə mərkəzi tapırıq
+        lbl.style.transform = `rotate(${angle - 90}deg)`;
+        lbl.innerHTML = `<span>${wheelSegments[i]}</span><span style="font-size:16px;">🍋</span>`;
+        wheel.appendChild(lbl);
+    }
+}
+
+let isSpinning = false;
+let currentWheelRotation = 0;
+
+function getRiggedRewardIndex() {
+    let wheelSpinCount = parseInt(safeGet(WHEEL_CNT_KEY, 0));
+    let wheelHasWon500 = safeGet(WHEEL_500_KEY, false);
+    
+    wheelSpinCount++;
+    safeSet(WHEEL_CNT_KEY, wheelSpinCount);
+
+    // Tam 35-ci spində 500 verir (30-40 arası)
+    if (!wheelHasWon500 && wheelSpinCount === 35) {
+        safeSet(WHEEL_500_KEY, true);
+        return 3; // 500-ün indeksi
+    }
+
+    // Hər tam 11-ci spində 200 verir (10-12 arası)
+    if (wheelSpinCount % 11 === 0) {
+        return 2; // 200-ün indeksi
+    }
+
+    // Digər bütün vaxtlar yalnız 50 və ya 100 verir
+    return Math.random() < 0.5 ? 0 : 1; 
+}
+
+document.getElementById('spinBtn').onclick = async () => {
+    let wheelSpinCount = parseInt(safeGet(WHEEL_CNT_KEY, 0));
+    if (wheelSpinCount >= 50) {
+        document.getElementById('wheelMsg').textContent = i18n[currentLang].msg_limit;
+        return;
+    }
+    if(isSpinning) return;
+    
+    isSpinning = true;
+    const spinBtn = document.getElementById('spinBtn');
+    spinBtn.classList.add('waiting');
+    
+    const textSpan = spinBtn.querySelector('#spinBtnText');
+    const icon = spinBtn.querySelector('i');
+    if(textSpan) textSpan.textContent = i18n[currentLang].watching;
+    if(icon) { icon.setAttribute('data-lucide', 'loader'); lucide.createIcons(); }
+    document.getElementById('wheelMsg').textContent = '';
+    
+    try {
+        if (!adManager && window.Adsgram) { adManager = window.Adsgram.init({ blockId: "int-28369" }); }
+        
+        if (adManager) {
+            adManager.show().then((result) => {
+                executeSpin();
+            }).catch((error) => {
+                resetWheelBtnState();
+            });
+        } else {
+            resetWheelBtnState();
+        }
+    } catch(e) {
+        resetWheelBtnState();
+    }
+};
+
+function executeSpin() {
+    const segAngle = 360 / wheelSegments.length;
+    const rewardIndex = getRiggedRewardIndex();
+    const rewardValue = wheelSegments[rewardIndex];
+    
+    // Hədəf bucağı tam mərkəzə təyin edirik
+    const targetAngleCenter = (rewardIndex * segAngle) + (segAngle / 2);
+    
+    // Tam xəttin üstünə düşməməsi və süni görünməməsi üçün içəridə kiçik təsadüfi sürüşmə
+    // Bu kod oxun (▼) xəttə deyil, tam mərkəzi hissəyə düşməsini qarantiya edir
+    const randomOffset = (Math.random() * (segAngle/2)) - (segAngle/4); 
+    
+    const currentMod = currentWheelRotation % 360;
+    const targetMod = (360 - targetAngleCenter) + randomOffset;
+    
+    let distance = targetMod - currentMod;
+    if (distance <= 0) distance += 360;
+    
+    const spins = 5; // Hər basışda 5 tam dövr edir
+    distance += 360 * spins;
+    
+    currentWheelRotation += distance;
+    
+    const wheelEl = document.getElementById('spinWheel');
+    // Kubik bezier animasiyası ilə yavaş-yavaş tam xətasız mərkəzə qonur
+    wheelEl.style.transition = 'transform 4s cubic-bezier(0.2, 0.8, 0.2, 1)'; 
+    wheelEl.style.transform = `rotate(${currentWheelRotation}deg)`;
+    
+    setTimeout(() => {
+        if (!boxClaimed) {
+            limon += rewardValue;
+            if (limon > MAX_LIMON) limon = MAX_LIMON;
+            safeSet(LIMON_KEY, limon);
+        }
+        
+        update(); 
+        showTaskNotification(`🎉 ${rewardValue} 🍋 qazandınız!`);
+        resetWheelBtnState();
+    }, 4000); 
+}
+
+function resetWheelBtnState() {
+    isSpinning = false;
+    let wheelSpinCount = parseInt(safeGet(WHEEL_CNT_KEY, 0));
+    const spinBtn = document.getElementById('spinBtn');
+    const textSpan = spinBtn.querySelector('#spinBtnText');
+    const icon = spinBtn.querySelector('i');
+    
+    if (wheelSpinCount >= 50) {
+        spinBtn.classList.add('waiting');
+        if(textSpan) textSpan.textContent = i18n[currentLang].limit_reached;
+        if(icon) { icon.setAttribute('data-lucide', 'lock'); lucide.createIcons(); }
+        document.getElementById('wheelMsg').textContent = i18n[currentLang].msg_limit;
+    } else {
+        spinBtn.classList.remove('waiting');
+        if(textSpan) textSpan.textContent = i18n[currentLang].spin_btn;
+        if(icon) { icon.setAttribute('data-lucide', 'dribbble'); lucide.createIcons(); }
+        document.getElementById('wheelMsg').textContent = '';
+    }
+}
+
+
+/* =========================================================================
+   SİSTEMİN BAŞLADILMASI (YÜKLƏNMƏ VƏ SAAT YOXLANIŞI)
+   ========================================================================= */
 async function startApp() {
-    // Sürətli yüklənmə
     const minLoadPromise = new Promise(resolve => setTimeout(resolve, 1500));
     const syncPromise = syncServerTime();
 
     await Promise.all([minLoadPromise, syncPromise]);
 
-    // Bota daxil olanda birbaşa saatı və günü yoxlayır
     checkDailyReset();
 
+    buildWheel(); // Çarx interfeysi yaradılır
     updateTexts();
     loadProfile();
     update();
@@ -1823,7 +2066,6 @@ async function startApp() {
             container.style.visibility = "hidden";
             container.style.display = "none";
             
-            // Gündəlik bonusun ekrana gəlməsi
             let currentMoscowDate = getMoscowDateStr(getTrueTime());
             let lastClaimDate = localStorage.getItem(DAILY_CLAIM_DATE_KEY);
             

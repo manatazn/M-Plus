@@ -2,7 +2,7 @@
 <html lang="az">
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover" />
 <title id="pageTitle">M Plus</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -70,16 +70,7 @@ body.dark-theme {
 }
 
 /* --- ÜMUMİ STİLLƏR --- */
-*{box-sizing:border-box;margin:0;padding:0; -webkit-user-drag: none;}
-
-html, body {
-  width: 100vw;
-  max-width: 100%;
-  overflow-x: hidden; /* Sağa-sola sürüşmənin tam qarşısını alır */
-  overscroll-behavior-y: none; /* Ekranı çəkib yeniləmə effektini bağlayır */
-  touch-action: pan-y; /* Yalnız yuxarı-aşağı sürüşməyə icazə verir */
-}
-
+*{box-sizing:border-box;margin:0;padding:0;}
 body{
   font-family:'Inter',sans-serif;
   background:linear-gradient(135deg,var(--bg-start),var(--bg-end));
@@ -95,7 +86,7 @@ body{
 
 .container{max-width:480px;margin:auto;padding:40px 20px 20px;} 
 
-.page{display:none;animation:fadeIn .4s cubic-bezier(0.16, 1, 0.3, 1); width: 100%; overflow-x: hidden;}
+.page{display:none;animation:fadeIn .4s cubic-bezier(0.16, 1, 0.3, 1);}
 .page.active{display:block;}
 @keyframes fadeIn{from{opacity:0;transform:translateY(15px) scale(0.98);}to{opacity:1;transform:translateY(0) scale(1);}}
 
@@ -193,11 +184,11 @@ body.dark-theme .box-card {
 .task-btn.waiting { background: var(--progress-bg) !important; color: var(--accent) !important; cursor: not-allowed !important; box-shadow: none !important;}
 
 /* ÇARX OYUNU STİLLƏRİ */
-.wheel-container { position: relative; width: 280px; height: 280px; margin: 25px auto 35px; touch-action: pan-y; user-select: none; }
-.wheel { width: 100%; height: 100%; border-radius: 50%; overflow: hidden; position: relative; transition: transform 4s cubic-bezier(0.1, 2.5, 0.1, 1); border: 8px solid var(--card-bg); box-shadow: 0 15px 40px rgba(0,0,0,0.15); pointer-events: none; }
+.wheel-container { position: relative; width: 280px; height: 280px; margin: 25px auto 35px; }
+.wheel { width: 100%; height: 100%; border-radius: 50%; overflow: hidden; position: relative; transition: transform 4s cubic-bezier(0.1, 2.5, 0.1, 1); border: 8px solid var(--card-bg); box-shadow: 0 15px 40px rgba(0,0,0,0.15); }
 body.dark-theme .wheel { border-color: #1E293B; box-shadow: 0 15px 40px rgba(0,0,0,0.6); }
 .wheel-pointer { position: absolute; top: -20px; left: 50%; transform: translateX(-50%); font-size: 40px; color: #EF4444; z-index: 10; text-shadow: 0 4px 10px rgba(0,0,0,0.2); filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3)); pointer-events: none;}
-.wheel-label { position: absolute; top: 50%; left: 50%; width: 140px; height: 30px; margin-top: -15px; transform-origin: 0 50%; font-weight: 900; font-size: 18px; color: #0F172A; text-align: right; padding-right: 20px; display:flex; align-items:center; justify-content:flex-end; gap:5px; pointer-events: none;}
+.wheel-label { position: absolute; top: 50%; left: 50%; width: 140px; height: 30px; margin-top: -15px; transform-origin: 0 50%; font-weight: 900; font-size: 18px; color: #0F172A; text-align: right; padding-right: 20px; display:flex; align-items:center; justify-content:flex-end; gap:5px;}
 
 .stats{display:flex;justify-content:space-between;margin-top:30px; gap: 15px;}
 .stat{background:var(--input-bg);border-radius:20px;padding:20px 15px; flex: 1; border: 1px solid var(--card-border); transition: 0.3s;}
@@ -266,7 +257,7 @@ body.dark-theme .toggle-thumb i { color: #0F172A; }
 .modal-btn-action.telegram-btn { background: #0088cc; }
 
 #form{display:none;}
-.back-btn-ui {background: var(--accent); border: none; color: #fff; font-weight:800; font-size:15px; border-radius: 16px; padding: 14px 24px; width: max-content; box-shadow: 0 8px 20px var(--btn-shadow); display: flex; align-items: center; gap: 8px; cursor: pointer; transition: 0.2s;}
+.back-btn-ui {background: var(--accent); border: none; color: #fff; font-weight:800; font-size:15px; border-radius: 16px; padding: 14px 24px; width: max-content; margin: 0 0 25px 0; box-shadow: 0 8px 20px var(--btn-shadow); display: flex; align-items: center; gap: 8px; cursor: pointer; transition: 0.2s;}
 .back-btn-ui:active { transform: scale(0.95); }
 
 #form input{width:100%;padding:20px;margin:12px 0;border-radius:20px;border:2px solid transparent;background:var(--input-bg);color:var(--input-text); font-size: 16px;font-weight: 700;outline: none;transition: all 0.3s; font-family: 'Inter', sans-serif; box-shadow: inset 0 2px 6px rgba(0,0,0,0.02);}
@@ -531,7 +522,7 @@ if(savedTheme === 'dark') {
     document.getElementById('body').classList.remove('dark-theme');
 }
 
-let currentLang = safeGet(LANG_KEY, 'az'); 
+let currentLang = safeGet(LANG_KEY, 'az'); // Default AZ
 if(currentLang !== 'az' && currentLang !== 'tr') currentLang = 'az';
 </script>
 
@@ -541,6 +532,7 @@ if(currentLang !== 'az' && currentLang !== 'tr') currentLang = 'az';
 </div>
 
 <script>
+// Yüklənmə ekranındakı yazı səhifə tam açılmadan əvvəl mövcud dilə uyğun tənzimlənir
 document.getElementById('loadingTextNode').textContent = currentLang === 'tr' ? 'Yükleniyor' : 'Yüklənir';
 </script>
 
@@ -640,7 +632,7 @@ document.getElementById('loadingTextNode').textContent = currentLang === 'tr' ? 
         <div class="task-item">
             <div class="task-header">
                 <div class="task-title">
-                    <div class="task-icon" style="background: linear-gradient(135deg, #F59E0B, #D97706);"><i data-lucide="aperture" style="width:22px;height:22px; color: white;"></i></div>
+                    <div class="task-icon" style="background: linear-gradient(135deg, #F59E0B, #D97706);"><i data-lucide="dribbble" style="width:22px;height:22px;"></i></div>
                     <span data-i18n="wheel_title">Şans Çarxı</span>
                 </div>
             </div>
@@ -686,6 +678,10 @@ document.getElementById('loadingTextNode').textContent = currentLang === 'tr' ? 
   </div>
 
   <div id="wheelPage" class="page">
+    <button onclick="closeWheelPage()" class="back-btn-ui">
+      <i data-lucide="arrow-left" style="width:20px;height:20px;"></i>
+      <span data-i18n="back">Geri Qayıt</span>
+    </button>
     
     <div class="balance-card">
       <h3 data-i18n="balance">Balansınız</h3>
@@ -700,11 +696,6 @@ document.getElementById('loadingTextNode').textContent = currentLang === 'tr' ? 
          </div>
       </div>
     </div>
-
-    <button onclick="closeWheelPage()" class="back-btn-ui" style="margin: 0 auto 25px auto;">
-      <i data-lucide="arrow-left" style="width:20px;height:20px;"></i>
-      <span data-i18n="back">Geri Qayıt</span>
-    </button>
 
     <div class="ad-card" style="text-align: center; overflow: visible;">
          <h2 data-i18n="wheel_title">Şans Çarxı</h2>
@@ -725,7 +716,7 @@ document.getElementById('loadingTextNode').textContent = currentLang === 'tr' ? 
 
          <button id="spinBtn" class="ad-btn" style="background: linear-gradient(135deg, #F59E0B, #D97706); box-shadow: 0 10px 30px rgba(245, 158, 11, 0.3);">
             <span class="ad-btn-content">
-              <i data-lucide="aperture" style="width: 22px; height: 22px; fill: white;"></i>
+              <i data-lucide="dribbble" style="width: 22px; height: 22px; fill: white;"></i>
               <span id="spinBtnText" data-i18n="spin_btn">Reklam İzlə və Çevir</span>
             </span>
          </button>
@@ -796,7 +787,7 @@ document.getElementById('loadingTextNode').textContent = currentLang === 'tr' ? 
     </div>
 
     <div id="form">
-      <button id="backBtn" class="back-btn-ui" style="margin: 0 0 25px 0;">
+      <button id="backBtn" class="back-btn-ui">
         <i data-lucide="arrow-left" style="width:20px;height:20px;"></i>
         <span data-i18n="back">Geri Qayıt</span>
       </button>
@@ -930,7 +921,7 @@ const i18n = {
         max: "Maksimum",
         progress: "İrəliləyiş",
         watch_ad: "Reklam İzlə",
-        watching: "İzlənir...",
+        watching: "Gözlənilir...",
         limit_reached: "Limit Doldu",
         wallet: "Cüzdan",
         withdraw_method: "Çıxarış Üsulu",
@@ -1008,7 +999,7 @@ const i18n = {
         max: "Maksimum",
         progress: "İlerleme",
         watch_ad: "Reklam İzle",
-        watching: "İzleniyor...",
+        watching: "Bekleniyor...",
         limit_reached: "Limit Doldu",
         wallet: "Cüzdan",
         withdraw_method: "Çekim Yöntemi",
@@ -1940,19 +1931,19 @@ function getRiggedRewardIndex() {
     wheelSpinCount++;
     safeSet(WHEEL_CNT_KEY, wheelSpinCount);
 
-    // Tam 35-ci spində 500 verir
+    // Tam 35-ci spində 500 verir (30-40 arası)
     if (!wheelHasWon500 && wheelSpinCount === 35) {
         safeSet(WHEEL_500_KEY, true);
         return 3; // 500-ün indeksi
     }
 
-    // Hər tam 11-ci spində 200 verir
+    // Hər tam 11-ci spində 200 verir (10-12 arası)
     if (wheelSpinCount % 11 === 0) {
         return 2; // 200-ün indeksi
     }
 
-    // Digər hallarda 50% ehtimalla 50, 50% ehtimalla 100 verir (100-ün daha tez tez çıxması bərpa edildi)
-    return Math.random() < 0.5 ? 1 : 0; 
+    // Digər bütün vaxtlar yalnız 50 və ya 100 verir
+    return Math.random() < 0.5 ? 0 : 1; 
 }
 
 document.getElementById('spinBtn').onclick = async () => {
@@ -1999,6 +1990,7 @@ function executeSpin() {
     const targetAngleCenter = (rewardIndex * segAngle) + (segAngle / 2);
     
     // Tam xəttin üstünə düşməməsi və süni görünməməsi üçün içəridə kiçik təsadüfi sürüşmə
+    // Bu kod oxun (▼) xəttə deyil, tam mərkəzi hissəyə düşməsini qarantiya edir
     const randomOffset = (Math.random() * (segAngle/2)) - (segAngle/4); 
     
     const currentMod = currentWheelRotation % 360;
@@ -2024,11 +2016,6 @@ function executeSpin() {
             safeSet(LIMON_KEY, limon);
         }
         
-        // Çarx reklamı da Profil səhifəsindəki 'Reklam İzləndi' sayına əlavə edilir
-        totalAdsAllTime++;
-        safeSet(TOTAL_ADS_KEY, totalAdsAllTime);
-        updateStatsUI();
-        
         update(); 
         showTaskNotification(`🎉 ${rewardValue} 🍋 qazandınız!`);
         resetWheelBtnState();
@@ -2050,7 +2037,7 @@ function resetWheelBtnState() {
     } else {
         spinBtn.classList.remove('waiting');
         if(textSpan) textSpan.textContent = i18n[currentLang].spin_btn;
-        if(icon) { icon.setAttribute('data-lucide', 'aperture'); lucide.createIcons(); }
+        if(icon) { icon.setAttribute('data-lucide', 'dribbble'); lucide.createIcons(); }
         document.getElementById('wheelMsg').textContent = '';
     }
 }

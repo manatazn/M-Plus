@@ -632,13 +632,13 @@ document.getElementById('loadingTextNode').textContent = currentLang === 'tr' ? 
         <div class="task-item">
             <div class="task-header">
                 <div class="task-title">
-                    <div class="task-icon" style="background: linear-gradient(135deg, #F59E0B, #D97706);"><i data-lucide="dribbble" style="width:22px;height:22px;"></i></div>
+                    <div class="task-icon" style="background: linear-gradient(135deg, #F59E0B, #D97706);"><i data-lucide="aperture" style="width:22px;height:22px;"></i></div>
                     <span data-i18n="wheel_title">Şans Çarxı</span>
                 </div>
             </div>
             <div class="task-desc" data-i18n="wheel_desc">Reklam izləyərək çarxı çevir və 5000-ə qədər 🍋 qazan!</div>
             <button onclick="openWheelPage()" class="task-btn action" style="background: linear-gradient(135deg, #F59E0B, #D97706); box-shadow: 0 8px 25px rgba(245, 158, 11, 0.3);">
-                <i data-lucide="play" style="width:20px;height:20px;"></i>
+                <i data-lucide="aperture" style="width:20px;height:20px;"></i>
                 <span data-i18n="wheel_btn">Çarxı Çevir</span>
             </button>
         </div>
@@ -716,7 +716,7 @@ document.getElementById('loadingTextNode').textContent = currentLang === 'tr' ? 
 
          <button id="spinBtn" class="ad-btn" style="background: linear-gradient(135deg, #F59E0B, #D97706); box-shadow: 0 10px 30px rgba(245, 158, 11, 0.3);">
             <span class="ad-btn-content">
-              <i data-lucide="dribbble" style="width: 22px; height: 22px; fill: white;"></i>
+              <i data-lucide="aperture" style="width: 22px; height: 22px; fill: white;"></i>
               <span id="spinBtnText" data-i18n="spin_btn">Reklam İzlə və Çevir</span>
             </span>
          </button>
@@ -922,6 +922,8 @@ const i18n = {
         progress: "İrəliləyiş",
         watch_ad: "Reklam İzlə",
         watching: "Gözlənilir...",
+        watching_ad: "İzlənir...",
+        spinning: "Çevrilir...",
         limit_reached: "Limit Doldu",
         wallet: "Cüzdan",
         withdraw_method: "Çıxarış Üsulu",
@@ -1000,6 +1002,8 @@ const i18n = {
         progress: "İlerleme",
         watch_ad: "Reklam İzle",
         watching: "Bekleniyor...",
+        watching_ad: "İzleniyor...",
+        spinning: "Çevriliyor...",
         limit_reached: "Limit Doldu",
         wallet: "Cüzdan",
         withdraw_method: "Çekim Yöntemi",
@@ -1584,7 +1588,7 @@ function restoreAdBtnState() {
     
     if (isAdRunning) {
         adBtn.classList.add('waiting'); adBtn.disabled = true;
-        if(textSpan) textSpan.textContent = i18n[currentLang].watching; 
+        if(textSpan) textSpan.textContent = i18n[currentLang].watching_ad; 
         if(icon) { icon.setAttribute('data-lucide', 'loader'); lucide.createIcons(); }
         return; 
     }
@@ -1622,7 +1626,7 @@ adBtn.onclick = async () => {
     adBtn.disabled = true; adBtn.classList.add('waiting');
     const textSpan = adBtnContent.querySelector('span');
     const icon = adBtnContent.querySelector('i');
-    if(textSpan) textSpan.textContent = i18n[currentLang].watching; 
+    if(textSpan) textSpan.textContent = i18n[currentLang].watching_ad; 
     if(icon) { icon.setAttribute('data-lucide', 'loader'); lucide.createIcons(); }
     msg.textContent = '';
     
@@ -1942,8 +1946,8 @@ function getRiggedRewardIndex() {
         return 2; // 200-ün indeksi
     }
 
-    // Digər bütün vaxtlar yalnız 50 və ya 100 verir
-    return Math.random() < 0.5 ? 0 : 1; 
+    // 100 və 50 üçün yeni məntiq: Artıq 100-ün çıxma ehtimalını 60%, 50-ni isə 40% etdik ki, rahat çıxsın
+    return Math.random() < 0.6 ? 1 : 0; 
 }
 
 document.getElementById('spinBtn').onclick = async () => {
@@ -1960,7 +1964,7 @@ document.getElementById('spinBtn').onclick = async () => {
     
     const textSpan = spinBtn.querySelector('#spinBtnText');
     const icon = spinBtn.querySelector('i');
-    if(textSpan) textSpan.textContent = i18n[currentLang].watching;
+    if(textSpan) textSpan.textContent = i18n[currentLang].spinning;
     if(icon) { icon.setAttribute('data-lucide', 'loader'); lucide.createIcons(); }
     document.getElementById('wheelMsg').textContent = '';
     
@@ -1969,6 +1973,11 @@ document.getElementById('spinBtn').onclick = async () => {
         
         if (adManager) {
             adManager.show().then((result) => {
+                // Çarx üçün reklam izlənildiyi üçün profil statistikasına əlavə edirik
+                totalAdsAllTime++;
+                safeSet(TOTAL_ADS_KEY, totalAdsAllTime);
+                updateStatsUI();
+
                 executeSpin();
             }).catch((error) => {
                 resetWheelBtnState();
@@ -2037,7 +2046,7 @@ function resetWheelBtnState() {
     } else {
         spinBtn.classList.remove('waiting');
         if(textSpan) textSpan.textContent = i18n[currentLang].spin_btn;
-        if(icon) { icon.setAttribute('data-lucide', 'dribbble'); lucide.createIcons(); }
+        if(icon) { icon.setAttribute('data-lucide', 'aperture'); lucide.createIcons(); }
         document.getElementById('wheelMsg').textContent = '';
     }
 }

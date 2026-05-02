@@ -184,8 +184,8 @@ body.dark-theme .box-card {
 .task-btn.waiting { background: var(--progress-bg) !important; color: var(--accent) !important; cursor: not-allowed !important; box-shadow: none !important;}
 
 /* ÇARX OYUNU STİLLƏRİ */
-.wheel-container { position: relative; width: 280px; height: 280px; margin: 25px auto 35px; }
-.wheel { width: 100%; height: 100%; border-radius: 50%; overflow: hidden; position: relative; transition: transform 4s cubic-bezier(0.1, 2.5, 0.1, 1); border: 8px solid var(--card-bg); box-shadow: 0 15px 40px rgba(0,0,0,0.15); }
+.wheel-container { position: relative; width: 280px; height: 280px; margin: 25px auto 35px; touch-action: none; user-select: none; -webkit-user-drag: none; }
+.wheel { width: 100%; height: 100%; border-radius: 50%; overflow: hidden; position: relative; transition: transform 4s cubic-bezier(0.1, 2.5, 0.1, 1); border: 8px solid var(--card-bg); box-shadow: 0 15px 40px rgba(0,0,0,0.15); pointer-events: none;}
 body.dark-theme .wheel { border-color: #1E293B; box-shadow: 0 15px 40px rgba(0,0,0,0.6); }
 .wheel-pointer { position: absolute; top: -20px; left: 50%; transform: translateX(-50%); font-size: 40px; color: #EF4444; z-index: 10; text-shadow: 0 4px 10px rgba(0,0,0,0.2); filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3)); pointer-events: none;}
 .wheel-label { position: absolute; top: 50%; left: 50%; width: 140px; height: 30px; margin-top: -15px; transform-origin: 0 50%; font-weight: 900; font-size: 18px; color: #0F172A; text-align: right; padding-right: 20px; display:flex; align-items:center; justify-content:flex-end; gap:5px;}
@@ -632,7 +632,7 @@ document.getElementById('loadingTextNode').textContent = currentLang === 'tr' ? 
         <div class="task-item">
             <div class="task-header">
                 <div class="task-title">
-                    <div class="task-icon" style="background: linear-gradient(135deg, #F59E0B, #D97706);"><i data-lucide="dribbble" style="width:22px;height:22px;"></i></div>
+                    <div class="task-icon" style="background: linear-gradient(135deg, #F59E0B, #D97706);"><i data-lucide="aperture" style="width:22px;height:22px; color: white;"></i></div>
                     <span data-i18n="wheel_title">Şans Çarxı</span>
                 </div>
             </div>
@@ -678,11 +678,6 @@ document.getElementById('loadingTextNode').textContent = currentLang === 'tr' ? 
   </div>
 
   <div id="wheelPage" class="page">
-    <button onclick="closeWheelPage()" class="back-btn-ui">
-      <i data-lucide="arrow-left" style="width:20px;height:20px;"></i>
-      <span data-i18n="back">Geri Qayıt</span>
-    </button>
-    
     <div class="balance-card">
       <h3 data-i18n="balance">Balansınız</h3>
       <div class="balances-wrapper">
@@ -697,6 +692,11 @@ document.getElementById('loadingTextNode').textContent = currentLang === 'tr' ? 
       </div>
     </div>
 
+    <button onclick="closeWheelPage()" class="back-btn-ui">
+      <i data-lucide="arrow-left" style="width:20px;height:20px;"></i>
+      <span data-i18n="back">Geri Qayıt</span>
+    </button>
+    
     <div class="ad-card" style="text-align: center; overflow: visible;">
          <h2 data-i18n="wheel_title">Şans Çarxı</h2>
          <p data-i18n="wheel_info">Hər gün 50 spin çevir və limon qazan!</p>
@@ -1943,7 +1943,8 @@ function getRiggedRewardIndex() {
     }
 
     // Digər bütün vaxtlar yalnız 50 və ya 100 verir
-    return Math.random() < 0.5 ? 0 : 1; 
+    // 50 və 100-ün tez-tez (daha çox 100) çıxması üçün:
+    return Math.random() < 0.4 ? 0 : 1; 
 }
 
 document.getElementById('spinBtn').onclick = async () => {

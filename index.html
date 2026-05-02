@@ -678,11 +678,6 @@ document.getElementById('loadingTextNode').textContent = currentLang === 'tr' ? 
   </div>
 
   <div id="wheelPage" class="page">
-    <button onclick="closeWheelPage()" class="back-btn-ui">
-      <i data-lucide="arrow-left" style="width:20px;height:20px;"></i>
-      <span data-i18n="back">Geri Qayıt</span>
-    </button>
-    
     <div class="balance-card">
       <h3 data-i18n="balance">Balansınız</h3>
       <div class="balances-wrapper">
@@ -696,6 +691,11 @@ document.getElementById('loadingTextNode').textContent = currentLang === 'tr' ? 
          </div>
       </div>
     </div>
+
+    <button onclick="closeWheelPage()" class="back-btn-ui" style="margin-bottom: 20px;">
+      <i data-lucide="arrow-left" style="width:20px;height:20px;"></i>
+      <span data-i18n="back">Geri Qayıt</span>
+    </button>
 
     <div class="ad-card" style="text-align: center; overflow: visible;">
          <h2 data-i18n="wheel_title">Şans Çarxı</h2>
@@ -1520,8 +1520,7 @@ function updateTaskButtons() {
     lucide.createIcons(); 
 }
 
-const adBtn=document.getElementById('adBtn'), msg=document.getElementById('msg');
-const adBtnContent = document.querySelector('.ad-btn-content');
+const adBtn = document.getElementById('adBtn'), msg = document.getElementById('msg');
 
 function displayRewardMsg(messageHTML) {
     if (rewardMsgTimeout) { clearTimeout(rewardMsgTimeout); rewardMsgTimeout = null; }
@@ -1583,12 +1582,12 @@ function checkAndDisplayRewardMsg() {
 }
 
 function restoreAdBtnState() {
-    const textSpan = adBtnContent.querySelector('span');
-    const icon = adBtnContent.querySelector('i');
+    const textSpan = adBtn.querySelector('span[data-i18n]');
+    const icon = adBtn.querySelector('i');
     
     if (isAdRunning) {
         adBtn.classList.add('waiting'); adBtn.disabled = true;
-        if(textSpan) textSpan.textContent = i18n[currentLang].watching_ad; 
+        if(textSpan) { textSpan.setAttribute('data-i18n', 'watching_ad'); textSpan.textContent = i18n[currentLang].watching_ad; }
         if(icon) { icon.setAttribute('data-lucide', 'loader'); lucide.createIcons(); }
         return; 
     }
@@ -1596,7 +1595,7 @@ function restoreAdBtnState() {
     if (cnt >= MAX_ADS_PER_DAY) {
         adBtn.classList.add('waiting'); 
         adBtn.disabled = true; 
-        if(textSpan) textSpan.textContent = i18n[currentLang].limit_reached;
+        if(textSpan) { textSpan.setAttribute('data-i18n', 'limit_reached'); textSpan.textContent = i18n[currentLang].limit_reached; }
         if(icon) { icon.setAttribute('data-lucide', 'lock'); lucide.createIcons(); }
         msg.textContent = i18n[currentLang].msg_limit; 
         checkAndDisplayRewardMsg(); 
@@ -1604,7 +1603,7 @@ function restoreAdBtnState() {
     }
     
     adBtn.classList.remove('waiting'); adBtn.disabled = false; 
-    if(textSpan) textSpan.textContent = i18n[currentLang].watch_ad;
+    if(textSpan) { textSpan.setAttribute('data-i18n', 'watch_ad'); textSpan.textContent = i18n[currentLang].watch_ad; }
     if(icon) { icon.setAttribute('data-lucide', 'play'); lucide.createIcons(); }
     msg.textContent = ''; checkAndDisplayRewardMsg();
 }
@@ -1613,7 +1612,9 @@ adBtn.onclick = async () => {
     update(); 
     if (cnt >= MAX_ADS_PER_DAY) { restoreAdBtnState(); return; }
     if (isAdRunning || adBtn.classList.contains('waiting')) return;
+    
     isAdRunning = true; 
+    restoreAdBtnState(); // UI-nı dərhal yeniləyir ("İzlənir...")
 
     if (rewardMsgTimeout) { clearTimeout(rewardMsgTimeout); rewardMsgTimeout = null; }
     safeRemove(REWARD_MSG_KEY);
@@ -1623,11 +1624,6 @@ adBtn.onclick = async () => {
          setTimeout(() => { const container = document.getElementById('adRewardNotificationContainer'); if(container && rewardMsgElement.parentNode === container) rewardMsgElement.remove(); }, 400); 
     }
     
-    adBtn.disabled = true; adBtn.classList.add('waiting');
-    const textSpan = adBtnContent.querySelector('span');
-    const icon = adBtnContent.querySelector('i');
-    if(textSpan) textSpan.textContent = i18n[currentLang].watching_ad; 
-    if(icon) { icon.setAttribute('data-lucide', 'loader'); lucide.createIcons(); }
     msg.textContent = '';
     
     try {
@@ -1960,11 +1956,11 @@ document.getElementById('spinBtn').onclick = async () => {
     
     isSpinning = true;
     const spinBtn = document.getElementById('spinBtn');
-    spinBtn.classList.add('waiting');
-    
-    const textSpan = spinBtn.querySelector('#spinBtnText');
+    const textSpan = spinBtn.querySelector('span[data-i18n]');
     const icon = spinBtn.querySelector('i');
-    if(textSpan) textSpan.textContent = i18n[currentLang].spinning;
+    
+    spinBtn.classList.add('waiting');
+    if(textSpan) { textSpan.setAttribute('data-i18n', 'spinning'); textSpan.textContent = i18n[currentLang].spinning; }
     if(icon) { icon.setAttribute('data-lucide', 'loader'); lucide.createIcons(); }
     document.getElementById('wheelMsg').textContent = '';
     
@@ -2035,17 +2031,17 @@ function resetWheelBtnState() {
     isSpinning = false;
     let wheelSpinCount = parseInt(safeGet(WHEEL_CNT_KEY, 0));
     const spinBtn = document.getElementById('spinBtn');
-    const textSpan = spinBtn.querySelector('#spinBtnText');
+    const textSpan = spinBtn.querySelector('span[data-i18n]');
     const icon = spinBtn.querySelector('i');
     
     if (wheelSpinCount >= 50) {
         spinBtn.classList.add('waiting');
-        if(textSpan) textSpan.textContent = i18n[currentLang].limit_reached;
+        if(textSpan) { textSpan.setAttribute('data-i18n', 'limit_reached'); textSpan.textContent = i18n[currentLang].limit_reached; }
         if(icon) { icon.setAttribute('data-lucide', 'lock'); lucide.createIcons(); }
         document.getElementById('wheelMsg').textContent = i18n[currentLang].msg_limit;
     } else {
         spinBtn.classList.remove('waiting');
-        if(textSpan) textSpan.textContent = i18n[currentLang].spin_btn;
+        if(textSpan) { textSpan.setAttribute('data-i18n', 'spin_btn'); textSpan.textContent = i18n[currentLang].spin_btn; }
         if(icon) { icon.setAttribute('data-lucide', 'aperture'); lucide.createIcons(); }
         document.getElementById('wheelMsg').textContent = '';
     }

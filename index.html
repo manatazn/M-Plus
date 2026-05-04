@@ -360,7 +360,7 @@ body.dark-theme .loading-image-logo {
     80%, 100% { text-shadow: .25em 0 0 var(--accent), .5em 0 0 var(--accent); }
 }
 
-/* YENİLƏNMİŞ BİLDİRİŞLƏR (GÖREVLƏR ÜÇÜN EKRAN ORTASI QIRMIZI/MAVİ) */
+/* YENİLƏNMİŞ BİLDİRİŞLƏR */
 #taskNotification {
     position: fixed; 
     top: 50%; 
@@ -421,14 +421,16 @@ body.dark-theme .loading-image-logo {
     transform: translateY(0); 
 }
 
-/* BOX MÜKAFAT MODALI */
-.modal-overlay-box {
+/* MODAL STİLLƏRİ */
+.modal-overlay-box, .modal-overlay-daily {
     position: fixed; top: 0; left: 0; width: 100%; height: 100%;
     background: rgba(0,0,0,0.8); backdrop-filter: blur(10px);
     display: flex; align-items: center; justify-content: center;
     z-index: 100000; opacity: 0; visibility: hidden; transition: all 0.4s;
 }
-.modal-overlay-box.show { opacity: 1; visibility: visible; }
+.modal-overlay-daily { background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(12px); transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1); }
+.modal-overlay-box.show, .modal-overlay-daily.show { opacity: 1; visibility: visible; }
+
 .box-modal-content {
     background: var(--card-bg); width: 90%; max-width: 360px;
     border-radius: 30px; padding: 40px 20px; text-align: center;
@@ -438,23 +440,11 @@ body.dark-theme .loading-image-logo {
 }
 .modal-overlay-box.show .box-modal-content { transform: scale(1); }
 .modal-box-icon { font-size: 80px; margin-bottom: 20px; animation: bounceIn 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
-@keyframes bounceIn {
-    0% { transform: scale(0); }
-    50% { transform: scale(1.2); }
-    100% { transform: scale(1); }
-}
+@keyframes bounceIn { 0% { transform: scale(0); } 50% { transform: scale(1.2); } 100% { transform: scale(1); } }
 .modal-reward-text { font-size: 32px; font-weight: 900; color: #10B981; margin: 15px 0; }
 .modal-close-btn { width: 100%; padding: 18px; border: none; border-radius: 20px; font-weight: 900; font-size: 16px; background: linear-gradient(135deg, var(--btn-gradient-start), var(--btn-gradient-end)); color: white; cursor: pointer; margin-top: 15px; box-shadow: 0 8px 25px var(--btn-shadow);}
 .modal-close-btn:active { transform: scale(0.96); }
 
-/* --- GÜNDƏLİK GİRİŞ (DAILY BONUS) MODALI --- */
-.modal-overlay-daily {
-    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(12px);
-    display: flex; align-items: center; justify-content: center;
-    z-index: 100000; opacity: 0; visibility: hidden; transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-}
-.modal-overlay-daily.show { opacity: 1; visibility: visible; }
 .daily-modal-content {
     background: linear-gradient(135deg, var(--card-bg), var(--input-bg));
     width: 90%; max-width: 340px; border-radius: 32px; padding: 40px 25px; text-align: center;
@@ -471,10 +461,7 @@ body.dark-theme .loading-image-logo {
     font-size: 45px; box-shadow: 0 10px 25px rgba(245, 158, 11, 0.4);
     animation: bounceDaily 2s infinite;
 }
-@keyframes bounceDaily {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-10px); }
-}
+@keyframes bounceDaily { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
 .daily-modal-title { font-size: 24px; font-weight: 900; color: var(--text-dark); margin-bottom: 12px; }
 .daily-modal-desc { font-size: 15px; color: var(--text-muted); font-weight: 600; line-height: 1.5; margin-bottom: 25px; }
 .daily-btn {
@@ -516,13 +503,10 @@ const THEME_KEY = 'theme_mplus_' + userRefId;
 const LANG_KEY = 'lang_mplus_' + userRefId;
 
 const savedTheme = safeGet(THEME_KEY, 'light'); 
-if(savedTheme === 'dark') {
-    document.getElementById('body').classList.add('dark-theme');
-} else {
-    document.getElementById('body').classList.remove('dark-theme');
-}
+if(savedTheme === 'dark') { document.getElementById('body').classList.add('dark-theme'); } 
+else { document.getElementById('body').classList.remove('dark-theme'); }
 
-let currentLang = safeGet(LANG_KEY, 'az'); // Default AZ
+let currentLang = safeGet(LANG_KEY, 'az'); 
 if(currentLang !== 'az' && currentLang !== 'tr') currentLang = 'az';
 </script>
 
@@ -532,9 +516,18 @@ if(currentLang !== 'az' && currentLang !== 'tr') currentLang = 'az';
 </div>
 
 <script>
-// Yüklənmə ekranındakı yazı səhifə tam açılmadan əvvəl mövcud dilə uyğun tənzimlənir
 document.getElementById('loadingTextNode').textContent = currentLang === 'tr' ? 'Yükleniyor' : 'Yüklənir';
 </script>
+
+<div id="celebrationModal" class="modal-overlay-daily">
+    <div class="daily-modal-content" style="border-color: #10B981; box-shadow: 0 25px 60px rgba(16, 185, 129, 0.25), inset 0 0 20px rgba(16, 185, 129, 0.1);">
+        <div class="daily-sunburst" style="background: repeating-conic-gradient(from 0deg, rgba(16, 185, 129, 0.05) 0deg 15deg, transparent 15deg 30deg);"></div>
+        <div class="daily-icon-wrapper" style="background: linear-gradient(135deg, #34D399, #10B981); box-shadow: 0 10px 25px rgba(16, 185, 129, 0.4);">🎉</div>
+        <div class="daily-modal-title" data-i18n="cel_title">🎉 İcma Böyüyür!</div>
+        <div class="daily-modal-desc" data-i18n="cel_desc">Mükəmməl xəbərimiz var! M Plus rəsmi kanalımız 100 istifadəçiyə çatdı! Bu münasibətlə sənə <b>50,000 🍋</b> hədiyyə edirik!</div>
+        <button id="claimCelebrationBtn" class="daily-btn" style="background: linear-gradient(135deg, #10B981, #059669); box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);" data-i18n="cel_btn">Mükafatı Al</button>
+    </div>
+</div>
 
 <div id="dailyBonusModal" class="modal-overlay-daily">
     <div class="daily-modal-content">
@@ -562,7 +555,6 @@ document.getElementById('loadingTextNode').textContent = currentLang === 'tr' ? 
 </div>
 
 <div class="container">
-  
   <div id="settingsPage" class="page">
     <div class="profile-card">
         <h2 style="font-weight:900; margin-bottom:25px; color: var(--text-dark); text-align: left; font-size: 22px;" data-i18n="settings">Ayarlar</h2>
@@ -657,21 +649,6 @@ document.getElementById('loadingTextNode').textContent = currentLang === 'tr' ? 
             <button id="joinAppBtn" class="task-btn action">
                 <i data-lucide="external-link" style="width:20px;height:20px;"></i>
                 <span data-i18n="task1_title">Kanala Qoşul</span>
-            </button>
-        </div>
-        
-        <div class="task-item">
-            <div class="task-header">
-                <div class="task-title">
-                    <div class="task-icon" style="background: linear-gradient(135deg, var(--accent-red), #991B1B);"><i data-lucide="users" style="width:22px;height:22px;"></i></div>
-                    <span data-i18n="task2_title">Qrupumuza Qoşul</span>
-                </div>
-                <div class="task-reward-badge" id="taskChatRewardBadge">0.15 ₼</div>
-            </div>
-            <div class="task-desc" data-i18n="task2_desc">Söhbət qrupumuza qoşul və icmanın bir hissəsi ol!</div>
-            <button id="joinChatBtn" class="task-btn action" style="background: linear-gradient(135deg, var(--accent-red), #991B1B); box-shadow: 0 8px 25px rgba(239, 68, 68, 0.3);">
-                <i data-lucide="message-circle" style="width:20px;height:20px;"></i>
-                <span data-i18n="task2_btn">Qrupa Qoşul</span>
             </button>
         </div>
     </div>
@@ -782,8 +759,7 @@ document.getElementById('loadingTextNode').textContent = currentLang === 'tr' ? 
         <h2 style="text-align:center;margin-bottom:10px;color:var(--text-dark);font-weight:900; font-size:24px;" data-i18n="withdraw_method">Çıxarış Üsulu</h2>
         <p style="text-align:center; color:var(--text-muted); font-size: 15px; font-weight: 600; margin-bottom: 30px;" data-i18n="where_to_receive">Ödənişi hara almaq istəyirsiniz?</p>
         
-        <div class="method-list" id="methods">
-          </div>
+        <div class="method-list" id="methods"></div>
     </div>
 
     <div id="form">
@@ -895,6 +871,12 @@ const i18n = {
         wp: "WhatsApp ilə Paylaş",
         tg: "Telegram ilə Paylaş",
         balance: "Balansınız",
+        
+        cel_title: "🎉 İcma Böyüyür!",
+        cel_desc: "Mükəmməl xəbərimiz var! M Plus rəsmi kanalımız 100 istifadəçiyə çatdı! Bu münasibətlə sənə <b>50,000 🍋</b> hədiyyə edirik!",
+        cel_btn: "Mükafatı Al",
+        cel_claimed_msg: "🎉 50,000 🍋 balansınıza əlavə edildi!",
+        
         box_title: "Şans Qutusu",
         box_desc: "1 Milyon 🍋 topla, qutunu aç və <b>25₼, 50₼, 75₼</b> və ya <b>100₼</b> qazan!",
         open_box: "Qutunu Aç",
@@ -910,11 +892,9 @@ const i18n = {
         wheel_btn: "Çarxı Çevir",
         wheel_info: "Hər gün 50 spin çevir və limon qazan!",
         spin_btn: "Reklam İzlə və Çevir",
+        wheel_success: "🎉 {reward} 🍋 qazandınız!",
         task1_title: "Kanala Qoşul",
         task1_desc: "Rəsmi M Plus kanalına qoşul və qazan!",
-        task2_title: "Qrupumuza Qoşul",
-        task2_btn: "Qrupa Qoşul",
-        task2_desc: "Söhbət qrupumuza qoşul və icmanın bir hissəsi ol!",
         ads_title: "Gündəlik Reklamlar",
         ads_desc: "Hər reklam üçün <b class='reward-text-b'>0.002 ₼ + 100 🍋</b> qazanın",
         watched: "İzlənən",
@@ -963,7 +943,7 @@ const i18n = {
         task_success: "✅ Tapşırıq uğurlu! <b>{reward}</b> qazandınız.",
         ad_reward_text: "🎉 <b>{reward}</b> qazandınız!",
         ad_reward_box: "🎉 <b>{reward} + 100 🍋</b> qazandınız!",
-        share_text: `🔥 Pul qazanmaq heç bu qədər rahat olmamışdı M Plus ilə hər şey sənin nəzarətində!\n\n💡 Sadəcə bir neçə saniyəlik reklamları izləyərək balansını artır. Heç bir çətinlik yoxdur telefonun kifayətdir.\n\n👇 İndi qoşul və ilk qazancını əldə et: 🔗 {link}\n\n📲 Gün ərzində istədiyin vaxt daxil ol, reklam izlə və qazancını yığ. 💸 Topladığın məbləği rahat şəkildə çıxara bilərsən.\n\n⚡ Gözləmə M Plus ilə qazancını bu gündən başlat!`
+        share_text: `🔥 Pul qazanmaq heç bu qədər rahat olmamışdı M Plus ilə hər şey sənin nəzarətində!\n\n💡 Sadəcə bir neçə saniyəlik reklamları izləyərək balansını artır. Heç bir çətinlik yoxdur telefonun kifayətdir.\n\n👇 İndi qoşul və ilk qazancını əldə et:\n{link}\n\n📲 Gün ərzində istədiyin vaxt daxil ol, reklam izlə və qazancını yığ. 💸 Topladığın məbləği rahat şəkildə çıxara bilərsən.\n\n⚡ Gözləmə M Plus ilə qazancını bu gündən başlat!`
     },
     tr: {
         loading: "Yükleniyor",
@@ -975,6 +955,12 @@ const i18n = {
         wp: "WhatsApp ile Paylaş",
         tg: "Telegram ile Paylaş",
         balance: "Bakiyeniz",
+        
+        cel_title: "🎉 Topluluk Büyüyor!",
+        cel_desc: "Harika bir haberimiz var! Resmi M Plus kanalımız 100 kullanıcıya ulaştı! Bu özel günde sana <b>50,000 🍋</b> hediye ediyoruz!",
+        cel_btn: "Ödülü Al",
+        cel_claimed_msg: "🎉 50,000 🍋 bakiyenize eklendi!",
+        
         box_title: "Şans Kutusu",
         box_desc: "1 Milyon 🍋 topla, kutuyu aç ve <b>660 TL, 1320 TL, 1980 TL</b> veya <b>2640 TL</b> kazan!",
         open_box: "Kutuyu Aç",
@@ -990,11 +976,9 @@ const i18n = {
         wheel_btn: "Çarkı Çevir",
         wheel_info: "Her gün 50 spin çevir ve limon kazan!",
         spin_btn: "Reklam İzle ve Çevir",
+        wheel_success: "🎉 {reward} 🍋 kazandınız!",
         task1_title: "Kanala Katıl",
         task1_desc: "Resmi M Plus kanalına katıl ve kazan!",
-        task2_title: "Grubumuza Katıl",
-        task2_btn: "Gruba Katıl",
-        task2_desc: "Sohbet grubumuza katıl ve topluluğun bir parçası ol!",
         ads_title: "Günlük Reklamlar",
         ads_desc: "Her reklam için <b class='reward-text-b'>0.0528 TL + 100 🍋</b> kazanın",
         watched: "İzlenen",
@@ -1043,7 +1027,7 @@ const i18n = {
         task_success: "✅ Görev başarılı! <b>{reward}</b> kazandınız.",
         ad_reward_text: "🎉 <b>{reward}</b> kazandınız!",
         ad_reward_box: "🎉 <b>{reward} + 100 🍋</b> kazandınız!",
-        share_text: `🔥 Para kazanmak hiç bu kadar kolay olmamıştı M Plus ile her şey senin kontrolünde!\n\n💡 Sadece birkaç saniyelik reklamları izleyerek bakiyeni artır. Hiçbir zorluk yok telefonun yeterli.\n\n👇 Şimdi katıl ve ilk kazancını elde et: 🔗 {link}\n\n📲 Gün içinde istediğin zaman gir, reklam izle ve kazancını topla. 💸 Topladığın tutarı rahatça çekebilirsin.\n\n⚡ Bekleme M Plus ile kazancını bugünden başlat!`
+        share_text: `🔥 Para kazanmak hiç bu kadar kolay olmamıştı M Plus ile her şey senin kontrolünde!\n\n💡 Sadece birkaç saniyelik reklamları izleyerek bakiyeni artır. Hiçbir zorluk yok telefonun yeterli.\n\n👇 Şimdi katıl ve ilk kazancını elde et:\n{link}\n\n📲 Gün içinde istediğin zaman gir, reklam izle ve kazancını topla. 💸 Topladığın tutarı rahatça çekebilirsin.\n\n⚡ Bekleme M Plus ile kazancını bugünden başlat!`
     }
 };
 
@@ -1154,7 +1138,6 @@ function updateTexts() {
     document.getElementById('btnLangTR').classList.toggle('active', currentLang === 'tr');
 
     document.getElementById('taskJoinRewardBadge').textContent = fC(TASK_APP_REWARD);
-    document.getElementById('taskChatRewardBadge').textContent = fC(TASK_CHAT_REWARD);
     
     document.querySelectorAll('.bal-symbol').forEach(el => el.textContent = currentLang === 'tr' ? 'TL' : '₼');
     document.querySelectorAll('.feeCalcSymbol').forEach(el => el.textContent = currentLang === 'tr' ? 'TL' : '₼');
@@ -1235,13 +1218,13 @@ const COUNT_KEY = `cnt_mplus_${userRefId}`;
 
 const LAST_RESET_DATE_KEY = `last_date_mplus_${userRefId}`;
 const DAILY_CLAIM_DATE_KEY = `daily_claim_date_mplus_${userRefId}`;
+const CELEBRATION_100_CLAIMED_KEY = `cel_100_mplus_${userRefId}`; 
 
 // ÇARX OYUNU AÇARLARI
 const WHEEL_CNT_KEY = `wheel_cnt_mplus_${userRefId}`;
 const WHEEL_500_KEY = `wheel_500_mplus_${userRefId}`;
 
 const JOIN_APP_KEY = `joined_mplus_app_${userRefId}`;
-const JOIN_CHAT_KEY = `joined_mplus_chat_${userRefId}`;
 const REWARD_MSG_KEY = `rewardMsgExpire_mplus_${userRefId}`;
 const HISTORY_KEY = `withdraw_history_mplus_${userRefId}`;
 
@@ -1252,7 +1235,6 @@ const TOTAL_AD_EARN_KEY = `tot_ad_earn_mplus_${userRefId}`;
 const REWARD_PER_AD = 0.002;
 const MAX_ADS_PER_DAY = 50;
 const TASK_APP_REWARD = 0.10;
-const TASK_CHAT_REWARD = 0.15;
 const MIN_WITHDRAW = 5;
 const FEE_PERCENT = 0.05;
 
@@ -1340,6 +1322,17 @@ function copyRefLink() {
     }
 }
 
+/* PAYLAŞIM FUNKSİYALARININ YENİLƏNMƏSİ */
+function shareWhatsApp() {
+    const msg = i18n[currentLang].share_text.replace('{link}', userRefLink);
+    window.open('https://api.whatsapp.com/send?text=' + encodeURIComponent(msg), '_blank');
+}
+
+function shareAppAction() {
+    const msg = i18n[currentLang].share_text.replace('{link}', userRefLink);
+    window.open(`https://t.me/share/url?url=&text=${encodeURIComponent(msg)}`, '_blank');
+}
+
 function update(){
   checkDailyReset();
 
@@ -1408,6 +1401,32 @@ function update(){
   restoreAdBtnState();
 }
 
+// 100 İSTİFADƏÇİ MÜKAFATI KLİK
+document.getElementById('claimCelebrationBtn').addEventListener('click', () => {
+    if (!safeGet(CELEBRATION_100_CLAIMED_KEY, false)) {
+        if (!boxClaimed) {
+            limon += 50000;
+            if (limon > MAX_LIMON) limon = MAX_LIMON;
+            safeSet(LIMON_KEY, limon);
+        }
+        
+        safeSet(CELEBRATION_100_CLAIMED_KEY, true);
+        document.getElementById('celebrationModal').classList.remove('show');
+        update();
+        showTaskNotification(i18n[currentLang].cel_claimed_msg);
+
+        // Ardınca əgər günlük mükafat almayıbsa, onu açır
+        let currentMoscowDate = getMoscowDateStr(getTrueTime());
+        let lastClaimDate = localStorage.getItem(DAILY_CLAIM_DATE_KEY);
+        if (lastClaimDate !== currentMoscowDate && !boxClaimed) {
+            setTimeout(() => {
+                document.getElementById('dailyBonusModal').classList.add('show');
+            }, 600);
+        }
+    }
+});
+
+// GÜNDƏLİK MÜKAFAT KLİK
 document.getElementById('claimDailyBtn').addEventListener('click', () => {
     let currentMoscowDate = getMoscowDateStr(getTrueTime());
     let lastClaimDate = localStorage.getItem(DAILY_CLAIM_DATE_KEY);
@@ -1503,20 +1522,13 @@ function setupTaskBtn(btnId, storageKey, linkTextKey) {
         if (!btn.classList.contains('waiting')) {
             btn.className = 'task-btn action'; 
             btn.disabled = false; 
-            if(btnId === 'joinChatBtn'){
-                btn.style.background = 'linear-gradient(135deg, var(--accent-red), #991B1B)';
-                btn.style.boxShadow = '0 8px 25px rgba(239, 68, 68, 0.3)';
-                btn.innerHTML = `<i data-lucide="message-circle" style="width:20px;height:20px;"></i> <span>${i18n[currentLang][linkTextKey]}</span>`;
-            } else {
-                btn.innerHTML = `<i data-lucide="external-link" style="width:20px;height:20px;"></i> <span>${i18n[currentLang][linkTextKey]}</span>`;
-            }
+            btn.innerHTML = `<i data-lucide="external-link" style="width:20px;height:20px;"></i> <span>${i18n[currentLang][linkTextKey]}</span>`;
         }
     }
 }
 
 function updateTaskButtons() {
     setupTaskBtn('joinAppBtn', JOIN_APP_KEY, 'task1_title');
-    setupTaskBtn('joinChatBtn', JOIN_CHAT_KEY, 'task2_btn');
     lucide.createIcons(); 
 }
 
@@ -1614,7 +1626,7 @@ adBtn.onclick = async () => {
     if (isAdRunning || adBtn.classList.contains('waiting')) return;
     
     isAdRunning = true; 
-    restoreAdBtnState(); // UI-nı dərhal yeniləyir ("İzlənir...")
+    restoreAdBtnState();
 
     if (rewardMsgTimeout) { clearTimeout(rewardMsgTimeout); rewardMsgTimeout = null; }
     safeRemove(REWARD_MSG_KEY);
@@ -1716,7 +1728,6 @@ function handleTaskClick(btnId, url, storageKey, reward) {
 }
 
 document.getElementById('joinAppBtn').onclick = () => handleTaskClick('joinAppBtn', 'https://t.me/mplus_app', JOIN_APP_KEY, TASK_APP_REWARD);
-document.getElementById('joinChatBtn').onclick = () => handleTaskClick('joinChatBtn', 'https://t.me/mpluschat', JOIN_CHAT_KEY, TASK_CHAT_REWARD);
 
 function openWheelPage() {
     document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
@@ -1888,9 +1899,7 @@ document.getElementById('withdrawBtn').onclick=()=>{
 
 function showErr(msg){ alertBox.innerHTML=`<i data-lucide="alert-circle" style="vertical-align: middle; margin-right: 5px;"></i> ${msg}`; lucide.createIcons(); alertBox.className='alert error'; alertBox.style.display='block'; }
 
-/* =========================================================================
-   YENİ: ÇARX OYUNU MƏNTİQİ VƏ YARADILMASI
-   ========================================================================= */
+/* ÇARX OYUNU MƏNTİQİ */
 const wheelSegments = [50, 100, 200, 500, 700, 1000, 5000];
 
 function buildWheel() {
@@ -1898,7 +1907,6 @@ function buildWheel() {
     if(!wheel) return;
     const segAngle = 360 / wheelSegments.length;
     
-    // Conic gradient ilə mükəmməl dairə (Tam ortadan başlayır və fırlanır)
     let bg = 'conic-gradient(';
     const colors = ['#FEF3C7', '#FDE68A', '#FCD34D', '#FBBF24', '#F59E0B', '#D97706', '#B45309'];
     for(let i=0; i<wheelSegments.length; i++) {
@@ -1908,13 +1916,11 @@ function buildWheel() {
     bg += ')';
     wheel.style.background = bg;
     
-    // Label-ləri əlavə etmək (Tam seqmentlərin mərkəzinə düşür)
     wheel.innerHTML = '';
     for(let i=0; i<wheelSegments.length; i++) {
         let lbl = document.createElement('div');
         lbl.className = 'wheel-label';
         let angle = (i * segAngle) + (segAngle / 2);
-        // Conic-gradient saat 12 (top) yönündən başlayır, ona görə mərkəzi tapırıq
         lbl.style.transform = `rotate(${angle - 90}deg)`;
         lbl.innerHTML = `<span>${wheelSegments[i]}</span><span style="font-size:16px;">🍋</span>`;
         wheel.appendChild(lbl);
@@ -1931,18 +1937,15 @@ function getRiggedRewardIndex() {
     wheelSpinCount++;
     safeSet(WHEEL_CNT_KEY, wheelSpinCount);
 
-    // Tam 35-ci spində 500 verir (30-40 arası)
     if (!wheelHasWon500 && wheelSpinCount === 35) {
         safeSet(WHEEL_500_KEY, true);
-        return 3; // 500-ün indeksi
+        return 3; 
     }
 
-    // Hər tam 11-ci spində 200 verir (10-12 arası)
     if (wheelSpinCount % 11 === 0) {
-        return 2; // 200-ün indeksi
+        return 2; 
     }
 
-    // 100 və 50 üçün yeni məntiq: Artıq 100-ün çıxma ehtimalını 60%, 50-ni isə 40% etdik ki, rahat çıxsın
     return Math.random() < 0.6 ? 1 : 0; 
 }
 
@@ -1969,11 +1972,9 @@ document.getElementById('spinBtn').onclick = async () => {
         
         if (adManager) {
             adManager.show().then((result) => {
-                // Çarx üçün reklam izlənildiyi üçün profil statistikasına əlavə edirik
                 totalAdsAllTime++;
                 safeSet(TOTAL_ADS_KEY, totalAdsAllTime);
                 updateStatsUI();
-
                 executeSpin();
             }).catch((error) => {
                 resetWheelBtnState();
@@ -1991,11 +1992,7 @@ function executeSpin() {
     const rewardIndex = getRiggedRewardIndex();
     const rewardValue = wheelSegments[rewardIndex];
     
-    // Hədəf bucağı tam mərkəzə təyin edirik
     const targetAngleCenter = (rewardIndex * segAngle) + (segAngle / 2);
-    
-    // Tam xəttin üstünə düşməməsi və süni görünməməsi üçün içəridə kiçik təsadüfi sürüşmə
-    // Bu kod oxun (▼) xəttə deyil, tam mərkəzi hissəyə düşməsini qarantiya edir
     const randomOffset = (Math.random() * (segAngle/2)) - (segAngle/4); 
     
     const currentMod = currentWheelRotation % 360;
@@ -2004,13 +2001,12 @@ function executeSpin() {
     let distance = targetMod - currentMod;
     if (distance <= 0) distance += 360;
     
-    const spins = 5; // Hər basışda 5 tam dövr edir
+    const spins = 5; 
     distance += 360 * spins;
     
     currentWheelRotation += distance;
     
     const wheelEl = document.getElementById('spinWheel');
-    // Kubik bezier animasiyası ilə yavaş-yavaş tam xətasız mərkəzə qonur
     wheelEl.style.transition = 'transform 4s cubic-bezier(0.2, 0.8, 0.2, 1)'; 
     wheelEl.style.transform = `rotate(${currentWheelRotation}deg)`;
     
@@ -2022,7 +2018,8 @@ function executeSpin() {
         }
         
         update(); 
-        showTaskNotification(`🎉 ${rewardValue} 🍋 qazandınız!`);
+        let successMsg = i18n[currentLang].wheel_success.replace('{reward}', rewardValue);
+        showTaskNotification(successMsg);
         resetWheelBtnState();
     }, 4000); 
 }
@@ -2047,10 +2044,7 @@ function resetWheelBtnState() {
     }
 }
 
-
-/* =========================================================================
-   SİSTEMİN BAŞLADILMASI (YÜKLƏNMƏ VƏ SAAT YOXLANIŞI)
-   ========================================================================= */
+/* SİSTEMİN BAŞLADILMASI */
 async function startApp() {
     const minLoadPromise = new Promise(resolve => setTimeout(resolve, 1500));
     const syncPromise = syncServerTime();
@@ -2058,8 +2052,7 @@ async function startApp() {
     await Promise.all([minLoadPromise, syncPromise]);
 
     checkDailyReset();
-
-    buildWheel(); // Çarx interfeysi yaradılır
+    buildWheel();
     updateTexts();
     loadProfile();
     update();
@@ -2073,8 +2066,13 @@ async function startApp() {
             
             let currentMoscowDate = getMoscowDateStr(getTrueTime());
             let lastClaimDate = localStorage.getItem(DAILY_CLAIM_DATE_KEY);
+            let hasClaimedCel = safeGet(CELEBRATION_100_CLAIMED_KEY, false);
             
-            if (lastClaimDate !== currentMoscowDate && !boxClaimed) {
+            if (!hasClaimedCel) {
+                // Əgər 100 istifadəçi mükafatını almayıbsa əvvəl o ekrana gəlir
+                document.getElementById('celebrationModal').classList.add('show');
+            } else if (lastClaimDate !== currentMoscowDate && !boxClaimed) {
+                // Əgər 100 mükafatını alıbsa və gündəlik almayıbsa gündəlik ekrana gəlir
                 document.getElementById('dailyBonusModal').classList.add('show');
             }
         }, 600);
